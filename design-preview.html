@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>视觉设计预览 · 5 Styles Editor Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Press+Start+2P&family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ui-bg: #12141a;
+      --ui-panel: #1b1e27;
+      --ui-line: #2c3140;
+      --ui-text: #e8eaf0;
+      --ui-mute: #8b92a8;
+      --accent: #7dd3fc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--ui-bg);
+      color: var(--ui-text);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    /* ===== APP CHROME ===== */
+    .topbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--ui-line);
+      background: #151821;
+    }
+    .logo {
+      font-weight: 700; font-size: 13px; letter-spacing: 0.04em;
+      padding-right: 12px; border-right: 1px solid var(--ui-line);
+      white-space: nowrap;
+    }
+    .logo span { color: var(--accent); }
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center; flex: 1;
+    }
+    .tool, .select, .chip {
+      appearance: none; border: 1px solid var(--ui-line); background: #222733;
+      color: var(--ui-text); border-radius: 8px; padding: 7px 10px;
+      font-size: 12px; cursor: pointer;
+    }
+    .tool:hover, .chip:hover { border-color: #4b556b; }
+    .tool.primary { background: #0ea5e9; border-color: #0ea5e9; color: #041018; font-weight: 600; }
+    .tool.ghost { background: transparent; }
+    .divider { width: 1px; height: 22px; background: var(--ui-line); margin: 0 4px; }
+    .swatch {
+      width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--ui-line);
+      padding: 0; overflow: hidden; cursor: pointer;
+    }
+    .swatch input { opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+    .hint { color: var(--ui-mute); font-size: 11px; margin-left: auto; white-space: nowrap; }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 220px 1fr 240px;
+      min-height: 0;
+    }
+    .sidebar, .inspector {
+      background: var(--ui-panel);
+      border-right: 1px solid var(--ui-line);
+      padding: 12px;
+      overflow: auto;
+    }
+    .inspector { border-right: 0; border-left: 1px solid var(--ui-line); }
+    .side-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ui-mute); margin: 8px 0 10px;
+    }
+    .style-card {
+      width: 100%; text-align: left;
+      border: 1px solid var(--ui-line); background: #151821;
+      border-radius: 12px; padding: 10px; margin-bottom: 8px; cursor: pointer;
+      color: inherit;
+    }
+    .style-card.active { border-color: #38bdf8; box-shadow: 0 0 0 1px #38bdf8 inset; }
+    .style-card b { display: block; font-size: 13px; margin-bottom: 4px; }
+    .style-card small { color: var(--ui-mute); font-size: 11px; line-height: 1.4; }
+    .thumb {
+      height: 54px; border-radius: 8px; margin-bottom: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .pages { display: grid; gap: 8px; }
+    .page-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px; border-radius: 10px; border: 1px solid var(--ui-line);
+      background: #151821; cursor: pointer; font-size: 12px;
+    }
+    .page-item.active { border-color: #64748b; }
+    .page-mini {
+      width: 42px; height: 28px; border-radius: 4px;
+      background: #334155; flex: 0 0 auto;
+    }
+
+    .canvas-wrap {
+      min-width: 0; min-height: 0;
+      display: grid; place-items: center;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(56,189,248,.08), transparent 35%),
+        radial-gradient(circle at 80% 90%, rgba(244,114,182,.07), transparent 30%),
+        #0d0f14;
+      overflow: auto;
+    }
+    .stage {
+      width: min(1080px, 96%);
+      aspect-ratio: 16 / 10;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      border: 1px solid #2a2f3c;
+    }
+    .stage * { user-select: none; }
+
+    /* draggable mock blocks */
+    .block {
+      position: absolute;
+      cursor: grab;
+      min-width: 40px; min-height: 24px;
+    }
+    .block.dragging { cursor: grabbing; z-index: 50; opacity: 0.92; }
+    .block.selected { outline: 2px solid #38bdf8; outline-offset: 2px; }
+
+    .field label {
+      display: block; font-size: 11px; color: var(--ui-mute); margin: 10px 0 6px;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%; background: #151821; border: 1px solid var(--ui-line);
+      color: var(--ui-text); border-radius: 8px; padding: 8px 10px; font-size: 12px;
+    }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .note {
+      margin-top: 14px; padding: 10px; border-radius: 10px;
+      background: #141824; border: 1px dashed #334155;
+      color: var(--ui-mute); font-size: 11px; line-height: 1.5;
+    }
+
+    /* ===================== THEME 1: PURIKURA ===================== */
+    .theme-purikura {
+      background:
+        radial-gradient(circle, rgba(243,93,147,.16) 0 3px, transparent 4px) 0 0 / 28px 28px,
+        linear-gradient(180deg, #ffe6f1, #ffd0e5 50%, #ffe9dc);
+      font-family: "Pixelify Sans", sans-serif;
+    }
+    .theme-purikura .machine {
+      left: 8%; top: 18%; width: 28%; height: 58%;
+      background: linear-gradient(#ffc1d8, #ff8fb8);
+      border: 4px solid #ef6ea0; border-radius: 18px;
+      box-shadow: 0 8px 0 #e277a4, inset 0 3px 0 rgba(255,255,255,.5);
+      display: flex; flex-direction: column; align-items: center; padding: 12px;
+    }
+    .theme-purikura .screen {
+      width: 86%; flex: 1; background: #fff7fb;
+      border: 3px solid #fff; border-radius: 12px;
+      display: grid; place-items: center; text-align: center;
+      box-shadow: inset 0 0 0 2px #f7b6d0;
+    }
+    .theme-purikura .screen b {
+      font-family: "Press Start 2P", monospace; font-size: 10px; color: #f35d93;
+      line-height: 1.6;
+    }
+    .theme-purikura .slot {
+      margin-top: 10px; width: 70%; height: 14px; border-radius: 8px;
+      background: #4a2a38; color: #ffd0e0; font-size: 10px;
+      display: grid; place-items: center; letter-spacing: 0.2em;
+    }
+    .theme-purikura .gel {
+      right: 10%; width: 34%; height: 54px;
+      border-radius: 999px; border: 4px solid #fff;
+      background: linear-gradient(#ffb7d3, #ff6fa8 48%, #f25591 52%);
+      box-shadow: inset 0 4px 0 rgba(255,255,255,.55), 0 6px 0 #d95385;
+      color: #fff; font-weight: 700; font-size: 22px;
+      display: grid; place-items: center;
+      text-shadow: 0 1px 0 rgba(120,30,60,.35);
+    }
+    .theme-purikura .gel.g1 { top: 22%; }
+    .theme-purikura .gel.g2 { top: 40%; background: linear-gradient(#fff, #ffe4f0); color: #e04884; box-shadow: inset 0 4px 0 #fff, 0 6px 0 #f0a0c0; }
+    .theme-purikura .gel.g3 { top: 58%; }
+    .theme-purikura .sticker {
+      width: 28px; height: 28px; filter: drop-shadow(1px 2px 0 rgba(200,60,110,.3));
+    }
+    .theme-purikura .title-bit {
+      left: 8%; bottom: 8%;
+      background: #fff; border: 3px solid #ff8fb8; border-radius: 12px 20px 10px 18px;
+      padding: 8px 14px; color: #d94884; font-size: 14px;
+      box-shadow: 3px 3px 0 #f5b4d0; transform: rotate(-2deg);
+    }
+
+    /* ===================== THEME 2: JAM FARM ===================== */
+    .theme-jamfarm {
+      background: #f5f5f5;
+      font-family: Inter, sans-serif;
+      color: #111;
+    }
+    .theme-jamfarm .nav {
+      position: absolute; inset: 0 0 auto 0; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; background: #fff; border-bottom: 1px solid #ececec;
+      font-size: 13px;
+    }
+    .theme-jamfarm .nav b { font-family: "Instrument Serif", serif; font-size: 20px; font-weight: 400; }
+    .theme-jamfarm .nav ul { display: flex; gap: 22px; list-style: none; color: #666; }
+    .theme-jamfarm .nav li.active { color: #111; font-weight: 600; }
+    .theme-jamfarm .hero-title {
+      left: 50%; top: 14%; transform: translateX(-50%);
+      font-family: "Instrument Serif", serif; font-size: 48px; letter-spacing: -0.02em;
+    }
+    .theme-jamfarm .jar {
+      top: 32%; width: 18%; aspect-ratio: 3/4;
+      background: #fff center/cover no-repeat;
+      border-radius: 12px 12px 8px 8px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.08);
+      border: 1px solid #eee;
+    }
+    .theme-jamfarm .jar.j1 { left: 16%; background-image: url("assets/xhs/jam_06.webp"); }
+    .theme-jamfarm .jar.j2 { left: 41%; background-image: url("assets/xhs/jam_02.webp"); }
+    .theme-jamfarm .jar.j3 { left: 66%; background-image: url("assets/xhs/jam_01.webp"); }
+    .theme-jamfarm .lock {
+      left: 47%; top: 48%; width: 36px; height: 36px; border-radius: 50%;
+      background: #111; color: #fff; display: grid; place-items: center; font-size: 14px;
+    }
+    .theme-jamfarm .dots {
+      left: 50%; bottom: 10%; transform: translateX(-50%);
+      display: flex; gap: 8px;
+    }
+    .theme-jamfarm .dots i {
+      width: 8px; height: 8px; border-radius: 50%; background: #ddd; display: block;
+    }
+    .theme-jamfarm .dots i.on { background: #333; }
+    .theme-jamfarm .note-paper {
+      right: 4%; top: 18%; width: 12%; aspect-ratio: 1/1.4;
+      background: #c8f071; transform: rotate(6deg);
+      box-shadow: 2px 4px 0 rgba(0,0,0,.1);
+      padding: 8px; font-size: 10px; color: #244;
+    }
+    .theme-jamfarm .pixel-stamp {
+      left: 6%; bottom: 12%;
+      font-family: "Press Start 2P", monospace; font-size: 14px;
+      background: linear-gradient(90deg, #ff3b3b, #ff9a1f); -webkit-background-clip: text;
+      color: transparent; transform: rotate(-4deg);
+    }
+
+    /* ===================== THEME 3: SHOP ===================== */
+    .theme-shop {
+      background: #fff;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      color: #151515;
+    }
+    .theme-shop .nav {
+      position: absolute; inset: 0 0 auto 0; height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; border-bottom: 1px solid #eee; font-size: 13px;
+    }
+    .theme-shop .bag {
+      border: 1px solid #111; border-radius: 999px; padding: 8px 14px; font-size: 12px;
+    }
+    .theme-shop .grid {
+      position: absolute; left: 8%; right: 8%; top: 18%; bottom: 10%;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    }
+    .theme-shop .product {
+      border: 1px solid #eee; background: #fafafa; padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .theme-shop .product .pic {
+      aspect-ratio: 1; background: #fff center/contain no-repeat;
+      border: 1px solid #f0f0f0;
+    }
+    .theme-shop .product .meta { font-size: 12px; color: #666; }
+    .theme-shop .product .price { font-size: 13px; font-weight: 600; color: #111; }
+    .theme-shop .price::before { content: "◆ "; color: #5eb0dc; font-size: 10px; }
+    .theme-shop .p1 .pic { background-image: url("assets/xhs/style_01.webp"); background-size: cover; }
+    .theme-shop .p2 .pic { background-image: url("assets/xhs/jam_08.webp"); background-size: cover; }
+    .theme-shop .p3 .pic { background-image: url("assets/xhs/style_05.webp"); background-size: cover; }
+    .theme-shop .p4 .pic { background: linear-gradient(#eee,#ddd); display:grid; place-items:center; font-size:42px; }
+    .theme-shop .p5 .pic { background-image: url("assets/xhs/team_01.webp"); background-size: cover; }
+    .theme-shop .p6 .pic { background: #f3f7ea; display:grid; place-items:center; font-size:36px; }
+
+    /* ===================== THEME 4: INSTAGRAM ===================== */
+    .theme-instagram {
+      background: #fafafa;
+      font-family: Inter, sans-serif;
+      color: #111;
+    }
+    .theme-instagram .phone {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      width: min(360px, 42%); aspect-ratio: 9/16;
+      background: #fff; border: 8px solid #111; border-radius: 28px;
+      overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.2);
+    }
+    .theme-instagram .ig-top {
+      height: 44px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 12px; border-bottom: 1px solid #efefef; font-weight: 700; font-size: 15px;
+    }
+    .theme-instagram .ig-post { padding: 10px 0 0; }
+    .theme-instagram .ig-user {
+      display: flex; align-items: center; gap: 8px; padding: 0 12px 8px; font-size: 12px; font-weight: 600;
+    }
+    .theme-instagram .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(#f9ce34,#ee2a7b,#6228d7); padding: 2px;
+    }
+    .theme-instagram .avatar i {
+      display: block; width: 100%; height: 100%; border-radius: 50%;
+      background: url("assets/xhs/style_04.webp") center/cover #fff; border: 2px solid #fff;
+    }
+    .theme-instagram .ig-media {
+      aspect-ratio: 1; background: url("assets/ref/ever2late.png") center/cover;
+    }
+    .theme-instagram .ig-actions {
+      padding: 10px 12px; display: flex; gap: 14px; font-size: 18px;
+    }
+    .theme-instagram .ig-caption {
+      padding: 0 12px; font-size: 12px; line-height: 1.4; color: #222;
+    }
+    .theme-instagram .stories {
+      position: absolute; left: 6%; top: 10%; bottom: 10%; width: 18%;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .theme-instagram .story {
+      aspect-ratio: 1; border-radius: 50%;
+      background: center/cover;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px #ee2a7b;
+    }
+    .theme-instagram .stickers-tray {
+      position: absolute; right: 5%; top: 12%; width: 20%;
+      background: #fff; border: 1px solid #e5e5e5; border-radius: 14px;
+      padding: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    .theme-instagram .stickers-tray h4 { font-size: 11px; margin-bottom: 8px; color: #666; }
+    .theme-instagram .stickers-tray .row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 22px; text-align: center;
+    }
+
+    /* ===================== THEME 5: TRAVEL / SOUVENIR ===================== */
+    .theme-travel {
+      background:
+        radial-gradient(circle at 70% 20%, #9fd4f0, transparent 40%),
+        linear-gradient(180deg, #bfe7f8 0%, #fff 45%, #ffe8d2 100%);
+      font-family: "Space Grotesk", Inter, sans-serif;
+      color: #243447;
+    }
+    .theme-travel .bar {
+      position: absolute; left: 4%; right: 4%; top: 5%;
+      height: 48px; background: #fff; border-radius: 14px;
+      display: flex; align-items: center; gap: 10px; padding: 0 14px;
+      box-shadow: 0 8px 24px rgba(50,100,140,.12); font-size: 13px;
+    }
+    .theme-travel .pill {
+      margin-left: auto; background: #8fbf7a; color: #fff;
+      border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 600;
+    }
+    .theme-travel .guide {
+      left: 18%; top: 18%; width: 46%; height: 62%;
+      background: url("assets/ref/ever2late.png") center/cover;
+      border-radius: 8px; border: 1px solid rgba(255,255,255,.8);
+      box-shadow: 0 18px 40px rgba(40,80,120,.18);
+      overflow: hidden;
+    }
+    .theme-travel .guide .overlay {
+      position: absolute; inset: auto 0 0 0; padding: 14px;
+      background: linear-gradient(transparent, rgba(20,40,60,.45));
+      color: #fff; font-size: 12px;
+    }
+    .theme-travel .badge {
+      position: absolute; right: 12px; top: 12px;
+      background: rgba(120,180,220,.85); color: #fff;
+      border-radius: 999px; padding: 6px 10px; font-size: 11px;
+    }
+    .theme-travel .souvenir {
+      right: 7%; width: 22%; aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, #fff8, transparent 40%),
+        conic-gradient(from 20deg, #ff5ea8, #ffd34e, #6ee7b7, #60a5fa, #ff5ea8);
+      border: 4px solid #fff;
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      display: grid; place-items: center; font-size: 34px;
+    }
+    .theme-travel .souvenir.s1 { top: 22%; }
+    .theme-travel .souvenir.s2 { top: 48%; background: linear-gradient(135deg,#111,#333); color: #fff; border-radius: 12px; font-size: 11px; font-weight: 700; text-align: center; padding: 8px; }
+    .theme-travel .souvenir.s3 { top: 72%; background: #fff; color: #111; font-size: 28px; }
+    .theme-travel .section-title {
+      left: 18%; top: 12%; font-size: 28px; font-weight: 600;
+    }
+    .theme-travel .section-title span { color: #5ea0c8; }
+
+    .floating-label {
+      position: absolute; left: 18px; bottom: 14px;
+      background: rgba(0,0,0,.55); color: #fff; font-size: 11px;
+      padding: 6px 10px; border-radius: 999px; backdrop-filter: blur(6px);
+      z-index: 20; pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">Kiii<span>Deck</span> · Design Preview</div>
+    <div class="toolbar">
+      <select class="select" id="fontSelect" title="字体">
+        <option>Inter</option>
+        <option>Pixelify Sans</option>
+        <option>Instrument Serif</option>
+        <option>Space Grotesk</option>
+        <option>Press Start 2P</option>
+      </select>
+      <select class="select" id="sizeSelect" title="字号">
+        <option>14</option><option>18</option><option selected>24</option><option>32</option><option>48</option>
+      </select>
+      <label class="swatch" title="文字颜色"><input type="color" id="colorPick" value="#111111" /></label>
+      <div class="divider"></div>
+      <button class="tool" type="button" data-tip="背景图">🖼 背景</button>
+      <button class="tool" type="button">🖼 图片</button>
+      <button class="tool" type="button">🎞 视频/GIF</button>
+      <button class="tool" type="button">🔗 网址</button>
+      <button class="tool" type="button">✦ 贴纸</button>
+      <div class="divider"></div>
+      <button class="tool ghost" type="button">复制页</button>
+      <button class="tool primary" type="button">新建页</button>
+      <span class="hint">预览稿 · 可拖元素 · 先确认视觉再接大纲</span>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <aside class="sidebar">
+      <div class="side-title">五套风格模板</div>
+
+      <button class="style-card active" data-theme="purikura">
+        <div class="thumb" style="background:linear-gradient(180deg,#ffe6f1,#ff9fbf)"></div>
+        <b>01 像素大头贴</b>
+        <small>Purikura 拍贴机 · 果冻按钮 · 宝石贴纸</small>
+      </button>
+      <button class="style-card" data-theme="jamfarm">
+        <div class="thumb" style="background:linear-gradient(180deg,#fff,#eee)"></div>
+        <b>02 果酱农场极简</b>
+        <small>白底拼贴 · 果酱罐 · No Return 像素印</small>
+      </button>
+      <button class="style-card" data-theme="shop">
+        <div class="thumb" style="background:linear-gradient(180deg,#fafafa,#e8e8e8)"></div>
+        <b>03 简约商店</b>
+        <small>商品网格 · 干净导航 · 轻复古货架感</small>
+      </button>
+      <button class="style-card" data-theme="instagram">
+        <div class="thumb" style="background:linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7)"></div>
+        <b>04 Instagram</b>
+        <small>手机信息流 · Stories · 贴纸托盘</small>
+      </button>
+      <button class="style-card" data-theme="travel">
+        <div class="thumb" style="background:linear-gradient(180deg,#9fd4f0,#ffe8d2)"></div>
+        <b>05 Ever2Late 旅行社</b>
+        <small>Tour Guide · 登机牌 · 纪念品徽章</small>
+      </button>
+
+      <div class="side-title">页面</div>
+      <div class="pages">
+        <div class="page-item active"><div class="page-mini" id="mini1"></div>封面预览</div>
+        <div class="page-item"><div class="page-mini" style="background:#eee"></div>空白画布（示意）</div>
+      </div>
+    </aside>
+
+    <main class="canvas-wrap">
+      <!-- PURIKURA -->
+      <section class="stage theme-purikura" data-theme-stage="purikura">
+        <div class="block machine selected" data-x="8" data-y="18" style="left:8%;top:18%">
+          <div class="screen"><b>Kiii<br/>PRINT</b></div>
+          <div class="slot">PRINT</div>
+        </div>
+        <div class="block gel g1" style="right:10%;top:22%">Frame</div>
+        <div class="block gel g2" style="right:10%;top:40%">Number</div>
+        <div class="block gel g3" style="right:10%;top:58%">Save</div>
+        <div class="block sticker" style="left:42%;top:16%;font-size:28px">💎</div>
+        <div class="block sticker" style="left:55%;top:70%;font-size:26px">⭐</div>
+        <div class="block sticker" style="left:48%;top:42%;font-size:24px">💗</div>
+        <div class="block sticker" style="right:42%;top:18%;font-size:22px">✨</div>
+        <div class="block title-bit" style="left:8%;bottom:8%">拖我改位置 · 大头贴风格预览</div>
+        <div class="floating-label">Style 01 · 像素大头贴</div>
+      </section>
+
+      <!-- JAM FARM -->
+      <section class="stage theme-jamfarm" data-theme-stage="jamfarm" hidden>
+        <div class="block nav" style="left:0;right:0;top:0;width:100%;height:56px;position:absolute">
+          <b>KiiiKiii uncut gem</b>
+          <ul><li>Home</li><li class="active">Jams</li><li>Staff</li><li>Shop</li><li>FAQ</li></ul>
+        </div>
+        <div class="block hero-title">Jams</div>
+        <div class="block jar j1"></div>
+        <div class="block jar j2"></div>
+        <div class="block jar j3"></div>
+        <div class="block lock">🔒</div>
+        <div class="block note-paper">farm note<br/>↓ dig here</div>
+        <div class="block pixel-stamp">No Return</div>
+        <div class="block dots"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="floating-label">Style 02 · 果酱农场拼贴极简</div>
+      </section>
+
+      <!-- SHOP -->
+      <section class="stage theme-shop" data-theme-stage="shop" hidden>
+        <div class="block nav" style="left:0;right:0;top:0;width:100%;position:absolute">
+          <b>KiiiKiii</b>
+          <span class="bag">Bag · Duty Free</span>
+        </div>
+        <div class="grid">
+          <div class="block product p1"><div class="pic"></div><div class="meta">Album GEM ver</div><div class="price">24.00</div></div>
+          <div class="block product p2"><div class="pic"></div><div class="meta">Farm Object</div><div class="price">8.00</div></div>
+          <div class="block product p3"><div class="pic"></div><div class="meta">Snapshot Cam</div><div class="price">36.00</div></div>
+          <div class="block product p4"><div class="pic">🪨</div><div class="meta">Uncut Rock</div><div class="price">3.00</div></div>
+          <div class="block product p5"><div class="pic"></div><div class="meta">Staff Mug</div><div class="price">15.00</div></div>
+          <div class="block product p6"><div class="pic">🍈</div><div class="meta">Melon Pack</div><div class="price">12.00</div></div>
+        </div>
+        <div class="floating-label">Style 03 · 简约商店</div>
+      </section>
+
+      <!-- INSTAGRAM -->
+      <section class="stage theme-instagram" data-theme-stage="instagram" hidden>
+        <div class="stories">
+          <div class="block story" style="background-image:url('assets/xhs/style_01.webp')"></div>
+          <div class="block story" style="background-image:url('assets/xhs/style_02.webp')"></div>
+          <div class="block story" style="background-image:url('assets/xhs/style_05.webp')"></div>
+          <div class="block story" style="background-image:url('assets/xhs/jam_06.webp')"></div>
+        </div>
+        <div class="phone">
+          <div class="ig-top"><span>kiiikiii.official</span><span>⋯</span></div>
+          <div class="ig-post">
+            <div class="ig-user"><span class="avatar"><i></i></span>kiiikiii.official</div>
+            <div class="ig-media"></div>
+            <div class="ig-actions">♡ &nbsp; 💬 &nbsp; ➢</div>
+            <div class="ig-caption"><b>kiiikiii.official</b> Ever2Late tour guide preview · visual archaeology</div>
+          </div>
+        </div>
+        <div class="stickers-tray">
+          <h4>2000s Stickers</h4>
+          <div class="row">
+            <span>📷</span><span>💿</span><span>📱</span>
+            <span>🐬</span><span>🌴</span><span>✌️</span>
+            <span>🍦</span><span>⭐</span><span>💗</span>
+          </div>
+        </div>
+        <div class="floating-label">Style 04 · Instagram</div>
+      </section>
+
+      <!-- TRAVEL -->
+      <section class="stage theme-travel" data-theme-stage="travel" hidden>
+        <div class="block bar">
+          <b>KiiiKiii Travel</b>
+          <span style="color:#7a90a4;font-size:12px">WHYKIIIKIII TOUR</span>
+          <span class="pill">(Girls) Duty Free</span>
+        </div>
+        <div class="block section-title">Tour <span>Guides</span></div>
+        <div class="block guide">
+          <div class="badge">04:00 - 08:00</div>
+          <div class="overlay">
+            <div style="font-size:22px;font-weight:600">Ever2Late! ✿</div>
+            <div>GUIDE BY LEESOL · KiiiKiii Travel</div>
+          </div>
+        </div>
+        <div class="block souvenir s1">🐬</div>
+        <div class="block souvenir s2">WHYKIIIKIII<br/>STATE<br/>BEACH</div>
+        <div class="block souvenir s3">✌️</div>
+        <div class="floating-label">Style 05 · Ever2Late 旅行社 + 纪念品</div>
+      </section>
+    </main>
+
+    <aside class="inspector">
+      <div class="side-title">属性（示意）</div>
+      <div class="field">
+        <label>选中元素</label>
+        <input id="selName" value="拍贴机 Machine" readonly />
+      </div>
+      <div class="row2">
+        <div class="field"><label>X %</label><input id="posX" type="number" value="8" /></div>
+        <div class="field"><label>Y %</label><input id="posY" type="number" value="18" /></div>
+      </div>
+      <div class="field">
+        <label>字体</label>
+        <select><option>Pixelify Sans</option><option>Inter</option><option>Instrument Serif</option></select>
+      </div>
+      <div class="row2">
+        <div class="field"><label>字号</label><input type="number" value="24" /></div>
+        <div class="field"><label>颜色</label><input type="color" value="#f35d93" /></div>
+      </div>
+      <div class="field">
+        <label>替换媒体 / 网址</label>
+        <input placeholder="粘贴图片、gif、mp4 或 https://…" />
+      </div>
+      <div class="note">
+        这是<strong>视觉确认稿</strong>：五套风格可切换，画布元素可拖拽。<br/><br/>
+        确认喜欢的风格组合后，我会接上：真实文件上传、视频播放、新建/复制页、以及讲稿大纲内容。
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const cards = [...document.querySelectorAll(".style-card")];
+    const stages = [...document.querySelectorAll("[data-theme-stage]")];
+    const mini1 = document.getElementById("mini1");
+    const selName = document.getElementById("selName");
+    const posX = document.getElementById("posX");
+    const posY = document.getElementById("posY");
+
+    const themeMeta = {
+      purikura: { name: "拍贴机 Machine", x: 8, y: 18, mini: "linear-gradient(180deg,#ffe6f1,#ff9fbf)" },
+      jamfarm: { name: "Jams Title", x: 50, y: 14, mini: "linear-gradient(180deg,#fff,#ddd)" },
+      shop: { name: "Product Grid", x: 8, y: 18, mini: "linear-gradient(180deg,#fafafa,#e5e5e5)" },
+      instagram: { name: "IG Phone", x: 50, y: 50, mini: "linear-gradient(135deg,#f9ce34,#ee2a7b)" },
+      travel: { name: "Tour Guide Card", x: 18, y: 18, mini: "linear-gradient(180deg,#9fd4f0,#ffe8d2)" },
+    };
+
+    function setTheme(theme) {
+      cards.forEach((c) => c.classList.toggle("active", c.dataset.theme === theme));
+      stages.forEach((s) => {
+        const on = s.dataset.themeStage === theme;
+        s.hidden = !on;
+      });
+      const m = themeMeta[theme];
+      mini1.style.background = m.mini;
+      selName.value = m.name;
+      posX.value = m.x;
+      posY.value = m.y;
+    }
+
+    cards.forEach((c) => c.addEventListener("click", () => setTheme(c.dataset.theme)));
+
+    // drag blocks inside active stage
+    let drag = null;
+    document.addEventListener("pointerdown", (e) => {
+      const block = e.target.closest(".block");
+      const stage = e.target.closest(".stage");
+      if (!block || !stage || stage.hidden) return;
+      stage.querySelectorAll(".block").forEach((b) => b.classList.remove("selected"));
+      block.classList.add("selected");
+      selName.value = block.className.replace("block", "").replace("selected", "").trim() || "Element";
+      const rect = stage.getBoundingClientRect();
+      drag = {
+        block,
+        stage,
+        ox: e.clientX - block.offsetLeft,
+        oy: e.clientY - block.offsetTop,
+        rw: rect.width,
+        rh: rect.height,
+      };
+      block.classList.add("dragging");
+      block.setPointerCapture?.(e.pointerId);
+    });
+    document.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const x = Math.max(0, Math.min(drag.rw - 20, e.clientX - drag.ox));
+      const y = Math.max(0, Math.min(drag.rh - 20, e.clientY - drag.oy));
+      drag.block.style.left = x + "px";
+      drag.block.style.top = y + "px";
+      drag.block.style.right = "auto";
+      drag.block.style.bottom = "auto";
+      posX.value = Math.round((x / drag.rw) * 100);
+      posY.value = Math.round((y / drag.rh) * 100);
+    });
+    document.addEventListener("pointerup", () => {
+      if (!drag) return;
+      drag.block.classList.remove("dragging");
+      drag = null;
+    });
+
+    // demo: toolbar buttons just flash
+    document.querySelectorAll(".toolbar .tool").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btn.animate([{ transform: "scale(1)" }, { transform: "scale(0.96)" }, { transform: "scale(1)" }], { duration: 160 });
+      });
+    });
+
+    setTheme("purikura");
+  </script>
+</body>
+</html>

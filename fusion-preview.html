@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>融合视觉预览 · Jam × Shop × Travel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #161616;
+      --mute: #6b7280;
+      --line: #ececec;
+      --paper: #ffffff;
+      --sky: #9fd4f0;
+      --sky-deep: #5ea0c8;
+      --mint: #8fbf7a;
+      --sand: #fff4e8;
+      --jam: #e8c547;
+      --ui-dark: #12141a;
+      --ui-panel: #1b1e27;
+      --ui-line: #2c3140;
+      --ui-text: #e8eaf0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--ui-dark);
+      color: var(--ui-text);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 10px 16px; border-bottom: 1px solid var(--ui-line); background: #151821;
+    }
+    .logo { font-weight: 700; font-size: 13px; letter-spacing: 0.04em; }
+    .logo span { color: #7dd3fc; }
+    .pill {
+      font-size: 11px; color: #9fb0c8; border: 1px solid var(--ui-line);
+      border-radius: 999px; padding: 6px 10px;
+    }
+    .pill em { color: #7dd3fc; font-style: normal; }
+    .tabs { display: flex; gap: 6px; margin-left: auto; }
+    .tab {
+      appearance: none; cursor: pointer;
+      background: #222733; color: var(--ui-text); border: 1px solid var(--ui-line);
+      border-radius: 8px; padding: 7px 12px; font-size: 12px;
+    }
+    .tab.active { background: #0ea5e9; border-color: #0ea5e9; color: #041018; font-weight: 600; }
+
+    .workspace {
+      display: grid; grid-template-columns: 1fr 280px; min-height: 0;
+    }
+    .canvas-wrap {
+      min-width: 0; overflow: auto;
+      display: grid; place-items: start center;
+      padding: 24px 20px 40px;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(56,189,248,.08), transparent 35%),
+        radial-gradient(circle at 90% 100%, rgba(143,191,122,.07), transparent 30%),
+        #0d0f14;
+    }
+    .stage {
+      width: min(1100px, 96vw);
+      aspect-ratio: 16 / 10;
+      position: relative;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      border: 1px solid #2a2f3c;
+    }
+    .stage[hidden] { display: none !important; }
+
+    .side {
+      border-left: 1px solid var(--ui-line); background: var(--ui-panel);
+      padding: 16px; overflow: auto; font-size: 12px; line-height: 1.55; color: #aab3c7;
+    }
+    .side h3 {
+      color: #fff; font-size: 13px; margin: 0 0 10px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .side h4 { color: #d6dbe8; font-size: 12px; margin: 16px 0 6px; }
+    .side ul { padding-left: 16px; }
+    .side li + li { margin-top: 4px; }
+    .recipe {
+      display: grid; gap: 8px; margin: 12px 0 16px;
+    }
+    .recipe i {
+      display: flex; justify-content: space-between; gap: 8px;
+      background: #151821; border: 1px solid var(--ui-line); border-radius: 10px;
+      padding: 8px 10px; font-style: normal;
+    }
+    .recipe b { color: #fff; font-weight: 600; }
+    .note {
+      margin-top: 14px; padding: 10px; border-radius: 10px;
+      border: 1px dashed #3a4154; background: #141824; color: #8b92a8;
+    }
+
+    /* ===== FUSION SYSTEM ===== */
+    .fx-nav {
+      position: absolute; inset: 0 0 auto 0; height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; background: #fff; border-bottom: 1px solid var(--line);
+      z-index: 5;
+    }
+    .brand {
+      font-family: "Instrument Serif", serif; font-size: 22px; font-weight: 400;
+      display: flex; align-items: baseline; gap: 8px;
+    }
+    .brand small {
+      font-family: Inter, sans-serif; font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--mute);
+    }
+    .nav-links {
+      display: flex; gap: 22px; list-style: none; font-size: 13px; color: var(--mute);
+      font-family: "Space Grotesk", Inter, sans-serif;
+    }
+    .nav-links .on { color: var(--ink); font-weight: 600; }
+    .duty {
+      font-family: "Space Grotesk", sans-serif;
+      background: var(--mint); color: #fff; border-radius: 999px;
+      padding: 8px 14px; font-size: 12px; font-weight: 600;
+      box-shadow: 0 6px 16px rgba(143,191,122,.28);
+    }
+
+    /* sky strip like travel homepage */
+    .skyband {
+      position: absolute; left: 0; right: 0; top: 58px; height: 38%;
+      background:
+        radial-gradient(ellipse 50% 80% at 70% 40%, rgba(255,255,255,.75), transparent 60%),
+        linear-gradient(180deg, #b9e4f8 0%, #d7f0fa 55%, #fff 100%);
+    }
+
+    .floating {
+      position: absolute; z-index: 3;
+      transition: transform 180ms ease;
+    }
+    .floating:hover { transform: translateY(-2px); }
+
+    /* jam jars as product cards */
+    .jar-card {
+      width: 160px; background: #fff; border: 1px solid #eee;
+      border-radius: 14px; padding: 10px 10px 12px;
+      box-shadow: 0 16px 36px rgba(20,40,60,.08);
+    }
+    .jar-card .pic {
+      aspect-ratio: 1; border-radius: 10px; background: center/cover no-repeat #f7f7f7;
+      border: 1px solid #f0f0f0; position: relative; overflow: hidden;
+    }
+    .jar-card .meta {
+      margin-top: 8px; font-family: "Space Grotesk", sans-serif; font-size: 12px;
+    }
+    .jar-card .meta b { display: block; font-size: 13px; margin-bottom: 2px; }
+    .jar-card .price { color: var(--mute); }
+    .jar-card .price::before { content: "◆ "; color: var(--sky-deep); font-size: 10px; }
+    .lock {
+      position: absolute; inset: 0; display: grid; place-items: center;
+      background: rgba(255,255,255,.35); font-size: 22px;
+    }
+
+    /* travel guide hero */
+    .guide {
+      width: 420px; height: 250px; border-radius: 10px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: 0 22px 50px rgba(40,80,120,.18);
+      background: center/cover no-repeat;
+      position: relative;
+    }
+    .guide .badge {
+      position: absolute; right: 12px; top: 12px;
+      background: rgba(120,180,220,.9); color: #fff;
+      border-radius: 999px; padding: 6px 10px; font-size: 11px;
+      font-family: "Space Grotesk", sans-serif;
+    }
+    .guide .cap {
+      position: absolute; inset: auto 0 0 0; padding: 14px;
+      background: linear-gradient(transparent, rgba(20,40,60,.5));
+      color: #fff; font-family: "Space Grotesk", sans-serif;
+    }
+    .guide .cap strong { display: block; font-size: 22px; font-weight: 600; }
+
+    /* souvenir stickers / 2000s objects */
+    .pin {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 3px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,.12);
+      display: grid; place-items: center; font-size: 28px;
+      background: conic-gradient(from 20deg, #ff5ea8, #ffd34e, #6ee7b7, #60a5fa, #ff5ea8);
+    }
+    .plate {
+      width: 110px; padding: 10px 8px; text-align: center;
+      background: linear-gradient(180deg, #dff7a8, #b6e05a);
+      border: 2px solid #fff; border-radius: 8px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.1);
+      font-family: "Space Grotesk", sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.04em; color: #1f3a12;
+      transform: rotate(4deg);
+    }
+    .cam {
+      width: 88px; height: 60px; border-radius: 8px;
+      background: linear-gradient(145deg, #dfe7ef, #9aa8b5);
+      border: 2px solid #fff; box-shadow: 0 10px 18px rgba(0,0,0,.12);
+      display: grid; place-items: center; font-size: 22px;
+      transform: rotate(-6deg);
+    }
+    .pixel-stamp {
+      font-family: "Press Start 2P", monospace; font-size: 12px;
+      background: linear-gradient(90deg, #ff3b3b, #ff9a1f);
+      -webkit-background-clip: text; color: transparent;
+      transform: rotate(-5deg); filter: drop-shadow(1px 1px 0 rgba(0,0,0,.15));
+    }
+    .paper-note {
+      width: 86px; min-height: 100px; padding: 10px 8px;
+      background: #c8f071; box-shadow: 2px 4px 0 rgba(0,0,0,.08);
+      font-size: 10px; color: #244012; transform: rotate(7deg);
+      font-family: "Instrument Serif", serif;
+    }
+
+    .section-label {
+      font-family: "Space Grotesk", sans-serif; font-size: 28px; font-weight: 600;
+    }
+    .section-label span { color: var(--sky-deep); }
+    .sub {
+      font-size: 13px; color: var(--mute); max-width: 28ch; line-height: 1.45;
+    }
+
+    .dots {
+      display: flex; gap: 7px;
+    }
+    .dots i {
+      width: 7px; height: 7px; border-radius: 50%; background: #d7d7d7; display: block;
+    }
+    .dots i.on { background: #333; }
+
+    .footer-strip {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; background: #fafafa; border-top: 1px solid var(--line);
+      font-size: 11px; color: var(--mute); z-index: 5;
+    }
+    .seals { display: flex; gap: 10px; align-items: center; }
+    .seal {
+      height: 34px; padding: 0 10px; border-radius: 999px; border: 1px solid #e5e5e5;
+      background: #fff; display: flex; align-items: center; gap: 6px;
+      font-size: 10px; color: #333; font-weight: 600;
+    }
+
+    /* page variants */
+    .p-cover .skyband { height: 100%; opacity: 0.55; }
+    .p-cover .headline {
+      position: absolute; left: 7%; top: 22%; z-index: 4; max-width: 420px;
+    }
+    .p-cover .headline h1 {
+      font-family: "Instrument Serif", serif; font-size: clamp(40px, 5vw, 58px);
+      line-height: 1.05; letter-spacing: -0.02em; margin: 8px 0 12px;
+    }
+    .p-cover .headline .kicker {
+      font-family: "Space Grotesk", sans-serif; font-size: 11px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--sky-deep);
+    }
+
+    .tag {
+      display: inline-block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      border: 1px solid #dbeafe; background: #eff8ff; color: var(--sky-deep);
+      border-radius: 999px; padding: 4px 8px; font-family: "Space Grotesk", sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">Kiii<span>Deck</span> · Fusion Preview</div>
+    <span class="pill">融合配方：<em>果酱农场</em> × <em>简约商店</em> × <em>旅行社</em></span>
+    <div class="tabs">
+      <button class="tab active" data-page="cover">封面融合</button>
+      <button class="tab" data-page="shop">商店货架页</button>
+      <button class="tab" data-page="tour">Tour Guides 页</button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <main class="canvas-wrap">
+      <!-- PAGE A: COVER FUSION -->
+      <section class="stage p-cover" data-page-stage="cover">
+        <div class="skyband"></div>
+        <header class="fx-nav">
+          <div class="brand">KiiiKiii <small>Travel · Uncut Gem</small></div>
+          <ul class="nav-links">
+            <li class="on">Home</li><li>Jams</li><li>Shop</li><li>Guides</li><li>FAQ</li>
+          </ul>
+          <div class="duty">(Girls) Duty Free</div>
+        </header>
+
+        <div class="headline">
+          <span class="tag">Fusion Preview</span>
+          <h1>视觉考古<br/>登机口</h1>
+          <p class="sub">白底极简官网骨架 + 果酱罐商品卡 + Ever2Late 旅行视觉，点缀 2000s 小物件。</p>
+        </div>
+
+        <div class="floating guide" style="left:46%; top:20%; background-image:url('assets/ref/ever2late.png')">
+          <div class="badge">04:00 - 08:00</div>
+          <div class="cap">
+            <strong>Ever2Late! ✿</strong>
+            <div>GUIDE BY LEESOL · KiiiKiii Travel</div>
+          </div>
+        </div>
+
+        <div class="floating jar-card" style="left:7%; top:58%">
+          <div class="pic" style="background-image:url('assets/xhs/jam_06.webp')"><div class="lock">🔒</div></div>
+          <div class="meta"><b>Jam · Groundwork</b><div class="price">Unlock soon</div></div>
+        </div>
+        <div class="floating jar-card" style="left:24%; top:62%">
+          <div class="pic" style="background-image:url('assets/xhs/jam_02.webp')"></div>
+          <div class="meta"><b>Jam · Debut Song</b><div class="price">12.00</div></div>
+        </div>
+
+        <div class="floating pin" style="right:7%; top:22%">🐬</div>
+        <div class="floating plate" style="right:5%; top:42%">WHYKIIIKIII<br/>STATE BEACH</div>
+        <div class="floating cam" style="right:18%; top:68%">📷</div>
+        <div class="floating paper-note" style="left:40%; top:68%">boarding<br/>pass inside →</div>
+
+        <div class="footer-strip">
+          <div class="seals">
+            <span class="seal">✅ Project Certified</span>
+            <span class="seal">🏅 Very Very Good Jams</span>
+            <span class="seal">🍃 Raised & Handled</span>
+          </div>
+          <div class="dots"><i class="on"></i><i></i><i></i></div>
+        </div>
+      </section>
+
+      <!-- PAGE B: SHOP SHELF -->
+      <section class="stage" data-page-stage="shop" hidden>
+        <header class="fx-nav">
+          <div class="brand">KiiiKiii <small>Shop</small></div>
+          <ul class="nav-links">
+            <li>Home</li><li>Jams</li><li class="on">Shop</li><li>Guides</li><li>FAQ</li>
+          </ul>
+          <div class="duty">Bag · 0</div>
+        </header>
+
+        <div style="position:absolute; left:7%; top:14%; z-index:2">
+          <div class="section-label">Jams <span>& Merch</span></div>
+          <p class="sub" style="margin-top:6px">商店网格保持干净，商品本身用果酱罐 / 相机 / 纪念品说话。</p>
+        </div>
+
+        <div class="floating jar-card" style="left:7%; top:32%">
+          <div class="pic" style="background-image:url('assets/xhs/jam_01.webp')"></div>
+          <div class="meta"><b>Album GEM ver</b><div class="price">24.00</div></div>
+        </div>
+        <div class="floating jar-card" style="left:24%; top:32%">
+          <div class="pic" style="background-image:url('assets/xhs/jam_06.webp')"><div class="lock">🔒</div></div>
+          <div class="meta"><b>Groundwork Jam</b><div class="price">soon</div></div>
+        </div>
+        <div class="floating jar-card" style="left:41%; top:32%">
+          <div class="pic" style="background-image:url('assets/xhs/style_05.webp')"></div>
+          <div class="meta"><b>Snapshot Cam</b><div class="price">36.00</div></div>
+        </div>
+        <div class="floating jar-card" style="left:58%; top:32%">
+          <div class="pic" style="display:grid;place-items:center;font-size:42px;background:#f3f7ea">🍈</div>
+          <div class="meta"><b>Melon Pack</b><div class="price">12.00</div></div>
+        </div>
+        <div class="floating jar-card" style="left:75%; top:32%">
+          <div class="pic" style="display:grid;place-items:center;font-size:40px;background:#f6f6f6">🪨</div>
+          <div class="meta"><b>Uncut Rock</b><div class="price">3.00</div></div>
+        </div>
+
+        <div class="floating pin" style="left:10%; bottom:14%">✌️</div>
+        <div class="floating plate" style="left:22%; bottom:12%; transform:rotate(-3deg)">PEACE LOVE<br/>WHYKIIIKIII</div>
+        <div class="floating pixel-stamp" style="right:10%; bottom:18%">No Return</div>
+        <div class="floating cam" style="right:28%; bottom:14%">🎞</div>
+
+        <div class="footer-strip">
+          <div>Duty Free · simple shop grid · jam objects as SKUs</div>
+          <div class="dots"><i></i><i class="on"></i><i></i></div>
+        </div>
+      </section>
+
+      <!-- PAGE C: TOUR GUIDES -->
+      <section class="stage" data-page-stage="tour" hidden>
+        <div class="skyband" style="height:48%"></div>
+        <header class="fx-nav">
+          <div class="brand">KiiiKiii <small>Travel</small></div>
+          <ul class="nav-links">
+            <li>Home</li><li>Jams</li><li>Shop</li><li class="on">Guides</li><li>FAQ</li>
+          </ul>
+          <div class="duty">(Girls) Duty Free</div>
+        </header>
+
+        <div style="position:absolute; left:7%; top:16%; z-index:2">
+          <div class="section-label">Tour <span>Guides</span></div>
+          <p class="sub" style="margin-top:6px">Meet the best tour guides in the world.</p>
+        </div>
+
+        <div class="floating guide" style="left:7%; top:34%; width:52%; height:48%; background-image:url('assets/ref/ever2late.png')">
+          <div class="badge">04:00 - 08:00</div>
+          <div class="cap">
+            <strong>Ever2Late! ✿</strong>
+            <div>GUIDE BY LEESOL · 1 / 6</div>
+          </div>
+        </div>
+
+        <div class="floating jar-card" style="right:7%; top:34%; width:200px">
+          <div class="pic" style="background-image:url('assets/xhs/style_01.webp')"></div>
+          <div class="meta"><b>Boarding Pass UGC</b><div class="price">collectable</div></div>
+        </div>
+        <div class="floating jar-card" style="right:7%; top:68%; width:200px">
+          <div class="pic" style="background-image:url('assets/xhs/jam_08.webp')"></div>
+          <div class="meta"><b>Souvenir Jam</b><div class="price">takeaway</div></div>
+        </div>
+
+        <div class="floating pin" style="left:62%; top:20%">🌴</div>
+        <div class="floating paper-note" style="left:70%; top:18%">tour soon<br/>weather: nice</div>
+
+        <div class="footer-strip">
+          <div class="seals">
+            <span class="seal">✈ Ever2Late</span>
+            <span class="seal">🗺 WhyKiiiKiii State</span>
+            <span class="seal">🎟 Boarding Pass</span>
+          </div>
+          <div class="dots"><i></i><i></i><i class="on"></i></div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="side">
+      <h3>融合说明</h3>
+      <p>把你喜欢的三套合成一套「可编辑母版」，而不是三套完全不同的皮肤。</p>
+
+      <div class="recipe">
+        <i><span>骨架</span><b>果酱农场极简</b></i>
+        <i><span>内容块</span><b>简约商店货架卡</b></i>
+        <i><span>气氛</span><b>Ever2Late 旅行天空 / Guides</b></i>
+        <i><span>点缀</span><b>2000s 相机·徽章·便签·像素印</b></i>
+      </div>
+
+      <h4>统一规则</h4>
+      <ul>
+        <li>白底 + 细线导航，保持官网干净感</li>
+        <li>主视觉用旅行大图 / Guides 卡</li>
+        <li>信息与商品用果酱罐式卡片承载</li>
+        <li>纪念品贴纸只做点缀，不抢正文</li>
+        <li>Duty Free 胶囊按钮贯穿全站</li>
+      </ul>
+
+      <h4>三页示意</h4>
+      <ul>
+        <li><b>封面融合</b>：天空 + Guides 大卡 + 果酱商品卡</li>
+        <li><b>商店货架</b>：极简网格，Jam/相机/石头当 SKU</li>
+        <li><b>Tour Guides</b>：旅行社主视觉，旁挂周边卡</li>
+      </ul>
+
+      <div class="note">
+        这是融合视觉确认稿（仍未接讲稿）。如果你点头，下一步会按这个母版做真正的 PPT 式编辑器，并内置这三页为默认模板。
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const tabs = [...document.querySelectorAll(".tab")];
+    const stages = [...document.querySelectorAll("[data-page-stage]")];
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => t.classList.toggle("active", t === tab));
+        stages.forEach((s) => {
+          s.hidden = s.dataset.pageStage !== tab.dataset.page;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
