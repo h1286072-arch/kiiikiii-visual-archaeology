@@ -1,5 +1,5 @@
 (() => {
-  const STORAGE_KEY = "kiiikiii-deck-v2-fusion";
+  const STORAGE_KEY = "kiiikiii-deck-v5-album-pages";
   const NAV_ITEMS = ["Home", "Jams", "Shop", "Guides", "FAQ", "Talk"];
   const uid = () => Math.random().toString(36).slice(2, 10);
   const $ = (id) => document.getElementById(id);
@@ -7,6 +7,11 @@
 
   let state = { mode: "edit", index: 0, selectedId: null, deck: null };
   let drag = null;
+  const MAX_HISTORY = 50;
+  let undoStack = [];
+  let redoStack = [];
+  let applyingHistory = false;
+  let thumbDragFrom = null;
 
   function toast(msg) {
     const t = $("toast");
@@ -14,6 +19,52 @@
     t.classList.add("show");
     clearTimeout(toast._t);
     toast._t = setTimeout(() => t.classList.remove("show"), 1600);
+  }
+
+  function deepSnap() {
+    return {
+      deck: JSON.parse(JSON.stringify(state.deck)),
+      index: state.index,
+      selectedId: state.selectedId
+    };
+  }
+
+  function pushUndo(preSnap) {
+    if (applyingHistory) return;
+    undoStack.push(preSnap || deepSnap());
+    if (undoStack.length > MAX_HISTORY) undoStack.shift();
+    redoStack = [];
+  }
+
+  function restoreSnap(snap) {
+    applyingHistory = true;
+    state.deck = snap.deck;
+    state.index = Math.max(0, Math.min(snap.index, snap.deck.slides.length - 1));
+    state.selectedId = snap.selectedId;
+    saveSilent();
+    renderAll();
+    applyingHistory = false;
+  }
+
+  function undo() {
+    if (!undoStack.length) return toast("没有可撤回的操作");
+    redoStack.push(deepSnap());
+    restoreSnap(undoStack.pop());
+    toast("已撤回");
+  }
+
+  function redo() {
+    if (!redoStack.length) return toast("没有可重做的操作");
+    undoStack.push(deepSnap());
+    restoreSnap(redoStack.pop());
+    toast("已重做");
+  }
+
+  /** Capture state, run mutation, persist */
+  function commit(fn) {
+    pushUndo(deepSnap());
+    fn();
+    saveSilent();
   }
 
   function cloneDefault() {
@@ -69,18 +120,73 @@
 
   function renderThumbs() {
     const box = $("thumbs");
-    box.innerHTML = "<h3>Pages</h3>";
+    box.innerHTML = "<h3>Pages</h3><div class=\"hint-drag\">拖拽排序 · 或点 ↑↓</div>";
     state.deck.slides.forEach((s, i) => {
       const d = document.createElement("div");
       d.className = "thumb" + (i === state.index ? " active" : "");
-      d.innerHTML = `<div class="t">${s.title || "未命名"}</div><div class="idx">${i + 1}</div>`;
-      d.onclick = () => {
+      d.draggable = state.mode === "edit";
+      d.dataset.index = String(i);
+      d.innerHTML = `
+        <div class="t">${s.title || "未命名"}</div>
+        <div class="idx">${i + 1}</div>
+        <div class="move-btns">
+          <button type="button" data-move="-1" title="上移">↑</button>
+          <button type="button" data-move="1" title="下移">↓</button>
+        </div>`;
+      d.onclick = (e) => {
+        if (e.target.closest("[data-move]")) return;
         state.index = i;
         state.selectedId = null;
         renderAll();
       };
+      d.querySelectorAll("[data-move]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          moveSlide(i, i + Number(btn.dataset.move));
+        });
+      });
+      d.addEventListener("dragstart", (e) => {
+        if (state.mode !== "edit") return;
+        thumbDragFrom = i;
+        d.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", String(i));
+      });
+      d.addEventListener("dragend", () => {
+        d.classList.remove("dragging");
+        thumbDragFrom = null;
+        box.querySelectorAll(".thumb").forEach((t) => t.classList.remove("drag-over"));
+      });
+      d.addEventListener("dragover", (e) => {
+        if (state.mode !== "edit") return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        d.classList.add("drag-over");
+      });
+      d.addEventListener("dragleave", () => d.classList.remove("drag-over"));
+      d.addEventListener("drop", (e) => {
+        e.preventDefault();
+        d.classList.remove("drag-over");
+        const from = Number(e.dataTransfer.getData("text/plain"));
+        if (Number.isNaN(from)) return;
+        moveSlide(from, i);
+      });
       box.appendChild(d);
     });
+  }
+
+  function moveSlide(from, to) {
+    if (from === to || to < 0 || to >= state.deck.slides.length) return;
+    commit(() => {
+      const [slide] = state.deck.slides.splice(from, 1);
+      state.deck.slides.splice(to, 0, slide);
+      if (state.index === from) state.index = to;
+      else if (from < state.index && to >= state.index) state.index -= 1;
+      else if (from > state.index && to <= state.index) state.index += 1;
+      state.selectedId = null;
+    });
+    renderAll();
+    toast("已调整页面顺序");
   }
 
   function renderChrome() {
@@ -228,6 +334,8 @@
         if (el.type === "link") {
           const text = prompt("链接文字", el.text || "");
           const href = prompt("URL", el.href || "https://");
+          if (text == null && href == null) return;
+          pushUndo(deepSnap());
           if (text != null) el.text = text;
           if (href != null) el.href = href;
           saveSilent();
@@ -237,21 +345,28 @@
       }
       if (el.type === "section") {
         const t = prompt("章节标题（可用 <span class=\"accent\">高亮</span>）", el.text || "");
-        if (t != null) {
+        if (t != null && t !== el.text) {
+          pushUndo(deepSnap());
           el.text = t;
           saveSilent();
           renderStage();
         }
         return;
       }
+      const preEdit = deepSnap();
+      const prevText = el.text || "";
       node.contentEditable = "true";
       node.classList.add("editing");
       node.focus();
       const finish = () => {
         node.contentEditable = "false";
         node.classList.remove("editing");
-        el.text = node.innerText;
-        saveSilent();
+        const next = node.innerText;
+        if (next !== prevText) {
+          pushUndo(preEdit);
+          el.text = next;
+          saveSilent();
+        }
         renderInspector();
       };
       node.addEventListener("blur", finish, { once: true });
@@ -293,7 +408,17 @@
     if (!el || e.currentTarget.classList.contains("editing")) return;
     state.selectedId = id;
     const rect = $("stage").getBoundingClientRect();
-    drag = { kind: "move", id, startX: e.clientX, startY: e.clientY, origX: el.x, origY: el.y, rect };
+    drag = {
+      kind: "move",
+      id,
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: el.x,
+      origY: el.y,
+      rect,
+      preSnap: deepSnap(),
+      changed: false
+    };
     e.currentTarget.setPointerCapture(e.pointerId);
     renderStage();
     renderInspector();
@@ -306,7 +431,17 @@
     const id = node.dataset.id;
     const el = currentSlide().elements.find((x) => x.id === id);
     const rect = $("stage").getBoundingClientRect();
-    drag = { kind: "resize", id, startX: e.clientX, startY: e.clientY, origW: el.w, origH: el.h, rect };
+    drag = {
+      kind: "resize",
+      id,
+      startX: e.clientX,
+      startY: e.clientY,
+      origW: el.w,
+      origH: el.h,
+      rect,
+      preSnap: deepSnap(),
+      changed: false
+    };
     node.setPointerCapture(e.pointerId);
     state.selectedId = id;
   }
@@ -320,9 +455,11 @@
     if (drag.kind === "move") {
       el.x = Math.max(0, Math.min(94, drag.origX + dx));
       el.y = Math.max(8, Math.min(88, drag.origY + dy));
+      if (el.x !== drag.origX || el.y !== drag.origY) drag.changed = true;
     } else {
       el.w = Math.max(6, Math.min(100 - el.x, drag.origW + dx));
       el.h = Math.max(5, Math.min(92 - el.y, drag.origH + dy));
+      if (el.w !== drag.origW || el.h !== drag.origH) drag.changed = true;
     }
     const node = $("layer").querySelector(`[data-id="${el.id}"]`);
     if (node) {
@@ -335,6 +472,7 @@
 
   window.addEventListener("pointerup", () => {
     if (!drag) return;
+    if (drag.changed && drag.preSnap) pushUndo(drag.preSnap);
     drag = null;
     saveSilent();
     renderInspector();
@@ -367,17 +505,21 @@
       link: { text: "link", href: "https://www.kiiikiii.kr/", w: 18, h: 6 }
     };
     const el = Object.assign(base, presets[type] || {});
+    const insertEl = async (src) => {
+      if (src != null) el.src = src;
+      commit(() => {
+        currentSlide().elements.push(el);
+        state.selectedId = el.id;
+      });
+      renderAll();
+    };
     if (type === "image") {
       const local = confirm("确定＝本地上传；取消＝输入路径/URL");
       if (local) {
         $("fileImage").onchange = async (ev) => {
           const file = ev.target.files?.[0];
           if (!file) return;
-          el.src = await readFile(file);
-          currentSlide().elements.push(el);
-          state.selectedId = el.id;
-          saveSilent();
-          renderAll();
+          await insertEl(await readFile(file));
           ev.target.value = "";
         };
         $("fileImage").click();
@@ -385,7 +527,8 @@
       }
       const src = prompt("图片路径", "assets/xhs/");
       if (!src) return;
-      el.src = src;
+      insertEl(src);
+      return;
     }
     if (type === "video") {
       const local = confirm("确定＝上传；取消＝输入 URL");
@@ -393,11 +536,7 @@
         $("fileVideo").onchange = async (ev) => {
           const file = ev.target.files?.[0];
           if (!file) return;
-          el.src = await readFile(file);
-          currentSlide().elements.push(el);
-          state.selectedId = el.id;
-          saveSilent();
-          renderAll();
+          await insertEl(await readFile(file));
           ev.target.value = "";
         };
         $("fileVideo").click();
@@ -405,12 +544,10 @@
       }
       const src = prompt("视频/GIF URL", "");
       if (!src) return;
-      el.src = src;
+      insertEl(src);
+      return;
     }
-    currentSlide().elements.push(el);
-    state.selectedId = el.id;
-    saveSilent();
-    renderAll();
+    insertEl();
   }
 
   function readFile(file) {
@@ -432,6 +569,7 @@
 
   async function applyImageSrc(el, src) {
     if (!el || !src) return;
+    pushUndo(deepSnap());
     el.src = src;
     saveSilent();
     renderStage();
@@ -466,7 +604,15 @@
   }
 
   function bindSlide(id, key, transform) {
-    $(id).addEventListener("input", (e) => {
+    const node = $(id);
+    node.addEventListener("focus", () => {
+      node._undoSnap = deepSnap();
+    });
+    node.addEventListener("input", (e) => {
+      if (node._undoSnap) {
+        pushUndo(node._undoSnap);
+        node._undoSnap = null;
+      }
       currentSlide()[key] = transform ? transform(e.target.value) : e.target.value;
       if (key === "title") renderThumbs();
       renderStage();
@@ -483,6 +629,8 @@
   $("btnPrev").onclick = () => go(-1);
   $("btnNext").onclick = () => go(1);
   $("btnSave").onclick = saveDeck;
+  $("btnUndo").onclick = undo;
+  $("btnRedo").onclick = redo;
   $("btnExport").onclick = () => {
     const blob = new Blob([JSON.stringify(state.deck, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
@@ -491,19 +639,25 @@
     a.click();
   };
   $("btnReset").onclick = () => {
-    if (!confirm("恢复 fusion 默认讲稿？本地修改会丢失。")) return;
-    state.deck = cloneDefault();
-    state.index = 0;
-    state.selectedId = null;
-    saveSilent();
+    if (!confirm("恢复讲稿默认版（对齐最新分享会讲稿）？本地修改会丢失。")) return;
+    commit(() => {
+      state.deck = cloneDefault();
+      state.index = 0;
+      state.selectedId = null;
+    });
+    undoStack = [];
+    redoStack = [];
     renderAll();
   };
   $("importFile").onchange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    state.deck = JSON.parse(await file.text());
-    state.index = 0;
-    saveSilent();
+    const parsed = JSON.parse(await file.text());
+    commit(() => {
+      state.deck = parsed;
+      state.index = 0;
+      state.selectedId = null;
+    });
     renderAll();
     toast("已导入");
   };
@@ -529,28 +683,33 @@
         { id: uid(), type: "section", x: 7, y: 18, w: 50, h: 8, text: 'New <span class="accent">Page</span>', size: 28, font: "Space Grotesk, sans-serif" }
       ]
     };
-    state.deck.slides.splice(state.index + 1, 0, s);
-    state.index += 1;
-    saveSilent();
+    commit(() => {
+      state.deck.slides.splice(state.index + 1, 0, s);
+      state.index += 1;
+      state.selectedId = null;
+    });
     renderAll();
   };
   $("btnDupSlide").onclick = () => {
-    const copy = JSON.parse(JSON.stringify(currentSlide()));
-    copy.id = uid();
-    copy.title = (copy.title || "") + " 副本";
-    copy.elements.forEach((el) => { el.id = uid(); });
-    state.deck.slides.splice(state.index + 1, 0, copy);
-    state.index += 1;
-    saveSilent();
+    commit(() => {
+      const copy = JSON.parse(JSON.stringify(currentSlide()));
+      copy.id = uid();
+      copy.title = (copy.title || "") + " 副本";
+      copy.elements.forEach((el) => { el.id = uid(); });
+      state.deck.slides.splice(state.index + 1, 0, copy);
+      state.index += 1;
+      state.selectedId = null;
+    });
     renderAll();
   };
   $("btnDelSlide").onclick = () => {
     if (state.deck.slides.length <= 1) return toast("至少保留一页");
     if (!confirm("删除当前页？")) return;
-    state.deck.slides.splice(state.index, 1);
-    state.index = Math.max(0, state.index - 1);
-    state.selectedId = null;
-    saveSilent();
+    commit(() => {
+      state.deck.slides.splice(state.index, 1);
+      state.index = Math.max(0, state.index - 1);
+      state.selectedId = null;
+    });
     renderAll();
   };
 
@@ -567,27 +726,43 @@
   $("elFont").onchange = (e) => {
     const el = selectedEl();
     if (!el) return;
+    pushUndo(deepSnap());
     el.font = e.target.value;
     saveSilent();
     renderStage();
   };
+  $("elSize").addEventListener("focus", () => { $("elSize")._undoSnap = deepSnap(); });
   $("elSize").oninput = (e) => {
     const el = selectedEl();
     if (!el) return;
+    if ($("elSize")._undoSnap) {
+      pushUndo($("elSize")._undoSnap);
+      $("elSize")._undoSnap = null;
+    }
     el.size = +e.target.value || 16;
     saveSilent();
     renderStage();
   };
+  $("elColor").addEventListener("focus", () => { $("elColor")._undoSnap = deepSnap(); });
   $("elColor").oninput = (e) => {
     const el = selectedEl();
     if (!el) return;
+    if ($("elColor")._undoSnap) {
+      pushUndo($("elColor")._undoSnap);
+      $("elColor")._undoSnap = null;
+    }
     el.color = e.target.value;
     saveSilent();
     renderStage();
   };
+  $("elContent").addEventListener("focus", () => { $("elContent")._undoSnap = deepSnap(); });
   $("elContent").onchange = (e) => {
     const el = selectedEl();
     if (!el) return;
+    if ($("elContent")._undoSnap) {
+      pushUndo($("elContent")._undoSnap);
+      $("elContent")._undoSnap = null;
+    }
     const v = e.target.value;
     const lines = v.split("\n");
     if (el.type === "jar") {
@@ -612,19 +787,22 @@
     renderStage();
   };
   $("btnDelEl").onclick = () => {
-    const s = currentSlide();
-    s.elements = s.elements.filter((e) => e.id !== state.selectedId);
-    state.selectedId = null;
-    saveSilent();
+    if (!state.selectedId) return;
+    commit(() => {
+      const s = currentSlide();
+      s.elements = s.elements.filter((e) => e.id !== state.selectedId);
+      state.selectedId = null;
+    });
     renderAll();
   };
   $("btnBringFront").onclick = () => {
     const s = currentSlide();
     const i = s.elements.findIndex((e) => e.id === state.selectedId);
     if (i < 0) return;
-    const [el] = s.elements.splice(i, 1);
-    s.elements.push(el);
-    saveSilent();
+    commit(() => {
+      const [el] = s.elements.splice(i, 1);
+      s.elements.push(el);
+    });
     renderStage();
   };
 
@@ -668,8 +846,23 @@
   };
 
   window.addEventListener("keydown", (e) => {
+    const mod = e.metaKey || e.ctrlKey;
     const tag = e.target?.tagName || "";
-    if (["INPUT", "TEXTAREA", "SELECT"].includes(tag) || e.target?.isContentEditable) return;
+    const typing = ["INPUT", "TEXTAREA", "SELECT"].includes(tag) || e.target?.isContentEditable;
+
+    if (mod && (e.key === "z" || e.key === "Z")) {
+      e.preventDefault();
+      if (e.shiftKey) redo();
+      else undo();
+      return;
+    }
+    if (mod && (e.key === "y" || e.key === "Y")) {
+      e.preventDefault();
+      redo();
+      return;
+    }
+
+    if (typing) return;
     if (e.key === "Escape") {
       if ($("lightbox").classList.contains("open")) $("lightbox").classList.remove("open");
       else if (state.mode === "present") setMode("edit");
