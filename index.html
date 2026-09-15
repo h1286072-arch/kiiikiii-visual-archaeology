@@ -885,7 +885,225 @@
       z-index: 40; pointer-events: none;
     }
 
-    /* ===== Instagram-style post modal ===== */
+    /* ===== 404 GIF collage (one frame · 4 loops · icon pages) ===== */
+    .mag-gif-block {
+      position: relative; margin: 28px 0 56px; padding-top: 8px;
+    }
+    .mag-gif-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .mag-gif-head .eyebrow {
+      font-family: var(--ui); font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--sky-deep);
+    }
+    .mag-gif-head h2 {
+      font-family: var(--display); font-size: clamp(22px, 3vw, 32px); font-weight: 400; margin: 4px 0 0;
+    }
+    .mag-gif-head .intro { color: var(--mute); font-size: 13px; width: 100%; }
+    .mag-gif-toolbar { display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    body.edit .mag-gif-toolbar { display: flex; }
+    .mag-gif-stage {
+      width: var(--gif-w, 42%); max-width: 420px; margin: 0 auto; position: relative;
+      padding: 8px; box-sizing: border-box;
+    }
+    .mag-gif-frame {
+      position: relative; width: 100%;
+      background: transparent; border-radius: 0; overflow: visible;
+    }
+    .mag-gif-cover {
+      position: relative; overflow: hidden; background: #0b0d12; cursor: zoom-in;
+      width: 100%; aspect-ratio: 9 / 16; border-radius: 4px;
+      box-shadow: 0 14px 36px rgba(20,30,50,.14);
+    }
+    .mag-gif-cover.empty {
+      display: grid; place-items: center; color: #889; font-size: 13px;
+      font-family: var(--ui); cursor: pointer; border: 1px dashed rgba(0,0,0,.18);
+      background: rgba(255,255,255,.35);
+    }
+    .mag-gif-cover img, .mag-gif-cover video {
+      width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
+      background: #0b0d12;
+    }
+    .mag-gif-cover .vid-badge { display: none; }
+    .mag-gif-nav {
+      appearance: none; position: absolute; top: 58%; z-index: 4;
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.95);
+      background: rgba(255,255,255,.92);
+      color: #222; cursor: pointer; padding: 0;
+      display: grid; place-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,.18);
+      transform: translateY(-50%);
+    }
+    .mag-gif-nav span {
+      font-family: var(--ui); font-size: 14px; font-weight: 600; line-height: 1;
+      margin-top: -1px;
+    }
+    .mag-gif-nav.prev { left: 10px; }
+    .mag-gif-nav.next { right: 10px; }
+    .mag-gif-nav:hover { background: #fff; }
+    .mag-gif-tools {
+      display: none; position: absolute; top: 6px; left: 6px; gap: 4px; z-index: 5;
+    }
+    body.edit .mag-gif-tools { display: flex; }
+    .mag-gif-tools button {
+      appearance: none; border: none; background: rgba(15,18,24,.75); color: #fff;
+      border-radius: 8px; padding: 4px 8px; font-size: 10px; font-family: var(--ui);
+    }
+    .mag-gif-tools .danger { background: rgba(127,29,29,.85); }
+    .mag-gif-frame .rh {
+      display: none; position: absolute; width: 14px; height: 14px; z-index: 6;
+      background: #111; border: 2px solid #fff; border-radius: 3px;
+    }
+    body.edit .mag-gif-frame .rh { display: block; }
+    .mag-gif-frame .rh-nw { left: -6px; top: -6px; cursor: nwse-resize; }
+    .mag-gif-frame .rh-ne { right: -6px; top: -6px; cursor: nesw-resize; }
+    .mag-gif-frame .rh-sw { left: -6px; bottom: -6px; cursor: nesw-resize; }
+    .mag-gif-frame .rh-se { right: -6px; bottom: -6px; cursor: nwse-resize; }
+    .mag-gif-dots {
+      display: flex; justify-content: center; gap: 7px; margin-top: 12px; min-height: 10px;
+    }
+    .mag-gif-dot {
+      appearance: none; border: none; padding: 0; width: 7px; height: 7px;
+      border-radius: 50%; background: rgba(0,0,0,.22); cursor: pointer;
+    }
+    .mag-gif-dot.on { background: var(--accent, #2a5cff); transform: scale(1.15); }
+    .mag-gif-dot.add {
+      width: auto; min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 999px; background: #111; color: #fff;
+      font-size: 12px; line-height: 1; font-family: var(--ui);
+    }
+    .mag-gif-dot.add:hover { background: var(--accent, #2a5cff); }
+
+    /* ===== 404 Flip book (spread) ===== */
+    .mag-book-block { margin: 12px 0 80px; }
+    .mag-book-head { margin-bottom: 16px; max-width: 520px; }
+    .mag-book-head .eyebrow {
+      font-family: var(--ui); font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--sky-deep);
+    }
+    .mag-book-head h2 {
+      font-family: var(--display); font-size: clamp(24px, 3.4vw, 36px); font-weight: 400; margin: 6px 0 0;
+    }
+    .mag-book-toolbar { display: none; gap: 6px; flex-wrap: wrap; margin: 10px 0 14px; }
+    body.edit .mag-book-toolbar { display: flex; }
+    .mag-book-stage {
+      width: min(980px, 100%); margin: 0 auto; position: relative;
+    }
+    .mag-book-spread {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      position: relative;
+      box-shadow: 0 22px 60px rgba(40,50,80,.16);
+      border-radius: 2px;
+      overflow: visible;
+      background: #ddd;
+      transition: transform .45s cubic-bezier(.2,.7,.2,1), opacity .3s ease;
+    }
+    .mag-book-spread.flip-next {
+      transform: perspective(1400px) rotateY(-12deg); opacity: .75;
+    }
+    .mag-book-spread.flip-prev {
+      transform: perspective(1400px) rotateY(12deg); opacity: .75;
+    }
+    .mag-book-page {
+      position: relative; width: 100%;
+      aspect-ratio: 3 / 4; max-height: 68vh;
+      background:
+        radial-gradient(circle at 1px 1px, rgba(120,130,150,.22) 1px, transparent 0) 0 0 / 18px 18px,
+        #fbfbfc;
+      overflow: hidden;
+    }
+    .mag-book-page.left {
+      border-right: 1px solid rgba(0,0,0,.08);
+      box-shadow: inset -10px 0 18px rgba(0,0,0,.04);
+    }
+    .mag-book-page.right {
+      box-shadow: inset 10px 0 18px rgba(0,0,0,.03);
+    }
+    .mag-book-stars {
+      position: absolute; right: 14px; top: 12px; width: 72px; height: 60px;
+      pointer-events: none; z-index: 1;
+    }
+    .mag-book-stars span {
+      position: absolute; width: 12px; height: 12px; background: #c5c9d4;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      opacity: .85;
+    }
+    .mag-book-media-wrap {
+      position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
+      width: var(--book-w, 72%); z-index: 2;
+    }
+    .mag-book-media {
+      position: relative; width: 100%; border: 2px solid #7c3aed;
+      background: #fff; box-shadow: 0 8px 24px rgba(80,60,140,.12);
+      cursor: zoom-in;
+    }
+    .mag-book-media img, .mag-book-media video {
+      width: 100%; height: auto; display: block;
+      object-fit: contain; max-height: 48vh;
+    }
+    body.edit .mag-book-media { cursor: default; }
+    .mag-book-media .rh {
+      display: none; position: absolute; width: 14px; height: 14px;
+      background: #111; border-radius: 3px; z-index: 4;
+    }
+    body.edit .mag-book-media .rh { display: block; }
+    .mag-book-media .rh-se { right: -7px; bottom: -7px; cursor: nwse-resize; }
+    .mag-book-media .rh-e { right: -7px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+    .mag-book-tools {
+      display: none; position: absolute; top: 8px; left: 8px; gap: 4px; z-index: 5;
+    }
+    body.edit .mag-book-tools { display: flex; }
+    .mag-book-tools button {
+      appearance: none; border: none; background: rgba(15,18,24,.78); color: #fff;
+      border-radius: 8px; padding: 4px 8px; font-size: 10px; font-family: var(--ui);
+    }
+    .mag-book-tools .danger { background: rgba(127,29,29,.85); }
+    .mag-book-num {
+      position: absolute; z-index: 2;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 12px; color: #666;
+    }
+    .mag-book-page.left .mag-book-num { left: 18px; bottom: 48px; }
+    .mag-book-page.right .mag-book-num { right: 18px; bottom: 48px; }
+    .mag-book-credit {
+      position: absolute; left: 18px; bottom: 16px; z-index: 2;
+      font-family: var(--ui); font-size: 11px; color: #888;
+    }
+    .mag-book-page .mag-float { z-index: 6; }
+    body.edit .mag-book-page.placing-book-text { cursor: crosshair; }
+    /* page-corner curls */
+    .mag-book-curl {
+      position: absolute; bottom: 0; width: 64px; height: 64px; z-index: 12;
+      cursor: pointer; border: none; padding: 0; appearance: none; background: transparent;
+    }
+    .mag-book-curl::before {
+      content: ""; position: absolute; inset: 0;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.18));
+    }
+    .mag-book-curl.next {
+      right: 0;
+    }
+    .mag-book-curl.next::before {
+      background:
+        linear-gradient(225deg, transparent 48%, #d4d4da 48%, #ececf0 62%, #f7f7f9 62%);
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+    .mag-book-curl.prev {
+      left: 0;
+    }
+    .mag-book-curl.prev::before {
+      background:
+        linear-gradient(135deg, transparent 48%, #d4d4da 48%, #ececf0 62%, #f7f7f9 62%);
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+    .mag-book-curl:hover::before { filter: brightness(1.05) drop-shadow(0 3px 8px rgba(0,0,0,.22)); }
+    .mag-book-curl:disabled { opacity: .25; pointer-events: none; }
+    @media (max-width: 720px) {
+      .mag-book-spread { grid-template-columns: 1fr; }
+      .mag-book-page.left { border-right: none; border-bottom: 1px solid rgba(0,0,0,.08); }
+    }
     .ig-modal {
       position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.72);
       display: none; place-items: center; padding: 24px 16px;
@@ -1002,7 +1220,7 @@
     <div class="tool-row" style="margin-top:8px">
       <button class="tab" type="button" id="btnPlaceText">空白处加文字</button>
     </div>
-    <div class="note">全站编辑：点文字改文案；选中图后 ⌘C / ⌘V 复制粘贴替换；也可从系统剪贴板粘贴图片。拖角可缩放（露出原图）。Jams 为货架 → 点进详情大图。<br>404：轮播下是贴纸墙；编辑可加图/视频、换图、拖排序；点图放大可切下一张。<br>Guides：右侧按钮切换主题；编辑可加主题按钮、图片/GIF/视频、拖排序、换图、改文案。<br>⌘Z 撤回</div>
+    <div class="note">全站编辑：点文字改文案；选中图后 ⌘C / ⌘V 复制粘贴替换；也可从系统剪贴板粘贴图片。拖角可缩放（露出原图）。Jams 为货架 → 点进详情大图。<br>404：贴纸墙 + Loop 一框四格（小图标翻页 / 拖四角调尺寸）+ 双页书本（页脚卷边翻页）。<br>Guides：右侧按钮切换主题；编辑可加主题按钮、图片/GIF/视频、拖排序、换图、改文案。<br>⌘Z 撤回</div>
   </aside>
 
   <button class="fab-edit" id="fabEdit" type="button">编辑</button>

@@ -1,6 +1,6 @@
 /* Interactive site — Home / Jams / 404 / Guides / Web / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v14-guides-themes";
+  const STORAGE_KEY = "kiiikiii-site-v20-merge-other-pc";
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [
@@ -20,6 +20,7 @@
     dragFrom: null,
     ig: null, // { postId, slide }
     placingText: false,
+    placingBookText: false,
     heroTimer: null,
     productId: null,
     selectedMedia: null,
@@ -78,8 +79,10 @@
       v.src = src;
       if (poster) v.poster = poster;
       v.muted = opts.muted !== false;
+      if (v.muted) v.setAttribute("muted", "");
       v.loop = opts.loop !== false;
       v.playsInline = true;
+      v.setAttribute("playsinline", "");
       v.autoplay = opts.autoplay !== false;
       if (opts.controls) v.controls = true;
       // still try to freeze on first frame if no poster yet
@@ -218,6 +221,35 @@
       if (typeof f.w !== "number") f.w = 20;
       if (f.text == null) f.text = "新文字";
     });
+
+    if (!page.gifRow) page.gifRow = { title: "404 · Loop Clips", intro: "", items: [] };
+    if (!page.gifRow.items) page.gifRow.items = [];
+    if (page.gifRow.title == null) page.gifRow.title = "404 · Loop Clips";
+    if (page.gifRow.intro == null) page.gifRow.intro = "单封面 · 左右翻页 · 拖四角调尺寸";
+    if (!page.gifRow.frame) page.gifRow.frame = { w: 42 };
+    if (typeof page.gifRow.frame.w !== "number") page.gifRow.frame.w = 42;
+    if (typeof page.gifRow.activePage !== "number") page.gifRow.activePage = 0;
+    page.gifRow.items.forEach((it) => {
+      if (!it.type) it.type = isVideoMedia(it) ? "video" : "image";
+    });
+    const gifLen = page.gifRow.items.length || 0;
+    if (gifLen === 0) page.gifRow.activePage = 0;
+    else if (page.gifRow.activePage < 0 || page.gifRow.activePage >= gifLen) page.gifRow.activePage = 0;
+
+    if (!page.book) page.book = { title: "404 Photo Book", credit: "*Designed By KiiiKiii", active: 0, pages: [] };
+    if (!page.book.pages) page.book.pages = [];
+    if (page.book.title == null) page.book.title = "404 Photo Book";
+    if (page.book.credit == null) page.book.credit = "*Designed By KiiiKiii";
+    if (typeof page.book.active !== "number") page.book.active = 0;
+    // active = spread index (0-based); each spread shows 2 pages
+    page.book.pages.forEach((pg) => {
+      ensureFrame(pg);
+      if (typeof pg.frame.w !== "number") pg.frame.w = 72;
+      ensureFloats(pg);
+      if (!pg.type) pg.type = isVideoMedia(pg) ? "video" : "image";
+    });
+    const spreadCount = Math.max(1, Math.ceil((page.book.pages.length || 0) / 2) || 1);
+    if (page.book.active < 0 || page.book.active >= spreadCount) page.book.active = 0;
 
     // keep posts for IG modal compatibility
     if (page.posts && page.posts.length) {
@@ -872,6 +904,465 @@
     igModal.appendChild(shell);
   }
 
+  function render404GifRow(page, mk) {
+    const gifRow = page.gifRow;
+    if (!gifRow.frame) gifRow.frame = { w: 42 };
+    if (typeof gifRow.activePage !== "number") gifRow.activePage = 0;
+    const items = gifRow.items || [];
+    const count = items.length;
+    gifRow.activePage = count ? clamp(gifRow.activePage, 0, count - 1) : 0;
+    const item = count ? items[gifRow.activePage] : null;
+
+    const gifBlock = document.createElement("div");
+    gifBlock.className = "mag-gif-block";
+
+    const gifHead = document.createElement("div");
+    gifHead.className = "mag-gif-head";
+    const gifEye = document.createElement("div");
+    gifEye.className = "eyebrow";
+    gifEye.textContent = "404 · Motion";
+    const gifTitle = document.createElement("h2");
+    editable(gifTitle, gifRow.title || "Loop Clips", (v) => { gifRow.title = v; saveQuiet(); });
+    const gifIntro = document.createElement("div");
+    gifIntro.className = "intro";
+    editable(gifIntro, gifRow.intro || "单封面 · 左右翻页 · 拖四角调尺寸", (v) => { gifRow.intro = v; saveQuiet(); });
+    gifHead.append(gifEye, gifTitle, gifIntro);
+
+    const gifToolbar = document.createElement("div");
+    gifToolbar.className = "mag-gif-toolbar";
+    const addGif = () => {
+      state.replaceTarget = { __404GifItem: true };
+      fileImage.click();
+    };
+    gifToolbar.append(
+      mk("+ 新增动图", addGif),
+      mk("+ 新增视频", () => {
+        state.replaceTarget = { __404GifItem: true };
+        fileVideo.click();
+      })
+    );
+
+    const stage = document.createElement("div");
+    stage.className = "mag-gif-stage";
+    stage.style.setProperty("--gif-w", `${clamp(gifRow.frame.w, 28, 100)}%`);
+
+    const frame = document.createElement("div");
+    frame.className = "mag-gif-frame";
+
+    const cover = document.createElement("article");
+    cover.className = "mag-gif-cover";
+    const gallery = items.filter((it) => it.src).map((it) => ({
+      src: it.src, type: isVideoMedia(it) ? "video" : "image"
+    }));
+
+    if (item?.src) {
+      appendMediaNode(cover, item, {
+        cover: false, muted: true, loop: true, autoplay: true, lazy: false, alt: ""
+      });
+      const v = cover.querySelector("video");
+      if (v) {
+        v.muted = true;
+        v.setAttribute("muted", "");
+        v.playsInline = true;
+        v.play?.().catch(() => {});
+      }
+      cover.addEventListener("click", (e) => {
+        if (e.target.closest("button, .rh")) return;
+        if (state.edit) { state.selectedMedia = item; return; }
+        const idx = gallery.findIndex((g) => g.src === item.src);
+        openLightboxGallery(gallery, idx < 0 ? 0 : idx);
+      });
+      if (state.edit) {
+        const tools = document.createElement("div");
+        tools.className = "mag-gif-tools";
+        const add = document.createElement("button");
+        add.type = "button"; add.textContent = "+";
+        add.title = "新增动图";
+        add.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = { __404GifItem: true };
+          fileImage.click();
+        });
+        const repl = document.createElement("button");
+        repl.type = "button"; repl.textContent = "换";
+        repl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = item;
+          (isVideoMedia(item) ? fileVideo : fileImage).click();
+        });
+        const del = document.createElement("button");
+        del.type = "button"; del.className = "danger"; del.textContent = "删";
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          items.splice(gifRow.activePage, 1);
+          if (gifRow.activePage >= items.length) gifRow.activePage = Math.max(0, items.length - 1);
+          saveQuiet();
+          render();
+        });
+        tools.append(add, repl, del);
+        cover.appendChild(tools);
+      }
+    } else if (state.edit) {
+      cover.classList.add("empty");
+      cover.textContent = "+ 添加动图";
+      cover.addEventListener("click", () => {
+        state.replaceTarget = { __404GifItem: true };
+        fileImage.click();
+      });
+    } else {
+      cover.classList.add("empty");
+      cover.textContent = "暂无动图";
+    }
+    frame.appendChild(cover);
+
+    const goTo = (next) => {
+      if (!count) return;
+      const n = ((next % count) + count) % count;
+      if (n === gifRow.activePage) return;
+      gifRow.activePage = n;
+      saveQuiet();
+      render();
+    };
+
+    if (count > 1) {
+      const prev = document.createElement("button");
+      prev.type = "button";
+      prev.className = "mag-gif-nav prev";
+      prev.setAttribute("aria-label", "上一张");
+      prev.innerHTML = "<span>&lt;</span>";
+      prev.addEventListener("click", (e) => { e.stopPropagation(); goTo(gifRow.activePage - 1); });
+
+      const next = document.createElement("button");
+      next.type = "button";
+      next.className = "mag-gif-nav next";
+      next.setAttribute("aria-label", "下一张");
+      next.innerHTML = "<span>&gt;</span>";
+      next.addEventListener("click", (e) => { e.stopPropagation(); goTo(gifRow.activePage + 1); });
+
+      frame.append(prev, next);
+    }
+
+    if (state.edit) {
+      ["nw", "ne", "sw", "se"].forEach((pos) => {
+        const h = document.createElement("div");
+        h.className = `rh rh-${pos}`;
+        h.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const startX = e.clientX;
+          const startW = gifRow.frame.w;
+          const parentW = gifBlock.clientWidth || 800;
+          const sign = (pos === "nw" || pos === "sw") ? -1 : 1;
+          const onMove = (ev) => {
+            gifRow.frame.w = clamp(startW + sign * ((ev.clientX - startX) / parentW) * 100 * 1.4, 28, 100);
+            stage.style.setProperty("--gif-w", `${gifRow.frame.w}%`);
+          };
+          const onUp = () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            saveQuiet();
+          };
+          window.addEventListener("pointermove", onMove);
+          window.addEventListener("pointerup", onUp);
+        });
+        frame.appendChild(h);
+      });
+    }
+    stage.appendChild(frame);
+
+    const dots = document.createElement("div");
+    dots.className = "mag-gif-dots";
+    if (count > 1) {
+      items.forEach((_, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "mag-gif-dot" + (i === gifRow.activePage ? " on" : "");
+        dot.setAttribute("aria-label", `第 ${i + 1} 张`);
+        dot.addEventListener("click", () => goTo(i));
+        dots.appendChild(dot);
+      });
+    }
+    if (state.edit) {
+      const addDot = document.createElement("button");
+      addDot.type = "button";
+      addDot.className = "mag-gif-dot add";
+      addDot.setAttribute("aria-label", "新增动图");
+      addDot.textContent = "+";
+      addDot.addEventListener("click", () => {
+        state.replaceTarget = { __404GifItem: true };
+        fileImage.click();
+      });
+      dots.appendChild(addDot);
+    }
+
+    gifBlock.append(gifHead, gifToolbar, stage, dots);
+    return gifBlock;
+  }
+
+  function fillBookSheet(sheet, pg, pageIndex, pages, book, side) {
+    sheet.className = `mag-book-page ${side}` + (state.placingBookText && state.edit ? " placing-book-text" : "");
+    const starBox = document.createElement("div");
+    starBox.className = "mag-book-stars";
+    [[70, 8], [40, 28], [12, 10], [55, 48]].forEach(([l, t], i) => {
+      const s = document.createElement("span");
+      s.style.left = `${l}%`;
+      s.style.top = `${t}%`;
+      s.style.transform = `scale(${0.7 + (i % 3) * 0.35})`;
+      starBox.appendChild(s);
+    });
+    sheet.appendChild(starBox);
+
+    if (pg) {
+      ensureFrame(pg);
+      if (typeof pg.frame.w !== "number") pg.frame.w = 72;
+      const mediaWrap = document.createElement("div");
+      mediaWrap.className = "mag-book-media-wrap";
+      mediaWrap.style.setProperty("--book-w", `${clamp(pg.frame.w, 28, 92)}%`);
+      const media = document.createElement("div");
+      media.className = "mag-book-media";
+      appendMediaNode(media, pg, {
+        cover: !!(pg.poster && isVideoMedia(pg)),
+        muted: true, loop: true, autoplay: true, lazy: false
+      });
+      media.addEventListener("click", () => {
+        if (state.edit) { state.selectedMedia = pg; return; }
+        if (!pg.src) return;
+        const gal = pages.filter((p) => p.src).map((p) => ({
+          src: p.src, type: isVideoMedia(p) ? "video" : "image"
+        }));
+        const idx = gal.findIndex((g) => g.src === pg.src);
+        openLightboxGallery(gal, idx < 0 ? 0 : idx);
+      });
+      if (state.edit) {
+        const tools = document.createElement("div");
+        tools.className = "mag-book-tools";
+        const repl = document.createElement("button");
+        repl.type = "button"; repl.textContent = "换";
+        repl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = pg;
+          fileImage.click();
+        });
+        const replVid = document.createElement("button");
+        replVid.type = "button"; replVid.textContent = "视频";
+        replVid.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = pg;
+          fileVideo.click();
+        });
+        const del = document.createElement("button");
+        del.type = "button"; del.className = "danger"; del.textContent = "删";
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          pages.splice(pageIndex, 1);
+          book.active = Math.max(0, Math.min(book.active, Math.ceil(pages.length / 2) - 1));
+          saveQuiet();
+          render();
+        });
+        tools.append(repl, replVid, del);
+        media.appendChild(tools);
+
+        const se = document.createElement("div");
+        se.className = "rh rh-se";
+        const ee = document.createElement("div");
+        ee.className = "rh rh-e";
+        const startResize = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const startX = e.clientX;
+          const startW = pg.frame.w;
+          const sheetW = sheet.clientWidth || 400;
+          const onMove = (ev) => {
+            pg.frame.w = clamp(startW + ((ev.clientX - startX) / sheetW) * 100 * 1.6, 28, 92);
+            mediaWrap.style.setProperty("--book-w", `${pg.frame.w}%`);
+          };
+          const onUp = () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            saveQuiet();
+          };
+          window.addEventListener("pointermove", onMove);
+          window.addEventListener("pointerup", onUp);
+        };
+        se.addEventListener("pointerdown", startResize);
+        ee.addEventListener("pointerdown", startResize);
+        media.append(se, ee);
+      }
+      mediaWrap.appendChild(media);
+      sheet.appendChild(mediaWrap);
+
+      ensureFloats(pg);
+      (pg.floats || []).forEach((f, fi) => {
+        const el = document.createElement("div");
+        el.className = "mag-float";
+        el.style.left = `${f.x}%`;
+        el.style.top = `${f.y}%`;
+        el.style.width = `${f.w || 22}%`;
+        const body = document.createElement("div");
+        body.className = "mag-float-body";
+        editable(body, f.text || "", (v) => { f.text = v; saveQuiet(); });
+        el.appendChild(body);
+        if (state.edit) {
+          const grip = document.createElement("span");
+          grip.className = "float-grip";
+          grip.textContent = "⋮⋮";
+          const del = document.createElement("button");
+          del.type = "button"; del.className = "float-del"; del.textContent = "×";
+          del.addEventListener("click", (e) => {
+            e.stopPropagation();
+            pg.floats.splice(fi, 1);
+            saveQuiet();
+            render();
+          });
+          el.append(grip, del);
+          grip.addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            el.classList.add("dragging");
+            const rect = sheet.getBoundingClientRect();
+            const onMove = (ev) => {
+              f.x = clamp(((ev.clientX - rect.left) / rect.width) * 100 - 2, 0, 90);
+              f.y = clamp(((ev.clientY - rect.top) / rect.height) * 100 - 2, 0, 92);
+              el.style.left = `${f.x}%`;
+              el.style.top = `${f.y}%`;
+            };
+            const onUp = () => {
+              el.classList.remove("dragging");
+              window.removeEventListener("pointermove", onMove);
+              window.removeEventListener("pointerup", onUp);
+              saveQuiet();
+            };
+            window.addEventListener("pointermove", onMove);
+            window.addEventListener("pointerup", onUp);
+          });
+        }
+        sheet.appendChild(el);
+      });
+    } else {
+      const empty = document.createElement("div");
+      empty.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;color:#99a;font-size:13px;";
+      empty.textContent = state.edit ? "空页 · 可再加书页" : "";
+      sheet.appendChild(empty);
+    }
+
+    const num = document.createElement("div");
+    num.className = "mag-book-num";
+    num.textContent = pageIndex >= 0 ? `(${String(pageIndex + 1).padStart(2, "0")})` : "";
+    sheet.appendChild(num);
+
+    if (side === "left") {
+      const credit = document.createElement("div");
+      credit.className = "mag-book-credit";
+      editable(credit, book.credit || "*Designed By KiiiKiii", (v) => { book.credit = v; saveQuiet(); });
+      sheet.appendChild(credit);
+    }
+
+    sheet.addEventListener("click", (e) => {
+      if (!state.edit || !state.placingBookText) return;
+      if (e.target.closest(".mag-float, .mag-book-media, button, [contenteditable=true], .rh, .mag-book-curl")) return;
+      if (!pg) return;
+      const rect = sheet.getBoundingClientRect();
+      const x = clamp(((e.clientX - rect.left) / rect.width) * 100, 4, 80);
+      const y = clamp(((e.clientY - rect.top) / rect.height) * 100, 4, 88);
+      ensureFloats(pg);
+      pg.floats.push({ id: uid("float"), text: "新文字", x, y, w: 24 });
+      state.placingBookText = false;
+      saveQuiet();
+      render();
+      toast("已在书页添加文字");
+    });
+  }
+
+  function render404Book(page, mk) {
+    const book = page.book;
+    const bookBlock = document.createElement("div");
+    bookBlock.className = "mag-book-block";
+
+    const bookHead = document.createElement("div");
+    bookHead.className = "mag-book-head";
+    const bookEye = document.createElement("div");
+    bookEye.className = "eyebrow";
+    bookEye.textContent = "404 · Photo Book";
+    const bookTitle = document.createElement("h2");
+    editable(bookTitle, book.title || "Photo Book", (v) => { book.title = v; saveQuiet(); });
+    bookHead.append(bookEye, bookTitle);
+
+    const bookToolbar = document.createElement("div");
+    bookToolbar.className = "mag-book-toolbar";
+    bookToolbar.append(
+      mk("+ 书页", () => {
+        state.replaceTarget = { __404BookPage: true, prefer: "image" };
+        fileImage.click();
+      }),
+      mk(state.placingBookText ? "取消书页文字" : "+ 书页文字", () => {
+        state.placingBookText = !state.placingBookText;
+        state.placingText = false;
+        render();
+        if (state.placingBookText) toast("点击书页空白处放置文字");
+      })
+    );
+
+    const stageBook = document.createElement("div");
+    stageBook.className = "mag-book-stage";
+    const pages = book.pages || [];
+    const spreadCount = Math.max(1, Math.ceil(pages.length / 2) || 1);
+    let spread = clamp(book.active || 0, 0, spreadCount - 1);
+    book.active = spread;
+
+    const renderSpread = () => {
+      stageBook.innerHTML = "";
+      const spreadEl = document.createElement("div");
+      spreadEl.className = "mag-book-spread";
+      const leftIdx = spread * 2;
+      const rightIdx = leftIdx + 1;
+      const left = document.createElement("div");
+      const right = document.createElement("div");
+      fillBookSheet(left, pages[leftIdx], pages[leftIdx] ? leftIdx : -1, pages, book, "left");
+      fillBookSheet(right, pages[rightIdx], pages[rightIdx] ? rightIdx : -1, pages, book, "right");
+      spreadEl.append(left, right);
+
+      const curlPrev = document.createElement("button");
+      curlPrev.type = "button";
+      curlPrev.className = "mag-book-curl prev";
+      curlPrev.title = "翻到上一开";
+      curlPrev.disabled = spread <= 0;
+      curlPrev.addEventListener("click", (e) => {
+        e.stopPropagation();
+        flipSpread(spread - 1, "prev");
+      });
+      const curlNext = document.createElement("button");
+      curlNext.type = "button";
+      curlNext.className = "mag-book-curl next";
+      curlNext.title = "翻到下一开";
+      curlNext.disabled = spread >= spreadCount - 1;
+      curlNext.addEventListener("click", (e) => {
+        e.stopPropagation();
+        flipSpread(spread + 1, "next");
+      });
+      spreadEl.append(curlPrev, curlNext);
+      stageBook.appendChild(spreadEl);
+    };
+
+    const flipSpread = (next, dir) => {
+      if (next < 0 || next >= spreadCount) return;
+      const el = stageBook.querySelector(".mag-book-spread");
+      const go = () => {
+        spread = next;
+        book.active = spread;
+        saveQuiet();
+        renderSpread();
+      };
+      if (el) {
+        el.classList.add(dir === "prev" ? "flip-prev" : "flip-next");
+        setTimeout(go, 260);
+      } else go();
+    };
+
+    renderSpread();
+    bookBlock.append(bookHead, bookToolbar, stageBook);
+    return bookBlock;
+  }
+
   function render404Page() {
     clearHeroTimer();
     const page = ensure404Posts(state.site.pages["404"]);
@@ -912,6 +1403,7 @@
       }),
       mk(state.placingText ? "取消放置文字" : "+ 空白处加文字", () => {
         state.placingText = !state.placingText;
+        state.placingBookText = false;
         render();
         if (state.placingText) toast("点击页面空白处放置文字");
       }),
@@ -922,6 +1414,20 @@
       mk("+ 轮播视频", () => {
         state.replaceTarget = { __404HeroSlide: true, prefer: "video" };
         fileVideo.click();
+      }),
+      mk("+ Loop 动图", () => {
+        state.replaceTarget = { __404GifItem: true };
+        fileImage.click();
+      }),
+      mk("+ 书页图片", () => {
+        state.replaceTarget = { __404BookPage: true, prefer: "image" };
+        fileImage.click();
+      }),
+      mk(state.placingBookText ? "取消书页文字" : "+ 书页文字", () => {
+        state.placingBookText = !state.placingBookText;
+        state.placingText = false;
+        render();
+        if (state.placingBookText) toast("点击书页空白处放置文字");
       })
     );
 
@@ -1208,7 +1714,7 @@
     // click blank to place text
     wrap.addEventListener("click", (e) => {
       if (!state.edit || !state.placingText) return;
-      if (e.target.closest(".mag-float, .mag-pin, .mag-hero-stage, .mag-head, .mag-toolbar, button, [contenteditable=true]")) return;
+      if (e.target.closest(".mag-float, .mag-pin, .mag-hero-stage, .mag-head, .mag-toolbar, .mag-gif-block, .mag-book-block, button, [contenteditable=true]")) return;
       const rect = wrap.getBoundingClientRect();
       const x = clamp(((e.clientX - rect.left) / rect.width) * 100, 2, 85);
       const y = clamp(((e.clientY - rect.top) / rect.height) * 100, 2, 90);
@@ -1219,7 +1725,9 @@
       toast("已添加文字，点文字直接编辑；拖 ⋮⋮ 移动位置");
     });
 
-    wrap.append(head, toolbar, stage, scrap);
+    const gifBlock = render404GifRow(page, mk);
+    const bookBlock = render404Book(page, mk);
+    wrap.append(head, toolbar, stage, scrap, gifBlock, bookBlock);
     view.appendChild(wrap);
     return view;
   }
@@ -1311,6 +1819,7 @@
     $("#btnView").classList.toggle("active", !on);
     if (!on) {
       state.placingText = false;
+      state.placingBookText = false;
       state.selectedMedia = null;
     }
     render();
@@ -2146,7 +2655,7 @@
       jams: state.productId
         ? "Jams 详情 · 大图概念照 · 拖角缩放 / 粘贴换图"
         : "Jams · 货架可拖卡片排序（编辑模式）· 点进详情",
-      "404": "404 · 顶部轮播 + 下方贴纸墙（悬停拨动 / 点击放大切图）",
+      "404": "404 · 轮播 + 贴纸墙 + 单封面 Loop + 双页书本",
       guides: "Guides · 右侧按钮切换主题图文；可新增主题 / 图片 / 视频",
       web: "Web · 官网设计（支持图/视频/链接）",
       talk: "Talk · 团队 / 器材 / 回忆杀"
@@ -2992,6 +3501,41 @@
         saveQuiet();
         render();
         toast(type === "video" ? "已加入轮播视频" : "已加入顶部轮播");
+        return;
+      }
+
+      if (target.__404GifItem) {
+        const page = ensure404Posts(state.site.pages["404"]);
+        page.gifRow.items.push({
+          id: uid("gif"),
+          type,
+          src: dataUrl,
+          poster,
+          title: ""
+        });
+        page.gifRow.activePage = page.gifRow.items.length - 1;
+        state.replaceTarget = null;
+        saveQuiet();
+        render();
+        toast(type === "video" ? "已新增视频动图" : "已新增动图");
+        return;
+      }
+
+      if (target.__404BookPage) {
+        const page = ensure404Posts(state.site.pages["404"]);
+        page.book.pages.push({
+          id: uid("book"),
+          type,
+          src: dataUrl,
+          poster,
+          frame: { w: 70, fit: "contain" },
+          floats: []
+        });
+        page.book.active = Math.floor((page.book.pages.length - 1) / 2);
+        state.replaceTarget = null;
+        saveQuiet();
+        render();
+        toast("已添加书页");
         return;
       }
 

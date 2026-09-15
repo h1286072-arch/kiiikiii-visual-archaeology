@@ -51,369 +51,6 @@ window.DEFAULT_SITE = {
     ]
   },
   "pages": {
-    "jams": {
-      "nav": "Jams",
-      "title": "Items",
-      "shopName": "KiiiKiii Garage Sale",
-      "eyebrow": "Comeback 01 · Jams",
-      "intro": "UNCUT GEM 概念货架。点进商品看成员概念照。",
-      "protection": "All purchase through KiiiKiii Airlines are covered by TiiKiii Protection.",
-      "floats": [],
-      "products": [
-        {
-          "id": "jam-concept-hq-a",
-          "title": "UNCUT GEM Concept A",
-          "seller": "starship",
-          "price": "1 Soft Landing",
-          "cover": "assets/albums/uncut-gem/official/10_concept_01.jpg",
-          "details": [
-            {
-              "id": "d-cA-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_01.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cA-2",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_02.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cA-3",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_03.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cA-4",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_04.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cA-5",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_05.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cA-6",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_06.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-concept-hq-b",
-          "title": "UNCUT GEM Concept B",
-          "seller": "starship",
-          "price": "1 Pic Together",
-          "cover": "assets/albums/uncut-gem/official/10_concept_07.jpg",
-          "details": [
-            {
-              "id": "d-cB-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_07.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cB-2",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_08.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cB-3",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_09.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cB-4",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_10.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cB-5",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_11.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-cB-6",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/10_concept_12.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-jacket-behind",
-          "title": "Jacket Behind",
-          "seller": "naver update",
-          "price": "1 Soft Flash",
-          "cover": "assets/albums/uncut-gem/official/11_jacket_behind_01.jpg",
-          "details": [
-            {
-              "id": "d-jb-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/11_jacket_behind_01.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-jb-2",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/11_jacket_behind_02.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-jb-3",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/11_jacket_behind_03.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-jb-4",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/11_jacket_behind_04.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-jb-5",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/11_jacket_behind_05.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-jb-6",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/official/11_jacket_behind_06.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-ido-me",
-          "title": "I DO ME Right",
-          "seller": "imnotjenjen",
-          "price": "1 Pic Together",
-          "cover": "assets/albums/uncut-gem/01_kiiikiii_I_DO_ME_I_DO_me_right_1_imnotjenjen.jpg",
-          "details": [
-            {
-              "id": "d-ido-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/01_kiiikiii_I_DO_ME_I_DO_me_right_1_imnotjenjen.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-ido-2",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/02_kiiikiii_I_DO_ME_I_DO_me_right_2_imnotjenjen.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-debut-study",
-          "title": "Debut Teaser Study",
-          "seller": "70岁的奶奶风流一夜",
-          "price": "1 Real Laugh",
-          "cover": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
-          "details": [
-            {
-              "id": "d-debut-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-debut-2",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/04_kiiikiii出道预告视觉分析_2_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-debut-3",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/05_kiiikiii出道预告视觉分析_3_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-debut-4",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/06_kiiikiii出道预告视觉分析_5_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-starship",
-          "title": "Starship Concept",
-          "seller": "剋泡种子选手",
-          "price": "1 Big Hug",
-          "cover": "assets/albums/uncut-gem/07_星船新女团出道专概念照公开_1_剋泡种子选手.jpg",
-          "details": [
-            {
-              "id": "d-star-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/07_星船新女团出道专概念照公开_1_剋泡种子选手.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-travel-1",
-          "title": "Group Travel Shot",
-          "seller": "搬了个",
-          "price": "1 Soft Landing",
-          "cover": "assets/albums/uncut-gem/08_群像旅拍赛道被你闯进来了_kiiikiii_1_搬了个.jpg",
-          "details": [
-            {
-              "id": "d-tv-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/08_群像旅拍赛道被你闯进来了_kiiikiii_1_搬了个.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-tv-2",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/09_群像旅拍赛道被你闯进来了_kiiikiii_2_搬了个.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-uncut-loose",
-          "title": "Uncut Gem Loose",
-          "seller": "kiiikiii",
-          "price": "1 Wild Girl",
-          "cover": "assets/albums/uncut-gem/02_kiiikiii_I_DO_ME_I_DO_me_right_2_imnotjenjen.jpg",
-          "details": [
-            {
-              "id": "d-loose-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/02_kiiikiii_I_DO_ME_I_DO_me_right_2_imnotjenjen.jpg",
-              "frame": {
-                "w": 92,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-friendship",
-          "title": "Friendship Fits",
-          "seller": "crew",
-          "price": "Sold Out",
-          "locked": true,
-          "cover": "assets/albums/uncut-gem/06_kiiikiii出道预告视觉分析_5_70岁的奶奶风流一夜.jpg",
-          "details": [
-            {
-              "id": "d-fr-1",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/06_kiiikiii出道预告视觉分析_5_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            }
-          ],
-          "floats": []
-        }
-      ]
-    },
     "404": {
       "nav": "404",
       "title": "404 (New Era)",
@@ -781,19 +418,19 @@ window.DEFAULT_SITE = {
         {
           "id": "hero-4",
           "type": "image",
-          "src": "assets/albums/404/05_404-2.jpg"
+          "src": "assets/imported/from-other-pc/001_hero-4_src_33f49dae14.jpg"
         },
         {
           "id": "hero-5",
           "type": "image",
-          "src": "assets/albums/404/06_404-3.jpg"
+          "src": "assets/imported/from-other-pc/002_hero-5_src_dfbd7d0fc5.jpg"
         }
       ],
       "heroInterval": 3200,
       "tiles": [
         {
           "id": "tile-1",
-          "src": "assets/albums/404/07_404-4.jpg",
+          "src": "assets/imported/from-other-pc/003_tile-1_src_7909b28d94.jpg",
           "type": "image",
           "text": "造型",
           "dot": "#f9a8d4"
@@ -807,7 +444,7 @@ window.DEFAULT_SITE = {
         },
         {
           "id": "tile-3",
-          "src": "assets/albums/404/09_404-6.jpg",
+          "src": "assets/imported/from-other-pc/004_tile-3_src_9f3f89a113.jpg",
           "type": "image",
           "text": "Y2K",
           "dot": "#86efac"
@@ -835,7 +472,7 @@ window.DEFAULT_SITE = {
         },
         {
           "id": "tile-7",
-          "src": "assets/albums/404/15_newera头围尺寸_1_清汤大老爷.jpg",
+          "src": "assets/imported/from-other-pc/005_tile-7_src_4cca1cc24f.jpg",
           "type": "image",
           "text": "New Era",
           "dot": "#fde047"
@@ -843,21 +480,482 @@ window.DEFAULT_SITE = {
       ],
       "floats": [
         {
-          "id": "float-1",
-          "text": "404 = 新时代入口",
-          "x": 72,
-          "y": 18,
-          "w": 22
-        },
-        {
           "id": "float-2",
           "text": "点空白可加字\n（编辑模式）",
-          "x": 8,
-          "y": 62,
+          "x": 1.7366548042704624,
+          "y": 74.04862548382685,
           "w": 18
         }
       ],
-      "scrapCaption": "[living my soft life <<3]"
+      "scrapCaption": "[living my soft life <<3]",
+      "gifRow": {
+        "title": "404 · Loop Clips",
+        "intro": "单封面 · 左右翻页 · 拖四角调尺寸",
+        "items": [
+          {
+            "id": "gif-01_loop",
+            "type": "video",
+            "src": "assets/albums/404/gif-row/01_loop.mp4",
+            "poster": ""
+          },
+          {
+            "id": "gif-02_loop",
+            "type": "video",
+            "src": "assets/albums/404/gif-row/02_loop.mp4",
+            "poster": ""
+          },
+          {
+            "id": "gif-03_loop",
+            "type": "video",
+            "src": "assets/albums/404/gif-row/03_loop.mp4",
+            "poster": ""
+          },
+          {
+            "id": "gif-04_loop",
+            "type": "video",
+            "src": "assets/albums/404/gif-row/04_loop.mp4",
+            "poster": ""
+          }
+        ],
+        "frame": {
+          "w": 42
+        },
+        "activePage": 0
+      },
+      "book": {
+        "title": "404 Photo Book",
+        "credit": "*Designed By KiiiKiii",
+        "active": 0,
+        "pages": [
+          {
+            "id": "book-01_book",
+            "type": "image",
+            "src": "assets/albums/404/book/01_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-02_book",
+            "type": "image",
+            "src": "assets/albums/404/book/02_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-03_book",
+            "type": "image",
+            "src": "assets/albums/404/book/03_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-04_book",
+            "type": "image",
+            "src": "assets/albums/404/book/04_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-05_book",
+            "type": "image",
+            "src": "assets/albums/404/book/05_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-06_book",
+            "type": "image",
+            "src": "assets/albums/404/book/06_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-07_book",
+            "type": "image",
+            "src": "assets/albums/404/book/07_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-08_book",
+            "type": "image",
+            "src": "assets/albums/404/book/08_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          }
+        ]
+      }
+    },
+    "jams": {
+      "nav": "Jams",
+      "title": "Items",
+      "shopName": "KiiiKiii Garage Sale",
+      "eyebrow": "Comeback 01 · Jams",
+      "intro": "UNCUT GEM 概念货架。点进商品看成员概念照。",
+      "protection": "All purchase through KiiiKiii Airlines are covered by TiiKiii Protection.",
+      "floats": [],
+      "products": [
+        {
+          "id": "jam-concept-hq-a",
+          "title": "UNCUT GEM Concept A",
+          "seller": "starship",
+          "price": "1 Soft Landing",
+          "cover": "assets/albums/uncut-gem/official/10_concept_01.jpg",
+          "details": [
+            {
+              "id": "d-cA-1",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_01.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cA-2",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_02.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cA-3",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_03.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cA-4",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_04.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cA-5",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_05.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cA-6",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_06.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            }
+          ],
+          "floats": []
+        },
+        {
+          "id": "jam-ido-me",
+          "title": "I DO ME Right",
+          "seller": "imnotjenjen",
+          "price": "1 Pic Together",
+          "cover": "assets/imported/from-other-pc/006_jam-ido-me_cover_534439a6cd.jpg",
+          "details": [
+            {
+              "id": "d-ido-1",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/007_d-ido-1_src_534439a6cd.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              },
+              "poster": ""
+            },
+            {
+              "id": "d-ido-2",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/008_d-ido-2_src_272d21dc91.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            }
+          ],
+          "floats": []
+        },
+        {
+          "id": "jam-concept-hq-b",
+          "title": "UNCUT GEM Concept B",
+          "seller": "starship",
+          "price": "1 Pic Together",
+          "cover": "assets/imported/from-other-pc/009_jam-concept-hq-b_cover_f41c4dceb0.jpg",
+          "details": [
+            {
+              "id": "d-cB-2",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_08.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cB-3",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_09.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cB-4",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_10.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cB-1",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/010_d-cB-1_src_f41c4dceb0.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              },
+              "poster": ""
+            },
+            {
+              "id": "d-cB-5",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_11.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-cB-6",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/10_concept_12.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu00g2sy-6vwt",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/011_detail-mu00g2sy-6vwt_src_63b2465454.jpg",
+              "poster": "",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu00g6xb-toa6",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/012_detail-mu00g6xb-toa6_src_f41c4dceb0.jpg",
+              "poster": "",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu00gacz-h82w",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/013_detail-mu00gacz-h82w_src_7a0db5bded.jpg",
+              "poster": "",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            }
+          ],
+          "floats": []
+        },
+        {
+          "id": "jam-travel-1",
+          "title": "Group Travel Shot",
+          "seller": "搬了个",
+          "price": "1 Soft Landing",
+          "cover": "assets/albums/uncut-gem/08_群像旅拍赛道被你闯进来了_kiiikiii_1_搬了个.jpg",
+          "details": [
+            {
+              "id": "d-tv-1",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/08_群像旅拍赛道被你闯进来了_kiiikiii_1_搬了个.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-tv-2",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/09_群像旅拍赛道被你闯进来了_kiiikiii_2_搬了个.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu00l0cz-iv9e",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/014_detail-mu00l0cz-iv9e_src_8554f2602c.jpg",
+              "poster": "",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            }
+          ],
+          "floats": []
+        },
+        {
+          "id": "jam-debut-study",
+          "title": "Debut Teaser Study",
+          "seller": "70岁的奶奶风流一夜",
+          "price": "1 Real Laugh",
+          "cover": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
+          "details": [
+            {
+              "id": "d-debut-1",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-debut-2",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/04_kiiikiii出道预告视觉分析_2_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-debut-3",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/05_kiiikiii出道预告视觉分析_3_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-debut-4",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/06_kiiikiii出道预告视觉分析_5_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            }
+          ],
+          "floats": []
+        },
+        {
+          "id": "jam-jacket-behind",
+          "title": "Jacket Behind",
+          "seller": "naver update",
+          "price": "1 Soft Flash",
+          "cover": "assets/albums/uncut-gem/official/11_jacket_behind_01.jpg",
+          "details": [
+            {
+              "id": "d-jb-1",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/11_jacket_behind_01.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-jb-2",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/11_jacket_behind_02.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-jb-3",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/11_jacket_behind_03.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-jb-4",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/11_jacket_behind_04.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-jb-5",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/11_jacket_behind_05.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-jb-6",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/official/11_jacket_behind_06.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            }
+          ],
+          "floats": []
+        }
+      ]
     },
     "guides": {
       "nav": "Guides",
@@ -866,135 +964,51 @@ window.DEFAULT_SITE = {
       "intro": "点右侧按钮切换主题：免税店策划 / Pop off MV 视觉……每个主题独立图文，可继续新增。",
       "items": [
         {
-          "id": "duty-01_duty_free",
+          "id": "guides-mtzzxwtn-vul1",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/01_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 3,
-            "rows": 2
-          }
-        },
-        {
-          "id": "duty-02_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/02_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 3,
-            "rows": 2
-          }
-        },
-        {
-          "id": "duty-03_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/03_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 4,
-            "rows": 1
-          }
-        },
-        {
-          "id": "duty-04_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/04_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 2,
-            "rows": 2
-          }
-        },
-        {
-          "id": "duty-05_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/05_duty_free.webp",
+          "src": "assets/imported/from-other-pc/015_guides-mtzzxwtn-vul1_src_512a881f0d.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
             "cols": 6,
-            "rows": 2
+            "rows": 3
           }
         },
         {
-          "id": "duty-06_duty_free",
+          "id": "guides-mtzzydpf-a13w",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/06_duty_free.webp",
+          "src": "assets/imported/from-other-pc/016_guides-mtzzydpf-a13w_src_22eb02df63.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
-            "cols": 3,
-            "rows": 2
+            "cols": 6,
+            "rows": 3
           }
         },
         {
-          "id": "duty-07_duty_free",
+          "id": "guides-mtzzzcy4-fw2o",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/07_duty_free.webp",
+          "src": "assets/imported/from-other-pc/017_guides-mtzzzcy4-fw2o_src_1693b934c5.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
-            "cols": 3,
-            "rows": 1
+            "cols": 6,
+            "rows": 3
           }
         },
         {
-          "id": "duty-08_duty_free",
+          "id": "guides-mu00uivf-xv91",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/08_duty_free.webp",
+          "src": "assets/imported/from-other-pc/018_guides-mu00uivf-xv91_src_ff7e7a91e1.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
-            "cols": 3,
-            "rows": 1
-          }
-        },
-        {
-          "id": "duty-09_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/09_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 3,
-            "rows": 2
-          }
-        },
-        {
-          "id": "duty-10_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/10_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 3,
-            "rows": 2
-          }
-        },
-        {
-          "id": "duty-11_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/11_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 4,
-            "rows": 1
-          }
-        },
-        {
-          "id": "duty-12_duty_free",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/duty-free-xhs/12_duty_free.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 2,
-            "rows": 2
+            "cols": 6,
+            "rows": 3
           }
         }
       ],
@@ -1026,25 +1040,14 @@ window.DEFAULT_SITE = {
           ],
           "items": [
             {
-              "id": "duty-01_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/01_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 2
-              }
-            },
-            {
               "id": "duty-02_duty_free",
               "type": "image",
               "src": "assets/albums/why-kiiikiii/duty-free-xhs/02_duty_free.webp",
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 3,
-                "rows": 2
+                "cols": 6,
+                "rows": 5
               }
             },
             {
@@ -1054,8 +1057,8 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 4,
-                "rows": 1
+                "cols": 6,
+                "rows": 5
               }
             },
             {
@@ -1065,96 +1068,8 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 2,
-                "rows": 2
-              }
-            },
-            {
-              "id": "duty-05_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/05_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
                 "cols": 6,
-                "rows": 2
-              }
-            },
-            {
-              "id": "duty-06_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/06_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 2
-              }
-            },
-            {
-              "id": "duty-07_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/07_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 1
-              }
-            },
-            {
-              "id": "duty-08_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/08_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 1
-              }
-            },
-            {
-              "id": "duty-09_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/09_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 2
-              }
-            },
-            {
-              "id": "duty-10_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/10_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 2
-              }
-            },
-            {
-              "id": "duty-11_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/11_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 4,
-                "rows": 1
-              }
-            },
-            {
-              "id": "duty-12_duty_free",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/duty-free-xhs/12_duty_free.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 2,
-                "rows": 2
+                "rows": 5
               }
             }
           ]
@@ -1322,18 +1237,82 @@ window.DEFAULT_SITE = {
               }
             }
           ]
+        },
+        {
+          "id": "panel-mtzyno11-bvgu",
+          "button": "Bluehour",
+          "style": "dark",
+          "eyebrow": "Comeback 03 · Guides",
+          "title": "新主题",
+          "intro": "在此写主题简介；左侧可插入对应图片 / GIF / 视频。",
+          "sections": [
+            {
+              "heading": "CONCEPT",
+              "body": "编辑这段文字。"
+            }
+          ],
+          "items": [
+            {
+              "id": "guides-mtzzxwtn-vul1",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/019_guides-mtzzxwtn-vul1_src_512a881f0d.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mtzzydpf-a13w",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/020_guides-mtzzydpf-a13w_src_22eb02df63.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mtzzzcy4-fw2o",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/021_guides-mtzzzcy4-fw2o_src_1693b934c5.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mu00uivf-xv91",
+              "type": "image",
+              "src": "assets/imported/from-other-pc/022_guides-mu00uivf-xv91_src_ff7e7a91e1.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 3
+              }
+            }
+          ]
         }
       ],
-      "activePanel": 0,
+      "activePanel": 2,
       "tour": {
         "eyebrow": "KiiiKiii Travel · WHYKiiiiKIII TOUR",
         "title": "Hey Hi Tour Guide",
-        "active": 1,
+        "active": 0,
         "slides": [
           {
             "id": "tour-1",
             "type": "image",
-            "src": "assets/albums/why-kiiikiii/19_kiiikiii_EP最新概念图_13_Adele_estetica.jpg",
+            "src": "assets/imported/from-other-pc/023_tour-1_src_a71ceed837.jpg",
             "label": "Hey Hi Guide by Haum",
             "time": "08:00 - 12:00",
             "caption": ""
@@ -1341,7 +1320,7 @@ window.DEFAULT_SITE = {
           {
             "id": "tour-2",
             "type": "image",
-            "src": "assets/albums/why-kiiikiii/20_kiiikiii_EP最新概念图_15_Adele_estetica.jpg",
+            "src": "assets/imported/from-other-pc/024_tour-2_src_76d42ef7c8.jpg",
             "label": "Hey Hi Tour Guide by Jiyu",
             "time": "08:00 - 12:00",
             "caption": ""
@@ -1349,7 +1328,7 @@ window.DEFAULT_SITE = {
           {
             "id": "tour-3",
             "type": "image",
-            "src": "assets/albums/why-kiiikiii/21_kiiikiii_EP最新概念图_1_Adele_estetica.jpg",
+            "src": "assets/imported/from-other-pc/025_tour-3_src_285125703a.jpg",
             "label": "Hey Hi Guide by Sui",
             "time": "12:30 - 15:00",
             "caption": ""
@@ -1357,7 +1336,7 @@ window.DEFAULT_SITE = {
           {
             "id": "tour-4",
             "type": "image",
-            "src": "assets/albums/why-kiiikiii/22_kiiikiii_EP最新概念图_6_Adele_estetica.jpg",
+            "src": "assets/imported/from-other-pc/026_tour-4_src_6258b23189.jpg",
             "label": "Hey Hi Guide by Leesol",
             "time": "15:30 - 18:00",
             "caption": ""
@@ -1365,17 +1344,9 @@ window.DEFAULT_SITE = {
           {
             "id": "tour-5",
             "type": "image",
-            "src": "assets/albums/why-kiiikiii/23_kiiikiii_EP最新概念图_9_Adele_estetica.jpg",
+            "src": "assets/imported/from-other-pc/027_tour-5_src_fc0818a87a.jpg",
             "label": "Hey Hi Guide by Kya",
             "time": "18:30 - 21:00",
-            "caption": ""
-          },
-          {
-            "id": "tour-6",
-            "type": "image",
-            "src": "assets/albums/why-kiiikiii/26_最懂KiiiKiii美学的_一直是她们自己_1_VSN.jpg",
-            "label": "Hey Hi Guide by Crew",
-            "time": "All day",
             "caption": ""
           }
         ],
@@ -1394,7 +1365,11 @@ window.DEFAULT_SITE = {
           "src": "assets/albums/why-kiiikiii/24_kk官网更新会不会太潮了_1_吃完睡觉.jpg",
           "title": "WhyKiiiKiii 官网",
           "caption": "可替换为录屏 / GIF",
-          "href": "https://www.kiiikiii.kr/"
+          "href": "https://www.kiiikiii.kr/",
+          "layout": {
+            "size": "m",
+            "frame": "auto"
+          }
         },
         {
           "id": "web-2",
@@ -1402,7 +1377,11 @@ window.DEFAULT_SITE = {
           "src": "assets/xhs/jam_04.webp",
           "title": "Jam 主题站（占位）",
           "caption": "待插入 UNCUT GEM 官网图",
-          "href": ""
+          "href": "",
+          "layout": {
+            "size": "m",
+            "frame": "auto"
+          }
         },
         {
           "id": "web-3",
@@ -1410,7 +1389,11 @@ window.DEFAULT_SITE = {
           "src": "assets/albums/404/01_404-1.jpg",
           "title": "404 官网（占位）",
           "caption": "待插入 404 官网图",
-          "href": ""
+          "href": "",
+          "layout": {
+            "size": "m",
+            "frame": "auto"
+          }
         },
         {
           "id": "web-4",
@@ -1418,7 +1401,11 @@ window.DEFAULT_SITE = {
           "src": "",
           "title": "kiiikiii.kr",
           "caption": "官方入口",
-          "href": "https://www.kiiikiii.kr/"
+          "href": "https://www.kiiikiii.kr/",
+          "layout": {
+            "size": "m",
+            "frame": "auto"
+          }
         },
         {
           "id": "web-5",
@@ -1427,9 +1414,14 @@ window.DEFAULT_SITE = {
           "poster": "assets/xhs/concept_cover.webp",
           "title": "官网录屏（占位）",
           "caption": "双击添加 mp4 / webm / gif",
-          "href": ""
+          "href": "",
+          "layout": {
+            "size": "m",
+            "frame": "auto"
+          }
         }
-      ]
+      ],
+      "floats": []
     },
     "talk": {
       "nav": "Talk",
