@@ -1,6 +1,6 @@
 /* Interactive site — Home / Jams / 404 / Guides / Web / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v20-merge-other-pc";
+  const STORAGE_KEY = "kiiikiii-site-v21-site2-export";
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [

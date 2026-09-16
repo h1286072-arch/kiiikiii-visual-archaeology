@@ -413,7 +413,7 @@ window.DEFAULT_SITE = {
         {
           "id": "hero-3",
           "type": "image",
-          "src": "assets/albums/404/04_404-12.jpg"
+          "src": "assets/imported/from-site2/001_hero-3_src_6d40cc0948.jpg"
         },
         {
           "id": "hero-4",
@@ -423,70 +423,70 @@ window.DEFAULT_SITE = {
         {
           "id": "hero-5",
           "type": "image",
-          "src": "assets/imported/from-other-pc/002_hero-5_src_dfbd7d0fc5.jpg"
+          "src": "assets/imported/from-site2/002_hero-5_src_33c9af0b45.jpg"
         }
       ],
       "heroInterval": 3200,
       "tiles": [
         {
           "id": "tile-1",
-          "src": "assets/imported/from-other-pc/003_tile-1_src_7909b28d94.jpg",
+          "src": "assets/imported/from-site2/003_tile-1_src_2adef4f566.jpg",
           "type": "image",
           "text": "造型",
           "dot": "#f9a8d4"
         },
         {
           "id": "tile-2",
-          "src": "assets/albums/404/08_404-5.jpg",
+          "src": "assets/imported/from-site2/004_tile-2_src_6fcca5c555.jpg",
           "type": "image",
           "text": "道具",
           "dot": "#c4b5fd"
         },
         {
           "id": "tile-3",
-          "src": "assets/imported/from-other-pc/004_tile-3_src_9f3f89a113.jpg",
+          "src": "assets/imported/from-site2/005_tile-3_src_4be4c4ebee.jpg",
           "type": "image",
           "text": "Y2K",
           "dot": "#86efac"
         },
         {
           "id": "tile-4",
-          "src": "assets/albums/404/10_404-7.jpg",
+          "src": "assets/imported/from-site2/006_tile-4_src_13f77a3025.jpg",
           "type": "image",
           "text": "直闪",
           "dot": "#d6d3d1"
         },
         {
           "id": "tile-5",
-          "src": "assets/albums/404/13_404-生活感.jpg",
+          "src": "assets/imported/from-site2/007_tile-5_src_d1f7a340e1.jpg",
           "type": "image",
           "text": "生活感",
           "dot": "#67e8f9"
         },
         {
           "id": "tile-6",
-          "src": "assets/albums/404/14_404-造型.jpg",
+          "src": "assets/imported/from-site2/008_tile-6_src_7909b28d94.jpg",
           "type": "image",
           "text": "街头",
           "dot": "#f87171"
         },
         {
           "id": "tile-7",
-          "src": "assets/imported/from-other-pc/005_tile-7_src_4cca1cc24f.jpg",
+          "src": "assets/imported/from-site2/009_tile-7_src_86625fbdb4.jpg",
           "type": "image",
           "text": "New Era",
           "dot": "#fde047"
-        }
-      ],
-      "floats": [
+        },
         {
-          "id": "float-2",
-          "text": "点空白可加字\n（编辑模式）",
-          "x": 1.7366548042704624,
-          "y": 74.04862548382685,
-          "w": 18
+          "id": "tile-mu2fho0g-zhdm",
+          "src": "assets/imported/from-site2/010_tile-mu2fho0g-zhdm_src_83d3496066.jpg",
+          "type": "image",
+          "poster": "",
+          "text": "",
+          "dot": "#fda4af"
         }
       ],
+      "floats": [],
       "scrapCaption": "[living my soft life <<3]",
       "gifRow": {
         "title": "404 · Loop Clips",
@@ -515,10 +515,45 @@ window.DEFAULT_SITE = {
             "type": "video",
             "src": "assets/albums/404/gif-row/04_loop.mp4",
             "poster": ""
+          },
+          {
+            "id": "gif-mu2cl32i-szhs",
+            "type": "video",
+            "src": "assets/imported/from-site2/011_gif-mu2cl32i-szhs_src_542af4ab78.mp4",
+            "poster": "assets/imported/from-site2/012_gif-mu2cl32i-szhs_poster_f87f43b845.jpg",
+            "title": ""
+          },
+          {
+            "id": "gif-mu2cl722-v4nf",
+            "type": "video",
+            "src": "assets/imported/from-site2/013_gif-mu2cl722-v4nf_src_1688b356f5.mp4",
+            "poster": "assets/imported/from-site2/014_gif-mu2cl722-v4nf_poster_fa65018ede.jpg",
+            "title": ""
+          },
+          {
+            "id": "gif-mu2clc24-depy",
+            "type": "video",
+            "src": "assets/imported/from-site2/015_gif-mu2clc24-depy_src_9b1764c05f.mp4",
+            "poster": "assets/imported/from-site2/016_gif-mu2clc24-depy_poster_756899a7c6.jpg",
+            "title": ""
+          },
+          {
+            "id": "gif-mu2cle1j-hb9f",
+            "type": "video",
+            "src": "assets/imported/from-site2/017_gif-mu2cle1j-hb9f_src_d24ac67544.mp4",
+            "poster": "assets/imported/from-site2/018_gif-mu2cle1j-hb9f_poster_64126e6d04.jpg",
+            "title": ""
+          },
+          {
+            "id": "gif-mu2cljbl-fd9x",
+            "type": "video",
+            "src": "assets/imported/from-site2/019_gif-mu2cljbl-fd9x_src_e009072cca.mp4",
+            "poster": "assets/imported/from-site2/020_gif-mu2cljbl-fd9x_poster_2d82eb3c39.jpg",
+            "title": ""
           }
         ],
         "frame": {
-          "w": 42
+          "w": 42.82110969387755
         },
         "activePage": 0
       },
@@ -619,6 +654,52 @@ window.DEFAULT_SITE = {
       "protection": "All purchase through KiiiKiii Airlines are covered by TiiKiii Protection.",
       "floats": [],
       "products": [
+        {
+          "id": "jam-debut-study",
+          "title": "Debut Teaser Study",
+          "seller": "70岁的奶奶风流一夜",
+          "price": "1 Real Laugh",
+          "cover": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
+          "details": [
+            {
+              "id": "d-debut-1",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-debut-2",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/04_kiiikiii出道预告视觉分析_2_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-debut-3",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/05_kiiikiii出道预告视觉分析_3_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-debut-4",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/06_kiiikiii出道预告视觉分析_5_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            }
+          ],
+          "floats": []
+        },
         {
           "id": "jam-concept-hq-a",
           "title": "UNCUT GEM Concept A",
@@ -841,48 +922,22 @@ window.DEFAULT_SITE = {
                 "w": 100,
                 "fit": "contain"
               }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-debut-study",
-          "title": "Debut Teaser Study",
-          "seller": "70岁的奶奶风流一夜",
-          "price": "1 Real Laugh",
-          "cover": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
-          "details": [
+            },
             {
-              "id": "d-debut-1",
+              "id": "detail-mu2fajxh-m3me",
               "type": "image",
-              "src": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
+              "src": "assets/imported/from-site2/021_detail-mu2fajxh-m3me_src_68760ab2b5.jpg",
+              "poster": "",
               "frame": {
                 "w": 100,
                 "fit": "contain"
               }
             },
             {
-              "id": "d-debut-2",
+              "id": "detail-mu2favie-h7q8",
               "type": "image",
-              "src": "assets/albums/uncut-gem/04_kiiikiii出道预告视觉分析_2_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-debut-3",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/05_kiiikiii出道预告视觉分析_3_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-debut-4",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/06_kiiikiii出道预告视觉分析_5_70岁的奶奶风流一夜.jpg",
+              "src": "assets/imported/from-site2/022_detail-mu2favie-h7q8_src_0ede5c7cfd.jpg",
+              "poster": "",
               "frame": {
                 "w": 100,
                 "fit": "contain"
@@ -964,10 +1019,9 @@ window.DEFAULT_SITE = {
       "intro": "点右侧按钮切换主题：免税店策划 / Pop off MV 视觉……每个主题独立图文，可继续新增。",
       "items": [
         {
-          "id": "guides-mtzzxwtn-vul1",
+          "id": "popoff-04_popoff",
           "type": "image",
-          "src": "assets/imported/from-other-pc/015_guides-mtzzxwtn-vul1_src_512a881f0d.jpg",
-          "poster": "",
+          "src": "assets/imported/from-site2/023_popoff-04_popoff_src_80eb3c742b.gif",
           "title": "",
           "caption": "",
           "puzzle": {
@@ -976,10 +1030,31 @@ window.DEFAULT_SITE = {
           }
         },
         {
-          "id": "guides-mtzzydpf-a13w",
+          "id": "popoff-05_popoff",
           "type": "image",
-          "src": "assets/imported/from-other-pc/016_guides-mtzzydpf-a13w_src_22eb02df63.jpg",
-          "poster": "",
+          "src": "assets/albums/why-kiiikiii/popoff-xhs/05_popoff.webp",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 5
+          }
+        },
+        {
+          "id": "popoff-06_popoff",
+          "type": "image",
+          "src": "assets/albums/why-kiiikiii/popoff-xhs/06_popoff.webp",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 5
+          }
+        },
+        {
+          "id": "popoff-07_popoff",
+          "type": "image",
+          "src": "assets/albums/why-kiiikiii/popoff-xhs/07_popoff.webp",
           "title": "",
           "caption": "",
           "puzzle": {
@@ -988,10 +1063,20 @@ window.DEFAULT_SITE = {
           }
         },
         {
-          "id": "guides-mtzzzcy4-fw2o",
+          "id": "popoff-08_popoff",
           "type": "image",
-          "src": "assets/imported/from-other-pc/017_guides-mtzzzcy4-fw2o_src_1693b934c5.jpg",
-          "poster": "",
+          "src": "assets/albums/why-kiiikiii/popoff-xhs/08_popoff.webp",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 4
+          }
+        },
+        {
+          "id": "popoff-09_popoff",
+          "type": "image",
+          "src": "assets/albums/why-kiiikiii/popoff-xhs/09_popoff.webp",
           "title": "",
           "caption": "",
           "puzzle": {
@@ -1000,10 +1085,32 @@ window.DEFAULT_SITE = {
           }
         },
         {
-          "id": "guides-mu00uivf-xv91",
+          "id": "popoff-10_popoff",
           "type": "image",
-          "src": "assets/imported/from-other-pc/018_guides-mu00uivf-xv91_src_ff7e7a91e1.jpg",
-          "poster": "",
+          "src": "assets/albums/why-kiiikiii/popoff-xhs/10_popoff.webp",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 4
+          }
+        },
+        {
+          "id": "guides-mu2daaj0-ba9p",
+          "type": "video",
+          "src": "assets/imported/from-site2/024_guides-mu2daaj0-ba9p_src_fcde216a96.mp4",
+          "poster": "assets/imported/from-site2/025_guides-mu2daaj0-ba9p_poster_3ec87a1df9.jpg",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 1
+          }
+        },
+        {
+          "id": "popoff-14_popoff",
+          "type": "image",
+          "src": "assets/albums/why-kiiikiii/popoff-xhs/14_popoff.webp",
           "title": "",
           "caption": "",
           "puzzle": {
@@ -1105,47 +1212,14 @@ window.DEFAULT_SITE = {
           ],
           "items": [
             {
-              "id": "popoff-01_popoff",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/popoff-xhs/01_popoff.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 2
-              }
-            },
-            {
-              "id": "popoff-02_popoff",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/popoff-xhs/02_popoff.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 3,
-                "rows": 2
-              }
-            },
-            {
-              "id": "popoff-03_popoff",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/popoff-xhs/03_popoff.webp",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 4,
-                "rows": 1
-              }
-            },
-            {
               "id": "popoff-04_popoff",
               "type": "image",
-              "src": "assets/albums/why-kiiikiii/popoff-xhs/04_popoff.webp",
+              "src": "assets/imported/from-site2/023_popoff-04_popoff_src_80eb3c742b.gif",
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 2,
-                "rows": 2
+                "cols": 6,
+                "rows": 3
               }
             },
             {
@@ -1156,7 +1230,7 @@ window.DEFAULT_SITE = {
               "caption": "",
               "puzzle": {
                 "cols": 6,
-                "rows": 2
+                "rows": 5
               }
             },
             {
@@ -1166,8 +1240,8 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 3,
-                "rows": 2
+                "cols": 6,
+                "rows": 5
               }
             },
             {
@@ -1177,8 +1251,8 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 3,
-                "rows": 1
+                "cols": 6,
+                "rows": 3
               }
             },
             {
@@ -1188,8 +1262,8 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 3,
-                "rows": 1
+                "cols": 6,
+                "rows": 4
               }
             },
             {
@@ -1199,8 +1273,8 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 3,
-                "rows": 2
+                "cols": 6,
+                "rows": 3
               }
             },
             {
@@ -1210,18 +1284,19 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 3,
-                "rows": 2
+                "cols": 6,
+                "rows": 4
               }
             },
             {
-              "id": "popoff-11_popoff",
-              "type": "image",
-              "src": "assets/albums/why-kiiikiii/popoff-xhs/11_popoff.webp",
+              "id": "guides-mu2daaj0-ba9p",
+              "type": "video",
+              "src": "assets/imported/from-site2/024_guides-mu2daaj0-ba9p_src_fcde216a96.mp4",
+              "poster": "assets/imported/from-site2/025_guides-mu2daaj0-ba9p_poster_3ec87a1df9.jpg",
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 4,
+                "cols": 6,
                 "rows": 1
               }
             },
@@ -1232,8 +1307,8 @@ window.DEFAULT_SITE = {
               "title": "",
               "caption": "",
               "puzzle": {
-                "cols": 2,
-                "rows": 2
+                "cols": 6,
+                "rows": 3
               }
             }
           ]
@@ -1303,11 +1378,11 @@ window.DEFAULT_SITE = {
           ]
         }
       ],
-      "activePanel": 2,
+      "activePanel": 1,
       "tour": {
         "eyebrow": "KiiiKiii Travel · WHYKiiiiKIII TOUR",
         "title": "Hey Hi Tour Guide",
-        "active": 0,
+        "active": 4,
         "slides": [
           {
             "id": "tour-1",
