@@ -642,6 +642,58 @@ window.DEFAULT_SITE = {
             },
             "floats": []
           }
+        ],
+        "frame": {
+          "w": 100
+        }
+      },
+      "splitRail": {
+        "title": "404 · Cinema Strip",
+        "intro": "上：固定动图/视频 · 下：横滑看图",
+        "feature": {
+          "id": "split-feature",
+          "type": "image",
+          "src": "assets/albums/404/split/01_travel_agency.gif",
+          "poster": "",
+          "aspect": "426/240"
+        },
+        "items": [
+          {
+            "id": "split-01",
+            "type": "image",
+            "src": "assets/albums/404/01_404-1.jpg",
+            "poster": ""
+          },
+          {
+            "id": "split-02",
+            "type": "image",
+            "src": "assets/albums/404/08_404-5.jpg",
+            "poster": ""
+          },
+          {
+            "id": "split-03",
+            "type": "image",
+            "src": "assets/albums/404/10_404-7.jpg",
+            "poster": ""
+          },
+          {
+            "id": "split-04",
+            "type": "image",
+            "src": "assets/albums/404/11_404-8.jpg",
+            "poster": ""
+          },
+          {
+            "id": "split-05",
+            "type": "image",
+            "src": "assets/albums/404/14_404-造型.jpg",
+            "poster": ""
+          },
+          {
+            "id": "split-06",
+            "type": "image",
+            "src": "assets/albums/404/17_KiiiKiii_404_New_Girl_2_十二点十八分.jpg",
+            "poster": ""
+          }
         ]
       }
     },
@@ -1425,78 +1477,10 @@ window.DEFAULT_SITE = {
             "caption": ""
           }
         ],
-        "floats": []
+        "floats": [],
+        "autoplay": true,
+        "interval": 3800
       }
-    },
-    "web": {
-      "nav": "Web",
-      "title": "官网设计",
-      "eyebrow": "Web · 三次回归",
-      "intro": "概念即交互。可插入官网截图、录屏、GIF、外链。素材可后续替换。",
-      "items": [
-        {
-          "id": "web-1",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/24_kk官网更新会不会太潮了_1_吃完睡觉.jpg",
-          "title": "WhyKiiiKiii 官网",
-          "caption": "可替换为录屏 / GIF",
-          "href": "https://www.kiiikiii.kr/",
-          "layout": {
-            "size": "m",
-            "frame": "auto"
-          }
-        },
-        {
-          "id": "web-2",
-          "type": "image",
-          "src": "assets/xhs/jam_04.webp",
-          "title": "Jam 主题站（占位）",
-          "caption": "待插入 UNCUT GEM 官网图",
-          "href": "",
-          "layout": {
-            "size": "m",
-            "frame": "auto"
-          }
-        },
-        {
-          "id": "web-3",
-          "type": "image",
-          "src": "assets/albums/404/01_404-1.jpg",
-          "title": "404 官网（占位）",
-          "caption": "待插入 404 官网图",
-          "href": "",
-          "layout": {
-            "size": "m",
-            "frame": "auto"
-          }
-        },
-        {
-          "id": "web-4",
-          "type": "link",
-          "src": "",
-          "title": "kiiikiii.kr",
-          "caption": "官方入口",
-          "href": "https://www.kiiikiii.kr/",
-          "layout": {
-            "size": "m",
-            "frame": "auto"
-          }
-        },
-        {
-          "id": "web-5",
-          "type": "video",
-          "src": "",
-          "poster": "assets/xhs/concept_cover.webp",
-          "title": "官网录屏（占位）",
-          "caption": "双击添加 mp4 / webm / gif",
-          "href": "",
-          "layout": {
-            "size": "m",
-            "frame": "auto"
-          }
-        }
-      ],
-      "floats": []
     },
     "talk": {
       "nav": "Talk",

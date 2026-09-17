@@ -1,6 +1,6 @@
-/* Interactive site — Home / Jams / 404 / Guides / Web / Talk */
+/* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v21-site2-export";
+  const STORAGE_KEY = "kiiikiii-site-v24-no-web";
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [
@@ -8,7 +8,6 @@
     { id: "jams", label: "Jams" },
     { id: "404", label: "404" },
     { id: "guides", label: "Guides" },
-    { id: "web", label: "Web" },
     { id: "talk", label: "Talk" }
   ];
 
@@ -22,6 +21,7 @@
     placingText: false,
     placingBookText: false,
     heroTimer: null,
+    tourTimer: null,
     productId: null,
     selectedMedia: null,
     clip: null, // { src, type }
@@ -250,6 +250,40 @@
     });
     const spreadCount = Math.max(1, Math.ceil((page.book.pages.length || 0) / 2) || 1);
     if (page.book.active < 0 || page.book.active >= spreadCount) page.book.active = 0;
+    if (!page.book.frame) page.book.frame = { w: 100 };
+    if (typeof page.book.frame.w !== "number") page.book.frame.w = 100;
+
+    if (!page.splitRail) {
+      page.splitRail = {
+        title: "404 · Cinema Strip",
+        intro: "上：固定动图/视频 · 下：横滑看图",
+        feature: {
+          id: "split-feature",
+          type: "image",
+          src: "assets/albums/404/split/01_travel_agency.gif",
+          poster: "",
+          aspect: "426/240"
+        },
+        items: [
+          { id: "split-01", type: "image", src: "assets/albums/404/01_404-1.jpg", poster: "" },
+          { id: "split-02", type: "image", src: "assets/albums/404/08_404-5.jpg", poster: "" },
+          { id: "split-03", type: "image", src: "assets/albums/404/10_404-7.jpg", poster: "" },
+          { id: "split-04", type: "image", src: "assets/albums/404/11_404-8.jpg", poster: "" },
+          { id: "split-05", type: "image", src: "assets/albums/404/14_404-造型.jpg", poster: "" },
+          { id: "split-06", type: "image", src: "assets/albums/404/17_KiiiKiii_404_New_Girl_2_十二点十八分.jpg", poster: "" }
+        ]
+      };
+    }
+    if (!page.splitRail.items) page.splitRail.items = [];
+    if (page.splitRail.title == null) page.splitRail.title = "404 · Cinema Strip";
+    if (page.splitRail.intro == null) page.splitRail.intro = "上：固定动图/视频 · 下：横滑看图";
+    if (!page.splitRail.feature) page.splitRail.feature = { id: uid("split"), type: "image", src: "", poster: "" };
+    if (!page.splitRail.feature.type) {
+      page.splitRail.feature.type = isVideoMedia(page.splitRail.feature) ? "video" : "image";
+    }
+    page.splitRail.items.forEach((it) => {
+      if (!it.type) it.type = isVideoMedia(it) ? "video" : "image";
+    });
 
     // keep posts for IG modal compatibility
     if (page.posts && page.posts.length) {
@@ -270,6 +304,13 @@
     if (state.heroTimer) {
       clearInterval(state.heroTimer);
       state.heroTimer = null;
+    }
+  }
+
+  function clearTourTimer() {
+    if (state.tourTimer) {
+      clearInterval(state.tourTimer);
+      state.tourTimer = null;
     }
   }
 
@@ -1275,6 +1316,7 @@
 
   function render404Book(page, mk) {
     const book = page.book;
+    if (!book.frame) book.frame = { w: 100 };
     const bookBlock = document.createElement("div");
     bookBlock.className = "mag-book-block";
 
@@ -1285,7 +1327,10 @@
     bookEye.textContent = "404 · Photo Book";
     const bookTitle = document.createElement("h2");
     editable(bookTitle, book.title || "Photo Book", (v) => { book.title = v; saveQuiet(); });
-    bookHead.append(bookEye, bookTitle);
+    const bookHint = document.createElement("div");
+    bookHint.className = "intro";
+    bookHint.textContent = "← → 键盘翻页 · 编辑模式拖四角等比缩放";
+    bookHead.append(bookEye, bookTitle, bookHint);
 
     const bookToolbar = document.createElement("div");
     bookToolbar.className = "mag-book-toolbar";
@@ -1304,6 +1349,7 @@
 
     const stageBook = document.createElement("div");
     stageBook.className = "mag-book-stage";
+    stageBook.style.setProperty("--book-stage-w", `${clamp(book.frame.w, 42, 100)}%`);
     const pages = book.pages || [];
     const spreadCount = Math.max(1, Math.ceil(pages.length / 2) || 1);
     let spread = clamp(book.active || 0, 0, spreadCount - 1);
@@ -1311,6 +1357,8 @@
 
     const renderSpread = () => {
       stageBook.innerHTML = "";
+      const frame = document.createElement("div");
+      frame.className = "mag-book-frame";
       const spreadEl = document.createElement("div");
       spreadEl.className = "mag-book-spread";
       const leftIdx = spread * 2;
@@ -1325,6 +1373,7 @@
       curlPrev.type = "button";
       curlPrev.className = "mag-book-curl prev";
       curlPrev.title = "翻到上一开";
+      curlPrev.setAttribute("aria-label", "翻到上一开");
       curlPrev.disabled = spread <= 0;
       curlPrev.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -1334,13 +1383,48 @@
       curlNext.type = "button";
       curlNext.className = "mag-book-curl next";
       curlNext.title = "翻到下一开";
+      curlNext.setAttribute("aria-label", "翻到下一开");
       curlNext.disabled = spread >= spreadCount - 1;
       curlNext.addEventListener("click", (e) => {
         e.stopPropagation();
         flipSpread(spread + 1, "next");
       });
       spreadEl.append(curlPrev, curlNext);
-      stageBook.appendChild(spreadEl);
+      frame.appendChild(spreadEl);
+
+      if (state.edit) {
+        ["nw", "ne", "sw", "se"].forEach((pos) => {
+          const h = document.createElement("div");
+          h.className = `rh rh-${pos}`;
+          h.addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const startW = book.frame.w;
+            const parentW = bookBlock.clientWidth || 900;
+            const signX = (pos === "nw" || pos === "sw") ? -1 : 1;
+            const signY = (pos === "nw" || pos === "ne") ? -1 : 1;
+            const onMove = (ev) => {
+              const dx = signX * ((ev.clientX - startX) / parentW) * 100;
+              const dy = signY * ((ev.clientY - startY) / parentW) * 100;
+              // proportional: average of both axes
+              book.frame.w = clamp(startW + (dx + dy) * 0.7, 42, 100);
+              stageBook.style.setProperty("--book-stage-w", `${book.frame.w}%`);
+            };
+            const onUp = () => {
+              window.removeEventListener("pointermove", onMove);
+              window.removeEventListener("pointerup", onUp);
+              saveQuiet();
+            };
+            window.addEventListener("pointermove", onMove);
+            window.addEventListener("pointerup", onUp);
+          });
+          frame.appendChild(h);
+        });
+      }
+
+      stageBook.appendChild(frame);
     };
 
     const flipSpread = (next, dir) => {
@@ -1358,9 +1442,203 @@
       } else go();
     };
 
+    // expose for keyboard handler
+    bookBlock._flipBook = (delta) => {
+      flipSpread(spread + delta, delta < 0 ? "prev" : "next");
+    };
+
     renderSpread();
     bookBlock.append(bookHead, bookToolbar, stageBook);
     return bookBlock;
+  }
+
+  function render404SplitRail(page, mk) {
+    const rail = page.splitRail;
+    const block = document.createElement("div");
+    block.className = "mag-split-block";
+
+    const head = document.createElement("div");
+    head.className = "mag-split-head";
+    const eye = document.createElement("div");
+    eye.className = "eyebrow";
+    eye.textContent = "404 · Cinema";
+    const title = document.createElement("h2");
+    editable(title, rail.title || "Cinema Strip", (v) => { rail.title = v; saveQuiet(); });
+    const intro = document.createElement("div");
+    intro.className = "intro";
+    editable(intro, rail.intro || "上：固定动图/视频 · 下：横滑看图", (v) => { rail.intro = v; saveQuiet(); });
+    head.append(eye, title, intro);
+
+    const toolbar = document.createElement("div");
+    toolbar.className = "mag-split-toolbar";
+    toolbar.append(
+      mk("换上方动图/视频", () => {
+        state.replaceTarget = rail.feature;
+        (isVideoMedia(rail.feature) ? fileVideo : fileImage).click();
+      }),
+      mk("+ 上方视频", () => {
+        state.replaceTarget = { __404SplitFeature: true, prefer: "video" };
+        fileVideo.click();
+      }),
+      mk("+ 下方图片", () => {
+        state.replaceTarget = { __404SplitItem: true };
+        fileImage.click();
+      })
+    );
+
+    const layout = document.createElement("div");
+    layout.className = "mag-split-layout";
+
+    const feature = document.createElement("article");
+    feature.className = "mag-split-feature";
+    const feat = rail.feature || {};
+    if (feat.aspect) {
+      feature.style.aspectRatio = String(feat.aspect).replace(":", " / ").replace("/", " / ");
+    } else if (feat.src && /\.gif$/i.test(feat.src)) {
+      feature.style.aspectRatio = "426 / 240";
+    }
+    if (feat.src) {
+      appendMediaNode(feature, feat, {
+        cover: false, muted: true, loop: true, autoplay: true, lazy: false, alt: ""
+      });
+      const media = feature.querySelector("img, video");
+      if (media) {
+        media.style.objectFit = "contain";
+        // read natural size when available to lock aspect
+        if (media.tagName === "IMG") {
+          const applyNatural = () => {
+            if (media.naturalWidth && media.naturalHeight) {
+              feature.style.aspectRatio = `${media.naturalWidth} / ${media.naturalHeight}`;
+              feat.aspect = `${media.naturalWidth}/${media.naturalHeight}`;
+            }
+          };
+          if (media.complete) applyNatural();
+          else media.addEventListener("load", applyNatural, { once: true });
+        }
+      }
+      const v = feature.querySelector("video");
+      if (v) {
+        v.muted = true;
+        v.setAttribute("muted", "");
+        v.playsInline = true;
+        v.play?.().catch(() => {});
+        v.addEventListener("loadedmetadata", () => {
+          if (v.videoWidth && v.videoHeight) {
+            feature.style.aspectRatio = `${v.videoWidth} / ${v.videoHeight}`;
+            feat.aspect = `${v.videoWidth}/${v.videoHeight}`;
+          }
+        }, { once: true });
+      }
+      feature.addEventListener("click", (e) => {
+        if (e.target.closest("button")) return;
+        if (state.edit) {
+          state.selectedMedia = feat;
+          state.replaceTarget = feat;
+          toast("已选中左侧媒体 · 可换图");
+          return;
+        }
+        openLightbox(feat.src, isVideoMedia(feat) ? "video" : "image");
+      });
+      if (state.edit) {
+        const tools = document.createElement("div");
+        tools.className = "mag-split-tools";
+        const repl = document.createElement("button");
+        repl.type = "button"; repl.textContent = "换";
+        repl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = feat;
+          fileImage.click();
+        });
+        tools.appendChild(repl);
+        feature.appendChild(tools);
+      }
+    } else if (state.edit) {
+      feature.classList.add("empty");
+      feature.textContent = "+ 添加左侧动图/视频";
+      feature.addEventListener("click", () => {
+        state.replaceTarget = { __404SplitFeature: true };
+        fileImage.click();
+      });
+    } else {
+      feature.classList.add("empty");
+      feature.textContent = "暂无";
+    }
+
+    const scroller = document.createElement("div");
+    scroller.className = "mag-split-scroller";
+    scroller.setAttribute("tabindex", "0");
+    const track = document.createElement("div");
+    track.className = "mag-split-track";
+    const items = rail.items || [];
+    const gallery = items.filter((it) => it.src).map((it) => ({
+      src: it.src, type: isVideoMedia(it) ? "video" : "image"
+    }));
+
+    items.forEach((item, i) => {
+      const card = document.createElement("article");
+      card.className = "mag-split-card";
+      if (item.src) {
+        appendMediaNode(card, item, {
+          cover: true, muted: true, loop: true, autoplay: false, lazy: true, alt: ""
+        });
+        card.addEventListener("click", (e) => {
+          if (e.target.closest("button")) return;
+          if (state.edit) {
+            state.selectedMedia = item;
+            return;
+          }
+          const idx = gallery.findIndex((g) => g.src === item.src);
+          openLightboxGallery(gallery, idx < 0 ? 0 : idx);
+        });
+        if (state.edit) {
+          const tools = document.createElement("div");
+          tools.className = "mag-split-tools";
+          const repl = document.createElement("button");
+          repl.type = "button"; repl.textContent = "换";
+          repl.addEventListener("click", (e) => {
+            e.stopPropagation();
+            state.replaceTarget = item;
+            fileImage.click();
+          });
+          const del = document.createElement("button");
+          del.type = "button"; del.className = "danger"; del.textContent = "删";
+          del.addEventListener("click", (e) => {
+            e.stopPropagation();
+            items.splice(i, 1);
+            saveQuiet();
+            render();
+          });
+          tools.append(repl, del);
+          card.appendChild(tools);
+        }
+      }
+      track.appendChild(card);
+    });
+
+    if (state.edit) {
+      const addCard = document.createElement("button");
+      addCard.type = "button";
+      addCard.className = "mag-split-card add";
+      addCard.textContent = "+";
+      addCard.addEventListener("click", () => {
+        state.replaceTarget = { __404SplitItem: true };
+        fileImage.click();
+      });
+      track.appendChild(addCard);
+    }
+
+    scroller.appendChild(track);
+    // drag-to-scroll hint / wheel horizontal
+    scroller.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        scroller.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    layout.append(feature, scroller);
+    block.append(head, toolbar, layout);
+    return block;
   }
 
   function render404Page() {
@@ -1417,6 +1695,14 @@
       }),
       mk("+ Loop 动图", () => {
         state.replaceTarget = { __404GifItem: true };
+        fileImage.click();
+      }),
+      mk("+ 上方动图", () => {
+        state.replaceTarget = { __404SplitFeature: true };
+        fileImage.click();
+      }),
+      mk("+ 下方横滑图", () => {
+        state.replaceTarget = { __404SplitItem: true };
         fileImage.click();
       }),
       mk("+ 书页图片", () => {
@@ -1714,7 +2000,7 @@
     // click blank to place text
     wrap.addEventListener("click", (e) => {
       if (!state.edit || !state.placingText) return;
-      if (e.target.closest(".mag-float, .mag-pin, .mag-hero-stage, .mag-head, .mag-toolbar, .mag-gif-block, .mag-book-block, button, [contenteditable=true]")) return;
+      if (e.target.closest(".mag-float, .mag-pin, .mag-hero-stage, .mag-head, .mag-toolbar, .mag-gif-block, .mag-split-block, .mag-book-block, button, [contenteditable=true]")) return;
       const rect = wrap.getBoundingClientRect();
       const x = clamp(((e.clientX - rect.left) / rect.width) * 100, 2, 85);
       const y = clamp(((e.clientY - rect.top) / rect.height) * 100, 2, 90);
@@ -1726,8 +2012,9 @@
     });
 
     const gifBlock = render404GifRow(page, mk);
+    const splitBlock = render404SplitRail(page, mk);
     const bookBlock = render404Book(page, mk);
-    wrap.append(head, toolbar, stage, scrap, gifBlock, bookBlock);
+    wrap.append(head, toolbar, stage, scrap, gifBlock, splitBlock, bookBlock);
     view.appendChild(wrap);
     return view;
   }
@@ -1743,15 +2030,21 @@
     toast._t = setTimeout(() => toastEl.classList.remove("show"), 1800);
   }
 
+  function scrubSite(site) {
+    if (!site?.pages) return site;
+    delete site.pages.web;
+    return site;
+  }
+
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        state.site = JSON.parse(raw);
+        state.site = scrubSite(JSON.parse(raw));
         return;
       }
     } catch (_) {}
-    state.site = deepClone(window.DEFAULT_SITE);
+    state.site = scrubSite(deepClone(window.DEFAULT_SITE));
   }
 
   function save() {
@@ -2655,9 +2948,8 @@
       jams: state.productId
         ? "Jams 详情 · 大图概念照 · 拖角缩放 / 粘贴换图"
         : "Jams · 货架可拖卡片排序（编辑模式）· 点进详情",
-      "404": "404 · 轮播 + 贴纸墙 + 单封面 Loop + 双页书本",
+      "404": "404 · 轮播 + 贴纸墙 + Loop + 横滑条 + 双页书本",
       guides: "Guides · 右侧按钮切换主题图文；可新增主题 / 图片 / 视频",
-      web: "Web · 官网设计（支持图/视频/链接）",
       talk: "Talk · 团队 / 器材 / 回忆杀"
     };
     box.innerHTML = `<div class="note">${labels[state.page] || ""}</div>`;
@@ -2723,6 +3015,8 @@
     if (page.tour.active < 0 || page.tour.active >= page.tour.slides.length) {
       page.tour.active = 0;
     }
+    if (typeof page.tour.interval !== "number") page.tour.interval = 3800;
+    if (typeof page.tour.autoplay !== "boolean") page.tour.autoplay = true;
     ensureFloats(page.tour);
     return page;
   }
@@ -3193,6 +3487,7 @@
     const active = clamp(tour.active || 0, 0, Math.max(0, slides.length - 1));
     tour.active = active;
     const slide = slides[active] || null;
+    clearTourTimer();
 
     const section = document.createElement("section");
     section.className = "guides-tour";
@@ -3239,6 +3534,12 @@
           saveQuiet();
           render();
         }),
+        mk(tour.autoplay === false ? "开自动轮播" : "停自动轮播", () => {
+          tour.autoplay = tour.autoplay === false;
+          saveQuiet();
+          render();
+          toast(tour.autoplay !== false ? "已开启自动轮播" : "已关闭自动轮播");
+        }),
         mk(state.placingText ? "取消放置文字" : "+ 空白处加文字", () => {
           state.placingText = !state.placingText;
           render();
@@ -3246,9 +3547,10 @@
       );
     }
 
-    const setTour = (idx) => {
+    const setTour = (idx, opts = {}) => {
       if (!slides.length) return;
       tour.active = ((idx % slides.length) + slides.length) % slides.length;
+      if (!opts.quiet) saveQuiet();
       render();
     };
 
@@ -3266,9 +3568,10 @@
     const stage = document.createElement("div");
     stage.className = "guides-tour-stage";
     if (slide?.src) {
-      if (slide.type === "video" && /\.(mp4|webm)$/i.test(slide.src)) {
+      if (isVideoMedia(slide) || (slide.type === "video" && /\.(mp4|webm|mov)$/i.test(slide.src))) {
         const v = document.createElement("video");
         v.src = slide.src; v.controls = true; v.playsInline = true;
+        if (slide.poster) v.poster = slide.poster;
         stage.appendChild(v);
       } else {
         const img = document.createElement("img");
@@ -3328,7 +3631,7 @@
         fileImage.click();
       });
     } else if (slide?.src) {
-      stage.addEventListener("click", () => openLightbox(slide.src, slide.type === "video" ? "video" : "image"));
+      stage.addEventListener("click", () => openLightbox(slide.src, isVideoMedia(slide) ? "video" : "image"));
       stage.style.cursor = "zoom-in";
     }
 
@@ -3345,7 +3648,7 @@
       th.className = "guides-tour-thumb" + (i === active ? " on" : "");
       if (s.src) {
         const img = document.createElement("img");
-        img.src = s.src; img.alt = ""; img.loading = "lazy";
+        img.src = s.poster || s.src; img.alt = ""; img.loading = "lazy";
         th.appendChild(img);
       }
       th.addEventListener("click", () => setTour(i));
@@ -3360,6 +3663,22 @@
     });
     shelf.appendChild(thumbs);
 
+    // autoplay carousel (pause on hover / edit)
+    if (slides.length > 1 && tour.autoplay !== false && !state.edit) {
+      const startAuto = () => {
+        clearTourTimer();
+        const ms = clamp(tour.interval || 3800, 1800, 12000);
+        state.tourTimer = setInterval(() => {
+          if (document.hidden || state.page !== "guides") return;
+          tour.active = (tour.active + 1) % slides.length;
+          render();
+        }, ms);
+      };
+      startAuto();
+      stageWrap.addEventListener("mouseenter", clearTourTimer);
+      stageWrap.addEventListener("mouseleave", startAuto);
+    }
+
     inner.append(head);
     if (state.edit) inner.appendChild(toolbar);
     inner.append(stageWrap, shelf);
@@ -3370,6 +3689,7 @@
 
   function render() {
     if (state.page !== "404") clearHeroTimer();
+    if (state.page !== "guides") clearTourTimer();
     renderNav();
     views.innerHTML = "";
     let view;
@@ -3415,7 +3735,7 @@
     }
     const page = state.site.pages[state.page];
     if (!page || !page.items) {
-      toast("当前页不支持加媒体（可去 Web / 专辑页）");
+      toast("当前页不支持加媒体（可去 Jams / 404 / Guides）");
       return;
     }
     if (type === "link") {
@@ -3518,6 +3838,36 @@
         saveQuiet();
         render();
         toast(type === "video" ? "已新增视频动图" : "已新增动图");
+        return;
+      }
+
+      if (target.__404SplitFeature) {
+        const page = ensure404Posts(state.site.pages["404"]);
+        page.splitRail.feature = {
+          id: page.splitRail.feature?.id || uid("split"),
+          type,
+          src: dataUrl,
+          poster
+        };
+        state.replaceTarget = null;
+        saveQuiet();
+        render();
+        toast("已更新上方固定媒体");
+        return;
+      }
+
+      if (target.__404SplitItem) {
+        const page = ensure404Posts(state.site.pages["404"]);
+        page.splitRail.items.push({
+          id: uid("split"),
+          type,
+          src: dataUrl,
+          poster
+        });
+        state.replaceTarget = null;
+        saveQuiet();
+        render();
+        toast("已加入下方横滑图");
         return;
       }
 
@@ -3702,7 +4052,7 @@
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          state.site = JSON.parse(reader.result);
+          state.site = scrubSite(JSON.parse(reader.result));
           resetHistory();
           saveQuiet();
           render();
@@ -3717,7 +4067,7 @@
     $("#btnReset").addEventListener("click", () => {
       if (!confirm("恢复默认内容？本机编辑会丢失。")) return;
       localStorage.removeItem(STORAGE_KEY);
-      state.site = deepClone(window.DEFAULT_SITE);
+      state.site = scrubSite(deepClone(window.DEFAULT_SITE));
       resetHistory();
       render();
       toast("已恢复默认");
@@ -3816,6 +4166,26 @@
         }
       }
 
+      // 404 photo book keyboard flip
+      if (
+        state.page === "404" &&
+        !state.ig &&
+        !lightbox.classList.contains("open") &&
+        !e.metaKey && !e.ctrlKey && !e.altKey &&
+        (e.key === "ArrowLeft" || e.key === "ArrowRight")
+      ) {
+        const tag = (e.target && e.target.tagName) || "";
+        const typing = e.target?.isContentEditable || tag === "INPUT" || tag === "TEXTAREA";
+        if (!typing) {
+          const bookEl = document.querySelector(".mag-book-block");
+          if (bookEl && typeof bookEl._flipBook === "function") {
+            e.preventDefault();
+            bookEl._flipBook(e.key === "ArrowLeft" ? -1 : 1);
+            return;
+          }
+        }
+      }
+
       const mod = e.metaKey || e.ctrlKey;
       if (!mod) return;
       const tag = (e.target && e.target.tagName) || "";
@@ -3845,6 +4215,7 @@
     window.addEventListener("hashchange", () => {
       applyHash();
       clearHeroTimer();
+      clearTourTimer();
       render();
     });
   }
