@@ -1,6 +1,6 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v24-no-web";
+  const STORAGE_KEY = "kiiikiii-site-v26-jams-three";
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [
@@ -256,14 +256,13 @@
     if (!page.splitRail) {
       page.splitRail = {
         title: "404 · Cinema Strip",
-        intro: "上：固定动图/视频 · 下：横滑看图",
-        feature: {
-          id: "split-feature",
-          type: "image",
-          src: "assets/albums/404/split/01_travel_agency.gif",
-          poster: "",
-          aspect: "426/240"
-        },
+        intro: "上：三格动图平铺 · 下：横滑看图 · 编辑拖角等比缩放",
+        features: [
+          { id: "split-f1", type: "image", src: "assets/albums/404/split/02_delulu.gif", poster: "", aspect: "656/400" },
+          { id: "split-f2", type: "image", src: "assets/albums/404/split/03_loading.gif", poster: "", aspect: "400/712" },
+          { id: "split-f3", type: "image", src: "assets/albums/404/split/04_garage_sale.gif", poster: "", aspect: "540/720" }
+        ],
+        frame: { w: 100 },
         items: [
           { id: "split-01", type: "image", src: "assets/albums/404/01_404-1.jpg", poster: "" },
           { id: "split-02", type: "image", src: "assets/albums/404/08_404-5.jpg", poster: "" },
@@ -276,11 +275,25 @@
     }
     if (!page.splitRail.items) page.splitRail.items = [];
     if (page.splitRail.title == null) page.splitRail.title = "404 · Cinema Strip";
-    if (page.splitRail.intro == null) page.splitRail.intro = "上：固定动图/视频 · 下：横滑看图";
-    if (!page.splitRail.feature) page.splitRail.feature = { id: uid("split"), type: "image", src: "", poster: "" };
-    if (!page.splitRail.feature.type) {
-      page.splitRail.feature.type = isVideoMedia(page.splitRail.feature) ? "video" : "image";
+    if (page.splitRail.intro == null) page.splitRail.intro = "上：三格动图平铺 · 下：横滑看图 · 编辑拖角等比缩放";
+    if (!page.splitRail.frame) page.splitRail.frame = { w: 100 };
+    if (typeof page.splitRail.frame.w !== "number") page.splitRail.frame.w = 100;
+    if (!page.splitRail.features || !page.splitRail.features.length) {
+      if (page.splitRail.feature?.src) {
+        page.splitRail.features = [page.splitRail.feature];
+      } else {
+        page.splitRail.features = [
+          { id: "split-f1", type: "image", src: "assets/albums/404/split/02_delulu.gif", poster: "", aspect: "656/400" },
+          { id: "split-f2", type: "image", src: "assets/albums/404/split/03_loading.gif", poster: "", aspect: "400/712" },
+          { id: "split-f3", type: "image", src: "assets/albums/404/split/04_garage_sale.gif", poster: "", aspect: "540/720" }
+        ];
+      }
     }
+    page.splitRail.features.forEach((it) => {
+      if (!it.type) it.type = isVideoMedia(it) ? "video" : "image";
+    });
+    // keep legacy single feature pointer in sync with first tile
+    page.splitRail.feature = page.splitRail.features[0] || page.splitRail.feature || { id: uid("split"), type: "image", src: "", poster: "" };
     page.splitRail.items.forEach((it) => {
       if (!it.type) it.type = isVideoMedia(it) ? "video" : "image";
     });
@@ -1454,6 +1467,8 @@
 
   function render404SplitRail(page, mk) {
     const rail = page.splitRail;
+    if (!rail.frame) rail.frame = { w: 100 };
+    if (!rail.features) rail.features = [];
     const block = document.createElement("div");
     block.className = "mag-split-block";
 
@@ -1466,15 +1481,15 @@
     editable(title, rail.title || "Cinema Strip", (v) => { rail.title = v; saveQuiet(); });
     const intro = document.createElement("div");
     intro.className = "intro";
-    editable(intro, rail.intro || "上：固定动图/视频 · 下：横滑看图", (v) => { rail.intro = v; saveQuiet(); });
+    editable(intro, rail.intro || "上：横屏动图 · 下：两张竖屏并排 · 编辑拖角等比缩放", (v) => { rail.intro = v; saveQuiet(); });
     head.append(eye, title, intro);
 
     const toolbar = document.createElement("div");
     toolbar.className = "mag-split-toolbar";
     toolbar.append(
-      mk("换上方动图/视频", () => {
-        state.replaceTarget = rail.feature;
-        (isVideoMedia(rail.feature) ? fileVideo : fileImage).click();
+      mk("+ 上方动图", () => {
+        state.replaceTarget = { __404SplitFeature: true };
+        fileImage.click();
       }),
       mk("+ 上方视频", () => {
         state.replaceTarget = { __404SplitFeature: true, prefer: "video" };
@@ -1489,79 +1504,130 @@
     const layout = document.createElement("div");
     layout.className = "mag-split-layout";
 
-    const feature = document.createElement("article");
-    feature.className = "mag-split-feature";
-    const feat = rail.feature || {};
-    if (feat.aspect) {
-      feature.style.aspectRatio = String(feat.aspect).replace(":", " / ").replace("/", " / ");
-    } else if (feat.src && /\.gif$/i.test(feat.src)) {
-      feature.style.aspectRatio = "426 / 240";
-    }
-    if (feat.src) {
-      appendMediaNode(feature, feat, {
-        cover: false, muted: true, loop: true, autoplay: true, lazy: false, alt: ""
-      });
-      const media = feature.querySelector("img, video");
-      if (media) {
-        media.style.objectFit = "contain";
-        // read natural size when available to lock aspect
-        if (media.tagName === "IMG") {
-          const applyNatural = () => {
-            if (media.naturalWidth && media.naturalHeight) {
-              feature.style.aspectRatio = `${media.naturalWidth} / ${media.naturalHeight}`;
-              feat.aspect = `${media.naturalWidth}/${media.naturalHeight}`;
-            }
-          };
-          if (media.complete) applyNatural();
-          else media.addEventListener("load", applyNatural, { once: true });
-        }
+    const featRow = document.createElement("div");
+    featRow.className = "mag-split-feature-row";
+    featRow.style.setProperty("--split-feat-w", `${clamp(rail.frame.w, 36, 100)}%`);
+
+    const features = rail.features;
+    const featGallery = features.filter((it) => it.src).map((it) => ({
+      src: it.src, type: isVideoMedia(it) ? "video" : "image"
+    }));
+
+    const mountFeatureTile = (feat, index) => {
+      const tile = document.createElement("article");
+      tile.className = "mag-split-feature-tile";
+      if (feat?.aspect) {
+        tile.style.setProperty("--tile-ar", String(feat.aspect).replace(":", " / ").replace("/", " / "));
       }
-      const v = feature.querySelector("video");
-      if (v) {
-        v.muted = true;
-        v.setAttribute("muted", "");
-        v.playsInline = true;
-        v.play?.().catch(() => {});
-        v.addEventListener("loadedmetadata", () => {
-          if (v.videoWidth && v.videoHeight) {
-            feature.style.aspectRatio = `${v.videoWidth} / ${v.videoHeight}`;
-            feat.aspect = `${v.videoWidth}/${v.videoHeight}`;
+      if (feat?.src) {
+        appendMediaNode(tile, feat, {
+          cover: false, muted: true, loop: true, autoplay: true, lazy: false, alt: ""
+        });
+        const media = tile.querySelector("img, video");
+        if (media) {
+          media.style.objectFit = "contain";
+          if (media.tagName === "IMG") {
+            const applyNatural = () => {
+              if (media.naturalWidth && media.naturalHeight) {
+                feat.aspect = `${media.naturalWidth}/${media.naturalHeight}`;
+                tile.style.setProperty("--tile-ar", `${media.naturalWidth} / ${media.naturalHeight}`);
+              }
+            };
+            if (media.complete) applyNatural();
+            else media.addEventListener("load", applyNatural, { once: true });
           }
-        }, { once: true });
-      }
-      feature.addEventListener("click", (e) => {
-        if (e.target.closest("button")) return;
-        if (state.edit) {
-          state.selectedMedia = feat;
-          state.replaceTarget = feat;
-          toast("已选中左侧媒体 · 可换图");
-          return;
         }
-        openLightbox(feat.src, isVideoMedia(feat) ? "video" : "image");
-      });
-      if (state.edit) {
-        const tools = document.createElement("div");
-        tools.className = "mag-split-tools";
-        const repl = document.createElement("button");
-        repl.type = "button"; repl.textContent = "换";
-        repl.addEventListener("click", (e) => {
-          e.stopPropagation();
-          state.replaceTarget = feat;
+        const v = tile.querySelector("video");
+        if (v) {
+          v.muted = true;
+          v.setAttribute("muted", "");
+          v.playsInline = true;
+          v.play?.().catch(() => {});
+          v.addEventListener("loadedmetadata", () => {
+            if (v.videoWidth && v.videoHeight) {
+              feat.aspect = `${v.videoWidth}/${v.videoHeight}`;
+              tile.style.setProperty("--tile-ar", `${v.videoWidth} / ${v.videoHeight}`);
+            }
+          }, { once: true });
+        }
+        tile.addEventListener("click", (e) => {
+          if (e.target.closest("button, .rh")) return;
+          if (state.edit) {
+            state.selectedMedia = feat;
+            state.replaceTarget = feat;
+            toast("已选中上方动图 · 可换");
+            return;
+          }
+          const idx = featGallery.findIndex((g) => g.src === feat.src);
+          openLightboxGallery(featGallery, idx < 0 ? 0 : idx);
+        });
+        if (state.edit) {
+          const tools = document.createElement("div");
+          tools.className = "mag-split-tools";
+          const repl = document.createElement("button");
+          repl.type = "button"; repl.textContent = "换";
+          repl.addEventListener("click", (e) => {
+            e.stopPropagation();
+            state.replaceTarget = feat;
+            fileImage.click();
+          });
+          const del = document.createElement("button");
+          del.type = "button"; del.className = "danger"; del.textContent = "删";
+          del.addEventListener("click", (e) => {
+            e.stopPropagation();
+            features.splice(index, 1);
+            saveQuiet();
+            render();
+          });
+          tools.append(repl, del);
+          tile.appendChild(tools);
+        }
+      } else if (state.edit) {
+        tile.classList.add("empty");
+        tile.textContent = "+";
+        tile.addEventListener("click", () => {
+          state.replaceTarget = { __404SplitFeature: true };
           fileImage.click();
         });
-        tools.appendChild(repl);
-        feature.appendChild(tools);
       }
+      return tile;
+    };
+
+    if (features.length) {
+      features.forEach((feat, i) => featRow.appendChild(mountFeatureTile(feat, i)));
     } else if (state.edit) {
-      feature.classList.add("empty");
-      feature.textContent = "+ 添加左侧动图/视频";
-      feature.addEventListener("click", () => {
-        state.replaceTarget = { __404SplitFeature: true };
-        fileImage.click();
+      featRow.appendChild(mountFeatureTile(null, 0));
+    }
+
+    if (state.edit) {
+      ["nw", "ne", "sw", "se"].forEach((pos) => {
+        const h = document.createElement("div");
+        h.className = `rh rh-${pos}`;
+        h.addEventListener("pointerdown", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const startW = rail.frame.w;
+          const parentW = block.clientWidth || 900;
+          const signX = (pos === "nw" || pos === "sw") ? -1 : 1;
+          const signY = (pos === "nw" || pos === "ne") ? -1 : 1;
+          const onMove = (ev) => {
+            const dx = signX * ((ev.clientX - startX) / parentW) * 100;
+            const dy = signY * ((ev.clientY - startY) / parentW) * 100;
+            rail.frame.w = clamp(startW + (dx + dy) * 0.7, 36, 100);
+            featRow.style.setProperty("--split-feat-w", `${rail.frame.w}%`);
+          };
+          const onUp = () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            saveQuiet();
+          };
+          window.addEventListener("pointermove", onMove);
+          window.addEventListener("pointerup", onUp);
+        });
+        featRow.appendChild(h);
       });
-    } else {
-      feature.classList.add("empty");
-      feature.textContent = "暂无";
     }
 
     const scroller = document.createElement("div");
@@ -1628,7 +1694,6 @@
     }
 
     scroller.appendChild(track);
-    // drag-to-scroll hint / wheel horizontal
     scroller.addEventListener("wheel", (e) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         scroller.scrollLeft += e.deltaY;
@@ -1636,7 +1701,7 @@
       }
     }, { passive: false });
 
-    layout.append(feature, scroller);
+    layout.append(featRow, scroller);
     block.append(head, toolbar, layout);
     return block;
   }
@@ -3843,16 +3908,18 @@
 
       if (target.__404SplitFeature) {
         const page = ensure404Posts(state.site.pages["404"]);
-        page.splitRail.feature = {
-          id: page.splitRail.feature?.id || uid("split"),
+        if (!page.splitRail.features) page.splitRail.features = [];
+        page.splitRail.features.push({
+          id: uid("split"),
           type,
           src: dataUrl,
           poster
-        };
+        });
+        page.splitRail.feature = page.splitRail.features[0];
         state.replaceTarget = null;
         saveQuiet();
         render();
-        toast("已更新上方固定媒体");
+        toast("已加入上方动图");
         return;
       }
 

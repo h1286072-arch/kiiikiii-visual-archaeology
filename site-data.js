@@ -649,13 +649,13 @@ window.DEFAULT_SITE = {
       },
       "splitRail": {
         "title": "404 · Cinema Strip",
-        "intro": "上：固定动图/视频 · 下：横滑看图",
+        "intro": "上：三格动图平铺 · 下：横滑看图 · 编辑拖角等比缩放",
         "feature": {
-          "id": "split-feature",
+          "id": "split-f1",
           "type": "image",
-          "src": "assets/albums/404/split/01_travel_agency.gif",
+          "src": "assets/albums/404/split/02_delulu.gif",
           "poster": "",
-          "aspect": "426/240"
+          "aspect": "656/400"
         },
         "items": [
           {
@@ -693,6 +693,32 @@ window.DEFAULT_SITE = {
             "type": "image",
             "src": "assets/albums/404/17_KiiiKiii_404_New_Girl_2_十二点十八分.jpg",
             "poster": ""
+          }
+        ],
+        "frame": {
+          "w": 100
+        },
+        "features": [
+          {
+            "id": "split-f1",
+            "type": "image",
+            "src": "assets/albums/404/split/02_delulu.gif",
+            "poster": "",
+            "aspect": "656/400"
+          },
+          {
+            "id": "split-f2",
+            "type": "image",
+            "src": "assets/albums/404/split/03_loading.gif",
+            "poster": "",
+            "aspect": "400/712"
+          },
+          {
+            "id": "split-f3",
+            "type": "image",
+            "src": "assets/albums/404/split/04_garage_sale.gif",
+            "poster": "",
+            "aspect": "540/720"
           }
         ]
       }
@@ -753,10 +779,11 @@ window.DEFAULT_SITE = {
           "floats": []
         },
         {
-          "id": "jam-concept-hq-a",
-          "title": "UNCUT GEM Concept A",
+          "id": "jam-concept-pack",
+          "title": "UNCUT GEM Concepts",
           "seller": "starship",
           "price": "1 Soft Landing",
+          "locked": false,
           "cover": "assets/albums/uncut-gem/official/10_concept_01.jpg",
           "details": [
             {
@@ -812,17 +839,7 @@ window.DEFAULT_SITE = {
                 "w": 100,
                 "fit": "contain"
               }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-ido-me",
-          "title": "I DO ME Right",
-          "seller": "imnotjenjen",
-          "price": "1 Pic Together",
-          "cover": "assets/imported/from-other-pc/006_jam-ido-me_cover_534439a6cd.jpg",
-          "details": [
+            },
             {
               "id": "d-ido-1",
               "type": "image",
@@ -841,17 +858,7 @@ window.DEFAULT_SITE = {
                 "w": 100,
                 "fit": "contain"
               }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-concept-hq-b",
-          "title": "UNCUT GEM Concept B",
-          "seller": "starship",
-          "price": "1 Pic Together",
-          "cover": "assets/imported/from-other-pc/009_jam-concept-hq-b_cover_f41c4dceb0.jpg",
-          "details": [
+            },
             {
               "id": "d-cB-2",
               "type": "image",
@@ -941,10 +948,11 @@ window.DEFAULT_SITE = {
           "floats": []
         },
         {
-          "id": "jam-travel-1",
-          "title": "Group Travel Shot",
+          "id": "jam-travel-jacket",
+          "title": "Travel & Jacket Behind",
           "seller": "搬了个",
           "price": "1 Soft Landing",
+          "locked": false,
           "cover": "assets/albums/uncut-gem/08_群像旅拍赛道被你闯进来了_kiiikiii_1_搬了个.jpg",
           "details": [
             {
@@ -994,17 +1002,7 @@ window.DEFAULT_SITE = {
                 "w": 100,
                 "fit": "contain"
               }
-            }
-          ],
-          "floats": []
-        },
-        {
-          "id": "jam-jacket-behind",
-          "title": "Jacket Behind",
-          "seller": "naver update",
-          "price": "1 Soft Flash",
-          "cover": "assets/albums/uncut-gem/official/11_jacket_behind_01.jpg",
-          "details": [
+            },
             {
               "id": "d-jb-1",
               "type": "image",

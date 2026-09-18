@@ -976,9 +976,9 @@
     }
     .mag-gif-dot.add:hover { background: var(--accent, #2a5cff); }
 
-    /* ===== 404 Cinema split (GIF on top + scroll row below) ===== */
+    /* ===== 404 Cinema split (GIF tiles on top + scroll row below) ===== */
     .mag-split-block { margin: 28px 0 56px; width: 100%; }
-    .mag-split-head { margin-bottom: 14px; max-width: 560px; }
+    .mag-split-head { margin-bottom: 14px; max-width: 640px; }
     .mag-split-head .eyebrow {
       font-family: var(--ui); font-size: 11px; letter-spacing: 0.12em;
       text-transform: uppercase; color: var(--sky-deep);
@@ -995,27 +995,60 @@
       gap: 14px;
       width: 100%;
     }
-    .mag-split-feature {
-      position: relative; overflow: hidden; border-radius: 4px; background: #111;
-      width: 100%;
+    .mag-split-feature-row {
+      position: relative;
+      width: var(--split-feat-w, 100%);
       max-width: 100%;
-      aspect-ratio: 426 / 240;
-      height: auto;
-      max-height: none;
-      cursor: zoom-in;
-      box-shadow: 0 12px 32px rgba(20,30,50,.12);
       margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 10px;
+      box-sizing: border-box;
     }
-    .mag-split-feature.empty {
-      display: grid; place-items: center; color: #889; font-size: 13px;
-      font-family: var(--ui); cursor: pointer; border: 1px dashed rgba(0,0,0,.18);
-      background: rgba(255,255,255,.4);
+    .mag-split-feature-tile {
+      position: relative;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #0e1014;
+      cursor: zoom-in;
+      box-shadow: 0 12px 28px rgba(20,30,50,.12);
     }
-    .mag-split-feature img, .mag-split-feature video {
-      width: 100%; height: 100%; object-fit: contain; object-position: center; display: block;
-      background: #111;
+    /* 1st = landscape full width; 2nd+3rd = portrait side by side */
+    .mag-split-feature-tile:nth-child(1) {
+      grid-column: 1 / -1;
+      aspect-ratio: var(--tile-ar, 656 / 400);
+      width: 100%;
     }
-    .mag-split-feature .vid-badge { display: none; }
+    .mag-split-feature-tile:nth-child(2),
+    .mag-split-feature-tile:nth-child(3) {
+      aspect-ratio: var(--tile-ar, 3 / 4);
+      width: 100%;
+    }
+    .mag-split-feature-tile.empty {
+      color: #889; font-size: 28px; font-family: var(--ui);
+      border: 1px dashed rgba(0,0,0,.18); background: rgba(255,255,255,.4);
+      cursor: pointer; min-height: 120px;
+    }
+    .mag-split-feature-tile img, .mag-split-feature-tile video {
+      width: 100%; height: 100%;
+      object-fit: contain; object-position: center; display: block;
+      background: #0e1014;
+    }
+    .mag-split-feature-tile .vid-badge { display: none; }
+    .mag-split-feature-row .rh {
+      display: none; position: absolute; width: 14px; height: 14px; z-index: 8;
+      background: #111; border: 2px solid #fff; border-radius: 3px;
+    }
+    body.edit .mag-split-feature-row .rh { display: block; }
+    .mag-split-feature-row .rh-nw { left: -6px; top: -6px; cursor: nwse-resize; }
+    .mag-split-feature-row .rh-ne { right: -6px; top: -6px; cursor: nesw-resize; }
+    .mag-split-feature-row .rh-sw { left: -6px; bottom: -6px; cursor: nesw-resize; }
+    .mag-split-feature-row .rh-se { right: -6px; bottom: -6px; cursor: nwse-resize; }
     .mag-split-scroller {
       width: 100%;
       overflow-x: auto;
@@ -1061,6 +1094,16 @@
       border-radius: 8px; padding: 4px 8px; font-size: 10px; font-family: var(--ui);
     }
     .mag-split-tools .danger { background: rgba(127,29,29,.85); }
+    @media (max-width: 640px) {
+      .mag-split-feature-row {
+        grid-template-columns: 1fr;
+      }
+      .mag-split-feature-tile:nth-child(1),
+      .mag-split-feature-tile:nth-child(2),
+      .mag-split-feature-tile:nth-child(3) {
+        grid-column: 1;
+      }
+    }
 
     /* ===== 404 Flip book (spread) ===== */
     .mag-book-block { margin: 12px 0 80px; }
