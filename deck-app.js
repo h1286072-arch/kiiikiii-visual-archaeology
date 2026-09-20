@@ -7,6 +7,10 @@
 
   let state = { mode: "edit", index: 0, selectedId: null, deck: null };
   let drag = null;
+  let presenterWin = null;
+  let presenterTimer = null;
+  let presenterStartedAt = 0;
+  const deckBus = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("kiiikiii-deck-v1") : null;
 
   function toast(msg) {
     const t = $("toast");
@@ -53,9 +57,15 @@
     $("btnEdit").classList.toggle("active", mode === "edit");
     $("btnPresent").classList.toggle("active", mode === "present");
     state.selectedId = null;
-    if (mode === "edit") $("notesDock").classList.remove("open");
+    // never show notes dock on the audience/projector surface
+    $("notesDock").classList.remove("open");
     renderAll();
-    toast(mode === "present" ? "演讲模式 · ←→ N F Esc" : "编辑模式");
+    if (mode === "present") {
+      openPresenterWindow(true);
+      toast("演讲模式 · 大屏只显示幻灯 · 本机看「演讲者视图」讲稿");
+    } else {
+      toast("编辑模式");
+    }
   }
 
   function go(delta) {
@@ -64,7 +74,155 @@
     state.index = next;
     state.selectedId = null;
     renderAll();
-    if (window.__notesPaint) try { window.__notesPaint(); } catch (_) {}
+    broadcastDeck({ type: "index", index: state.index });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= state.deck.slides.length) return;
+    state.index = index;
+    state.selectedId = null;
+    renderAll();
+    broadcastDeck({ type: "index", index: state.index });
+  }
+
+  function broadcastDeck(msg) {
+    try { deckBus?.postMessage(msg); } catch (_) {}
+  }
+
+  function esc(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function formatElapsed(ms) {
+    const sec = Math.floor(ms / 1000);
+    const m = String(Math.floor(sec / 60)).padStart(2, "0");
+    const s = String(sec % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  function paintPresenter() {
+    const w = presenterWin;
+    if (!w || w.closed) {
+      presenterWin = null;
+      return;
+    }
+    const s = currentSlide();
+    const next = state.deck.slides[state.index + 1];
+    const prev = state.deck.slides[state.index - 1];
+    const elapsed = presenterStartedAt ? formatElapsed(Date.now() - presenterStartedAt) : "00:00";
+    const root = w.document.getElementById("root");
+    if (!root) return;
+    root.innerHTML = `
+      <header class="bar">
+        <div>
+          <div class="eyebrow">演讲者视图 · 仅本机</div>
+          <div class="page">${state.index + 1} / ${state.deck.slides.length}</div>
+        </div>
+        <div class="timer" id="timer">${elapsed}</div>
+      </header>
+      <section class="now">
+        <h1>${esc(s.title || "未命名")}</h1>
+        <pre class="notes">${esc(s.notes || "（本页暂无备注）")}</pre>
+      </section>
+      <section class="meta">
+        <div class="card">
+          <div class="label">上一页</div>
+          <div class="val">${prev ? esc(prev.title || "未命名") : "—"}</div>
+        </div>
+        <div class="card">
+          <div class="label">下一页</div>
+          <div class="val">${next ? esc(next.title || "未命名") : "—"}</div>
+        </div>
+      </section>
+      <footer class="controls">
+        <button type="button" data-act="prev">← 上一页</button>
+        <button type="button" data-act="next">下一页 →</button>
+        <button type="button" data-act="reset-timer">重置计时</button>
+      </footer>
+      <p class="hint">大屏窗口只播幻灯；在本窗口或大屏按 ← → / 空格均可翻页</p>
+    `;
+    root.querySelectorAll("[data-act]").forEach((btn) => {
+      btn.onclick = () => {
+        const act = btn.getAttribute("data-act");
+        if (act === "prev") go(-1);
+        if (act === "next") go(1);
+        if (act === "reset-timer") {
+          presenterStartedAt = Date.now();
+          paintPresenter();
+        }
+      };
+    });
+  }
+
+  function openPresenterWindow(auto = false) {
+    if (presenterWin && !presenterWin.closed) {
+      try { presenterWin.focus(); } catch (_) {}
+      paintPresenter();
+      return presenterWin;
+    }
+    const w = window.open(
+      "",
+      "kiiikiii-presenter",
+      "popup=yes,width=520,height=820,left=40,top=40"
+    );
+    if (!w) {
+      toast(auto ? "请允许弹窗，才能打开本机讲稿窗" : "弹窗被拦截，请允许后重试");
+      return null;
+    }
+    presenterWin = w;
+    if (!presenterStartedAt) presenterStartedAt = Date.now();
+    w.document.title = "演讲者视图 · 讲稿";
+    w.document.head.innerHTML = `<meta charset="UTF-8" /><style>
+      *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0b0d12;color:#eef2ff}
+      #root{min-height:100vh;padding:18px 18px 24px;display:flex;flex-direction:column;gap:14px}
+      .bar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+      .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7dd3fc}
+      .page{font-size:28px;font-weight:700;margin-top:4px}
+      .timer{font-variant-numeric:tabular-nums;font-size:28px;font-weight:600;color:#a5b4fc}
+      .now{background:#151821;border:1px solid #2c3140;border-radius:14px;padding:16px;flex:1}
+      .now h1{font-size:20px;margin:0 0 12px;line-height:1.3}
+      .notes{margin:0;white-space:pre-wrap;line-height:1.65;font-size:17px;font-family:ui-sans-serif,system-ui,sans-serif;color:#e5e7eb}
+      .meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .card{background:#12151d;border:1px solid #2c3140;border-radius:12px;padding:12px}
+      .label{font-size:11px;color:#93c5fd;margin-bottom:6px}
+      .val{font-size:13px;color:#cbd5e1;line-height:1.4}
+      .controls{display:flex;flex-wrap:wrap;gap:8px}
+      .controls button{appearance:none;border:1px solid #334155;background:#1e293b;color:#f8fafc;border-radius:10px;padding:10px 14px;font-size:13px;cursor:pointer}
+      .controls button:hover{border-color:#38bdf8}
+      .hint{margin:0;font-size:12px;color:#94a3b8;line-height:1.45}
+    </style>`;
+    w.document.body.innerHTML = `<div id="root"></div>`;
+    w.addEventListener("keydown", (e) => {
+      if (["INPUT", "TEXTAREA"].includes(e.target?.tagName || "")) return;
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+        e.preventDefault();
+        go(1);
+      }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        e.preventDefault();
+        go(-1);
+      }
+    });
+    w.addEventListener("beforeunload", () => {
+      if (presenterWin === w) presenterWin = null;
+    });
+    clearInterval(presenterTimer);
+    presenterTimer = setInterval(() => {
+      if (!presenterWin || presenterWin.closed) {
+        clearInterval(presenterTimer);
+        presenterTimer = null;
+        return;
+      }
+      const el = presenterWin.document.getElementById("timer");
+      if (el && presenterStartedAt) el.textContent = formatElapsed(Date.now() - presenterStartedAt);
+    }, 1000);
+    paintPresenter();
+    try { w.focus(); } catch (_) {}
+    return w;
   }
 
   function renderThumbs() {
@@ -152,13 +310,6 @@
     } else {
       $("elContent").value = el.text || "";
     }
-  }
-
-  function esc(s) {
-    return String(s || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
   }
 
   function makeElNode(el) {
@@ -271,6 +422,7 @@
     renderThumbs();
     renderStage();
     renderInspector();
+    paintPresenter();
   }
 
   function openLightbox(el) {
@@ -472,7 +624,9 @@
       renderStage();
       if (key === "notes") {
         $("notesDockBody").textContent = currentSlide().notes || "";
+        paintPresenter();
       }
+      if (key === "title") paintPresenter();
       saveSilent();
     });
   }
@@ -654,18 +808,15 @@
     await applyImageSrc(el, src);
   });
 
-  $("btnNotesWindow").onclick = () => {
-    const w = window.open("", "notes", "width=420,height=640");
-    const paint = () => {
-      const s = currentSlide();
-      w.document.title = "讲者备注";
-      w.document.body.style.cssText = "font-family:Inter,sans-serif;padding:16px;background:#111;color:#eee;";
-      w.document.body.innerHTML = `<h2 style="color:#7dd3fc;font-size:14px">${state.index + 1}. ${esc(s.title)}</h2><pre style="white-space:pre-wrap;line-height:1.55;font-size:15px">${esc(s.notes)}</pre><button id="r">刷新</button>`;
-      w.document.getElementById("r").onclick = paint;
+  $("btnNotesWindow").onclick = () => openPresenterWindow(false);
+
+  if (deckBus) {
+    deckBus.onmessage = (e) => {
+      const msg = e.data || {};
+      if (msg.type === "go" && typeof msg.delta === "number") go(msg.delta);
+      if (msg.type === "goto" && typeof msg.index === "number") goTo(msg.index);
     };
-    paint();
-    window.__notesPaint = paint;
-  };
+  }
 
   window.addEventListener("keydown", (e) => {
     const tag = e.target?.tagName || "";
@@ -683,7 +834,11 @@
       e.preventDefault();
       go(-1);
     }
-    if (e.key === "n" || e.key === "N") $("notesDock").classList.toggle("open");
+    // N opens presenter notes on THIS machine only — never on the projector surface
+    if (e.key === "n" || e.key === "N") {
+      e.preventDefault();
+      openPresenterWindow(false);
+    }
     if (e.key === "f" || e.key === "F") {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
       else document.exitFullscreen?.();

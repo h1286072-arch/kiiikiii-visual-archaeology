@@ -1,6 +1,6 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v26-jams-three";
+  const STORAGE_KEY = "kiiikiii-site-v27-presenter";
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [
@@ -15,6 +15,7 @@
     site: null,
     page: "home",
     edit: false,
+    present: false,
     replaceTarget: null,
     dragFrom: null,
     ig: null, // { postId, slide }
@@ -32,6 +33,9 @@
   let history = [];
   let historyIndex = -1;
   let applyingHistory = false;
+  let presenterWin = null;
+  let presenterTimer = null;
+  let presenterStartedAt = 0;
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const views = $("#views");
@@ -381,6 +385,17 @@
       ensureFloats(p);
       p.details.forEach((d) => ensureFrame(d));
     });
+    // Debut Teaser Study: jam factory website GIF as last detail
+    const debut = page.products.find((p) => p.id === "jam-debut-study") || page.products[0];
+    const debutGif = "assets/albums/uncut-gem/jam-factory-website.gif";
+    if (debut?.details && !debut.details.some((d) => d.src === debutGif || d.id === "d-debut-gif")) {
+      debut.details.push({
+        id: "d-debut-gif",
+        type: "image",
+        src: debutGif,
+        frame: { w: 100, fit: "contain" }
+      });
+    }
     return page;
   }
 
@@ -2098,12 +2113,221 @@
   function scrubSite(site) {
     if (!site?.pages) return site;
     delete site.pages.web;
+    ensureSiteNotes(site);
     return site;
+  }
+
+  function defaultNotesFor(key) {
+    return window.DEFAULT_SITE?.pages?.[key]?.notes
+      ?? (key === "home" ? window.DEFAULT_SITE?.home?.notes : "")
+      ?? "";
+  }
+
+  function ensureSiteNotes(site) {
+    if (!site) return;
+    if (site.home && site.home.notes == null) {
+      site.home.notes = defaultNotesFor("home") || window.DEFAULT_SITE?.home?.notes || "";
+    }
+    Object.keys(site.pages || {}).forEach((key) => {
+      const page = site.pages[key];
+      if (!page) return;
+      if (page.notes == null) page.notes = defaultNotesFor(key) || "";
+      (page.panels || []).forEach((panel, i) => {
+        if (panel.notes == null) {
+          const def = window.DEFAULT_SITE?.pages?.[key]?.panels?.[i]?.notes;
+          panel.notes = def != null ? def : "";
+        }
+      });
+    });
+  }
+
+  function escHtml(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function formatElapsed(ms) {
+    const sec = Math.floor(ms / 1000);
+    const m = String(Math.floor(sec / 60)).padStart(2, "0");
+    const s = String(sec % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  function pageLabel(id) {
+    return NAV.find((n) => n.id === id)?.label || id;
+  }
+
+  function notesOwner() {
+    if (state.page === "home") return state.site.home;
+    if (state.page === "guides") {
+      const page = ensureGuides(state.site.pages.guides);
+      return guidesActivePanel(page);
+    }
+    return state.site.pages[state.page];
+  }
+
+  function currentNotesText() {
+    const owner = notesOwner();
+    if (!owner) return "";
+    if (state.page === "guides") {
+      const page = state.site.pages.guides;
+      const theme = owner;
+      const chunks = [];
+      if (theme.title) chunks.push(theme.title);
+      if (theme.intro) chunks.push(theme.intro);
+      (theme.sections || []).forEach((sec) => {
+        const h = (sec.heading || "").trim();
+        const b = (sec.body || "").trim();
+        if (h || b) chunks.push([h, b].filter(Boolean).join("\n"));
+      });
+      const extra = (theme.notes || page.notes || "").trim();
+      if (extra) chunks.push(`——\n${extra}`);
+      return chunks.join("\n\n") || "（本主题暂无讲稿）";
+    }
+    return (owner.notes || "").trim() || "（本页暂无备注，可在编辑侧栏填写）";
+  }
+
+  function currentPresenterTitle() {
+    if (state.page === "home") return state.site.home?.headline?.replace(/\n/g, " ") || "Home";
+    if (state.page === "guides") {
+      const theme = notesOwner();
+      return theme?.title || theme?.button || "Guides";
+    }
+    const page = state.site.pages[state.page];
+    return page?.title || pageLabel(state.page);
+  }
+
+  function paintPresenter() {
+    const w = presenterWin;
+    if (!w || w.closed) {
+      presenterWin = null;
+      return;
+    }
+    const idx = NAV.findIndex((n) => n.id === state.page);
+    const prev = idx > 0 ? NAV[idx - 1] : null;
+    const next = idx >= 0 && idx < NAV.length - 1 ? NAV[idx + 1] : null;
+    const elapsed = presenterStartedAt ? formatElapsed(Date.now() - presenterStartedAt) : "00:00";
+    const root = w.document.getElementById("root");
+    if (!root) return;
+    const sub = state.page === "guides"
+      ? `Guides · ${(state.site.pages.guides?.panels?.[state.site.pages.guides.activePanel || 0]?.button) || "主题"}`
+      : (state.productId ? `Jams · ${state.productId}` : pageLabel(state.page));
+    root.innerHTML = `
+      <header class="bar">
+        <div>
+          <div class="eyebrow">演讲者视图 · 仅本机可见</div>
+          <div class="page">${escHtml(sub)}</div>
+        </div>
+        <div class="timer" id="timer">${elapsed}</div>
+      </header>
+      <section class="now">
+        <h1>${escHtml(currentPresenterTitle())}</h1>
+        <pre class="notes">${escHtml(currentNotesText())}</pre>
+      </section>
+      <section class="meta">
+        <div class="card"><div class="label">上一站</div><div class="val">${prev ? escHtml(prev.label) : "—"}</div></div>
+        <div class="card"><div class="label">下一站</div><div class="val">${next ? escHtml(next.label) : "—"}</div></div>
+      </section>
+      <footer class="controls">
+        <button type="button" data-act="prev">← 上一站</button>
+        <button type="button" data-act="next">下一站 →</button>
+        <button type="button" data-act="reset-timer">重置计时</button>
+      </footer>
+      <p class="hint">把主窗口拖到投影仪；本窗留在电脑上。Guides 大屏会藏右侧文案，这里同步显示。←→ 翻导航 · Esc 退出演讲</p>
+    `;
+    root.querySelectorAll("[data-act]").forEach((btn) => {
+      btn.onclick = () => {
+        const act = btn.getAttribute("data-act");
+        if (act === "prev" || act === "next") stepNav(act === "next" ? 1 : -1);
+        if (act === "reset-timer") {
+          presenterStartedAt = Date.now();
+          paintPresenter();
+        }
+      };
+    });
+  }
+
+  function openPresenterWindow(auto = false) {
+    if (presenterWin && !presenterWin.closed) {
+      try { presenterWin.focus(); } catch (_) {}
+      paintPresenter();
+      return presenterWin;
+    }
+    const w = window.open("", "kiiikiii-site-presenter", "popup=yes,width=520,height=820,left=40,top=40");
+    if (!w) {
+      toast(auto ? "请允许弹窗，才能打开本机讲稿窗" : "弹窗被拦截，请允许后重试");
+      return null;
+    }
+    presenterWin = w;
+    if (!presenterStartedAt) presenterStartedAt = Date.now();
+    w.document.title = "演讲者视图 · 讲稿";
+    w.document.head.innerHTML = `<meta charset="UTF-8" /><style>
+      *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0b0d12;color:#eef2ff}
+      #root{min-height:100vh;padding:18px 18px 24px;display:flex;flex-direction:column;gap:14px}
+      .bar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+      .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7dd3fc}
+      .page{font-size:22px;font-weight:700;margin-top:4px}
+      .timer{font-variant-numeric:tabular-nums;font-size:28px;font-weight:600;color:#a5b4fc}
+      .now{background:#151821;border:1px solid #2c3140;border-radius:14px;padding:16px;flex:1;overflow:auto}
+      .now h1{font-size:20px;margin:0 0 12px;line-height:1.3}
+      .notes{margin:0;white-space:pre-wrap;line-height:1.65;font-size:16px;font-family:ui-sans-serif,system-ui,sans-serif;color:#e5e7eb}
+      .meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .card{background:#12151d;border:1px solid #2c3140;border-radius:12px;padding:12px}
+      .label{font-size:11px;color:#93c5fd;margin-bottom:6px}
+      .val{font-size:13px;color:#cbd5e1;line-height:1.4}
+      .controls{display:flex;flex-wrap:wrap;gap:8px}
+      .controls button{appearance:none;border:1px solid #334155;background:#1e293b;color:#f8fafc;border-radius:10px;padding:10px 14px;font-size:13px;cursor:pointer}
+      .controls button:hover{border-color:#38bdf8}
+      .hint{margin:0;font-size:12px;color:#94a3b8;line-height:1.45}
+    </style>`;
+    w.document.body.innerHTML = `<div id="root"></div>`;
+    w.addEventListener("keydown", (e) => {
+      if (["INPUT", "TEXTAREA"].includes(e.target?.tagName || "")) return;
+      if (e.key === "ArrowRight" || e.key === "PageDown") {
+        e.preventDefault();
+        stepNav(1);
+      }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        e.preventDefault();
+        stepNav(-1);
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setPresent(false);
+      }
+    });
+    w.addEventListener("beforeunload", () => {
+      if (presenterWin === w) presenterWin = null;
+    });
+    clearInterval(presenterTimer);
+    presenterTimer = setInterval(() => {
+      if (!presenterWin || presenterWin.closed) {
+        clearInterval(presenterTimer);
+        presenterTimer = null;
+        return;
+      }
+      const el = presenterWin.document.getElementById("timer");
+      if (el && presenterStartedAt) el.textContent = formatElapsed(Date.now() - presenterStartedAt);
+    }, 1000);
+    paintPresenter();
+    try { w.focus(); } catch (_) {}
+    return w;
+  }
+
+  function stepNav(delta) {
+    const idx = NAV.findIndex((n) => n.id === state.page);
+    const next = idx + delta;
+    if (next < 0 || next >= NAV.length) return;
+    go(NAV[next].id);
   }
 
   function load() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY)
+        || localStorage.getItem("kiiikiii-site-v26-jams-three");
       if (raw) {
         state.site = scrubSite(JSON.parse(raw));
         return;
@@ -2171,16 +2395,48 @@
   }
 
   function setEdit(on) {
+    if (on && state.present) {
+      state.present = false;
+      document.body.classList.remove("present");
+      $("#btnPresent")?.classList.remove("active");
+    }
     state.edit = on;
     document.body.classList.toggle("edit", on);
     $("#btnEdit").classList.toggle("active", on);
-    $("#btnView").classList.toggle("active", !on);
+    $("#btnView").classList.toggle("active", !on && !state.present);
     if (!on) {
       state.placingText = false;
       state.placingBookText = false;
       state.selectedMedia = null;
     }
     render();
+  }
+
+  function setPresent(on) {
+    const next = !!on;
+    if (state.present === next) {
+      if (next) openPresenterWindow(true);
+      return;
+    }
+    state.present = next;
+    document.body.classList.toggle("present", state.present);
+    $("#btnPresent")?.classList.toggle("active", state.present);
+    if (state.present) {
+      state.edit = false;
+      document.body.classList.remove("edit");
+      $("#btnEdit")?.classList.remove("active");
+      $("#btnView")?.classList.remove("active");
+      state.placingText = false;
+      state.placingBookText = false;
+      state.selectedMedia = null;
+      render();
+      openPresenterWindow(true);
+      toast("演讲模式 · 大屏干净 · 本机看讲稿窗");
+    } else {
+      $("#btnView")?.classList.add("active");
+      render();
+      toast("已退出演讲");
+    }
   }
 
   function go(page, productId = null) {
@@ -3018,6 +3274,16 @@
       talk: "Talk · 团队 / 器材 / 回忆杀"
     };
     box.innerHTML = `<div class="note">${labels[state.page] || ""}</div>`;
+
+    const notesEl = $("#pageNotes");
+    if (notesEl) {
+      const owner = notesOwner();
+      const value = owner?.notes || "";
+      if (notesEl.value !== value) notesEl.value = value;
+      notesEl.placeholder = state.page === "guides"
+        ? "额外提词（会叠在右侧文案后面）"
+        : "写上台提词；投屏演讲时只出现在本机讲稿窗";
+    }
   }
 
   function defaultGuidesPanels() {
@@ -3770,6 +4036,7 @@
     }
     views.appendChild(view);
     renderSide();
+    paintPresenter();
   }
 
   function addItem(type) {
@@ -4100,8 +4367,21 @@
 
   function bind() {
     $("#btnEdit").addEventListener("click", () => setEdit(true));
-    $("#btnView").addEventListener("click", () => setEdit(false));
+    $("#btnView").addEventListener("click", () => {
+      if (state.present) setPresent(false);
+      setEdit(false);
+    });
+    $("#btnPresent")?.addEventListener("click", () => setPresent(true));
+    $("#fabPresent")?.addEventListener("click", () => setPresent(true));
+    $("#fabExitPresent")?.addEventListener("click", () => setPresent(false));
     $("#fabEdit").addEventListener("click", () => setEdit(true));
+    $("#pageNotes")?.addEventListener("input", (e) => {
+      const owner = notesOwner();
+      if (!owner) return;
+      owner.notes = e.target.value;
+      saveQuiet();
+      paintPresenter();
+    });
     $("#btnSave").addEventListener("click", save);
     $("#btnUndo")?.addEventListener("click", undo);
     $("#btnRedo")?.addEventListener("click", redo);
@@ -4213,10 +4493,35 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         if (state.ig) closeIgModal();
-        else closeLightbox();
+        else if (lightbox.classList.contains("open")) closeLightbox();
+        else if (state.present) setPresent(false);
         if (state.placingText) {
           state.placingText = false;
           render();
+        }
+      }
+
+      const tag = (e.target && e.target.tagName) || "";
+      const typing = e.target?.isContentEditable || tag === "INPUT" || tag === "TEXTAREA";
+      if (!typing && (e.key === "n" || e.key === "N") && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        openPresenterWindow(false);
+      }
+      if (!typing && state.present && !state.ig && !lightbox.classList.contains("open") && !e.metaKey && !e.ctrlKey) {
+        if (e.key === "ArrowRight" || e.key === "PageDown") {
+          // don't steal 404 book / ig arrows handled below when not present-nav
+          if (state.page !== "404") {
+            e.preventDefault();
+            stepNav(1);
+            return;
+          }
+        }
+        if (e.key === "ArrowLeft" || e.key === "PageUp") {
+          if (state.page !== "404") {
+            e.preventDefault();
+            stepNav(-1);
+            return;
+          }
         }
       }
 
@@ -4241,8 +4546,6 @@
         !e.metaKey && !e.ctrlKey && !e.altKey &&
         (e.key === "ArrowLeft" || e.key === "ArrowRight")
       ) {
-        const tag = (e.target && e.target.tagName) || "";
-        const typing = e.target?.isContentEditable || tag === "INPUT" || tag === "TEXTAREA";
         if (!typing) {
           const bookEl = document.querySelector(".mag-book-block");
           if (bookEl && typeof bookEl._flipBook === "function") {
@@ -4255,8 +4558,6 @@
 
       const mod = e.metaKey || e.ctrlKey;
       if (!mod) return;
-      const tag = (e.target && e.target.tagName) || "";
-      const typing = e.target?.isContentEditable || tag === "INPUT" || tag === "TEXTAREA";
       if (typing) return;
 
       const key = e.key.toLowerCase();

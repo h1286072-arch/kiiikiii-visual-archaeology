@@ -48,7 +48,8 @@ window.DEFAULT_SITE = {
       "Visual Archaeology",
       "Design Share 2026",
       "Ever2Late"
-    ]
+    ],
+    "notes": "开场：各位同事下午好。用 KiiiKiii 案例聊——怎么把过时/土的审美重新做得好看、好传播。主题一句：视觉考古。约 35 分钟 + 互动。路线：三次回归 → 官网感 → 幕后 → 回忆杀。"
   },
   "pages": {
     "404": {
@@ -56,6 +57,7 @@ window.DEFAULT_SITE = {
       "title": "404 (New Era)",
       "eyebrow": "Comeback 02 · 404",
       "intro": "404 = 新时代入口。名媛符号拿来玩，New Era 联名写进概念宇宙。",
+      "notes": "404：名媛词典拿来玩，不是复刻纸醉金迷。故障预告 + New Era 联名写进概念宇宙。可翻 Loop / 书本 / Cinema Strip 给现场看细节。",
       "items": [
         {
           "id": "404-01_404-1",
@@ -729,6 +731,7 @@ window.DEFAULT_SITE = {
       "shopName": "KiiiKiii Garage Sale",
       "eyebrow": "Comeback 01 · Jams",
       "intro": "UNCUT GEM 概念货架。点进商品看成员概念照。",
+      "notes": "UNCUT GEM / Jams：邻家底盘 + 不对劲道具。点进货架看概念照；提「日常感 × 符号化 + 不和谐」。生命力旅拍可顺带点一下。",
       "protection": "All purchase through KiiiKiii Airlines are covered by TiiKiii Protection.",
       "floats": [],
       "products": [
@@ -770,6 +773,15 @@ window.DEFAULT_SITE = {
               "id": "d-debut-4",
               "type": "image",
               "src": "assets/albums/uncut-gem/06_kiiikiii出道预告视觉分析_5_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "d-debut-gif",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/jam-factory-website.gif",
               "frame": {
                 "w": 100,
                 "fit": "contain"
@@ -1067,6 +1079,7 @@ window.DEFAULT_SITE = {
       "eyebrow": "Comeback 03 · Guides",
       "title": "WhyKiiiKiii Guides",
       "intro": "点右侧按钮切换主题：免税店策划 / Pop off MV 视觉……每个主题独立图文，可继续新增。",
+      "notes": "WhyKiiiKiii 重点站。投屏时右侧文案会藏到本机讲稿窗；现场点主题按钮切换。强调：氧气感 × 旧互联网，风格是外套不是身份证。",
       "items": [
         {
           "id": "popoff-04_popoff",
@@ -1177,6 +1190,7 @@ window.DEFAULT_SITE = {
           "eyebrow": "Comeback 03 · WhyKiiiKiii",
           "title": "Girl's Duty Free",
           "intro": "WhyKiiiKiii 岛上的模拟免税店：商品评价就是买家秀概念照。一逛就出不来。",
+          "notes": "免税店：物料多、买家秀=概念照、Free of (Girls) Duty。可点商品示意「购买」弹窗。",
           "sections": [
             {
               "heading": "策划神点",
@@ -1238,6 +1252,7 @@ window.DEFAULT_SITE = {
           "eyebrow": "MV · Popoffpopoff",
           "title": "Pop off 视觉美学",
           "intro": "解析 Pop off pop off MV：Frutiger Aero × 初代互联网网页美学，一场 Windows 桌面里的虚拟海岛漫游。",
+          "notes": "Pop off：Frutiger Aero × 初代网页。卖的是「想住进那张图里」。跟风靠可模仿，不靠设备型号。",
           "sections": [
             {
               "heading": "审美基底",
@@ -1485,6 +1500,7 @@ window.DEFAULT_SITE = {
       "title": "幕后 & 互动",
       "eyebrow": "Talk · Crew & Nostalgia",
       "intro": "铁三角审美同频；再分享器材与 2000s 回忆杀。图片可后续替换。",
+      "notes": "幕后：byheyone / hiozoik / haanasah。固定班底→审美同频。回忆杀答案只在本机讲稿里念，别投屏念破。收：可被模仿的核心＝可传播的文化。谢谢。",
       "crew": [
         {
           "id": "c1",
