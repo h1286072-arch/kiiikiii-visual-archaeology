@@ -1,6 +1,6 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v29-0920-merge";
+  const STORAGE_KEY = "kiiikiii-site-v30-jams-three";
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [
@@ -410,6 +410,88 @@
     return host.floats;
   }
 
+  function consolidateJamsToThree(page) {
+    const prods = page.products || [];
+    const byId = Object.fromEntries(prods.map((p) => [p.id, p]));
+    const conceptA = byId["jam-concept-hq-a"];
+    const ido = byId["jam-ido-me"];
+    const conceptB = byId["jam-concept-hq-b"];
+    const travel = byId["jam-travel-1"];
+    const jacket = byId["jam-jacket-behind"];
+    const needsConcept = !!(conceptA || ido || conceptB);
+    const needsTravel = !!(travel || jacket);
+    if (!needsConcept && !needsTravel) return page;
+
+    const debut = byId["jam-debut-study"] || prods[0] || null;
+    const keepIds = new Set(["jam-debut-study", "jam-concept-pack", "jam-travel-jacket"]);
+    const others = prods.filter((p) => !keepIds.has(p.id) && ![
+      "jam-concept-hq-a", "jam-ido-me", "jam-concept-hq-b", "jam-travel-1", "jam-jacket-behind"
+    ].includes(p.id));
+
+    const next = [];
+    if (debut) next.push(debut);
+
+    if (needsConcept) {
+      const existing = byId["jam-concept-pack"];
+      const details = [
+        ...(existing?.details || []),
+        ...(conceptA?.details || []),
+        ...(ido?.details || []),
+        ...(conceptB?.details || [])
+      ];
+      const seen = new Set();
+      const mergedDetails = details.filter((d) => {
+        const key = d.id || d.src;
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      next.push({
+        id: "jam-concept-pack",
+        title: existing?.title || "UNCUT GEM Concepts",
+        seller: existing?.seller || conceptA?.seller || "starship",
+        price: existing?.price || conceptA?.price || "1 Soft Landing",
+        locked: false,
+        cover: existing?.cover || conceptA?.cover || mergedDetails[0]?.src || "",
+        details: mergedDetails,
+        floats: existing?.floats || []
+      });
+    } else if (byId["jam-concept-pack"]) {
+      next.push(byId["jam-concept-pack"]);
+    }
+
+    if (needsTravel) {
+      const existing = byId["jam-travel-jacket"];
+      const details = [
+        ...(existing?.details || []),
+        ...(travel?.details || []),
+        ...(jacket?.details || [])
+      ];
+      const seen = new Set();
+      const mergedDetails = details.filter((d) => {
+        const key = d.id || d.src;
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      next.push({
+        id: "jam-travel-jacket",
+        title: existing?.title || "Travel & Jacket Behind",
+        seller: existing?.seller || travel?.seller || "搬了个",
+        price: existing?.price || travel?.price || "1 Soft Landing",
+        locked: false,
+        cover: existing?.cover || travel?.cover || mergedDetails[0]?.src || "",
+        details: mergedDetails,
+        floats: existing?.floats || []
+      });
+    } else if (byId["jam-travel-jacket"]) {
+      next.push(byId["jam-travel-jacket"]);
+    }
+
+    page.products = next.concat(others);
+    return page;
+  }
+
   function ensureJamsShop(page) {
     if (!page.protection) {
       page.protection = "All purchase through KiiiKiii Airlines are covered by TiiKiii Protection.";
@@ -434,6 +516,7 @@
         floats: []
       }));
     }
+    consolidateJamsToThree(page);
     page.products.forEach((p) => {
       if (!p.details) p.details = [];
       if (!p.details.length && p.cover) {
@@ -2207,10 +2290,20 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         state.site = scrubSite(JSON.parse(raw));
-        return;
+      } else {
+        state.site = scrubSite(deepClone(window.DEFAULT_SITE));
       }
-    } catch (_) {}
-    state.site = scrubSite(deepClone(window.DEFAULT_SITE));
+    } catch (_) {
+      state.site = scrubSite(deepClone(window.DEFAULT_SITE));
+    }
+    if (state.site?.pages?.jams) {
+      const before = (state.site.pages.jams.products || []).map((p) => p.id).join(",");
+      ensureJamsShop(state.site.pages.jams);
+      const after = (state.site.pages.jams.products || []).map((p) => p.id).join(",");
+      if (before !== after) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
+      }
+    }
   }
 
   function save() {
@@ -4254,6 +4347,7 @@
       reader.onload = () => {
         try {
           state.site = scrubSite(JSON.parse(reader.result));
+          if (state.site?.pages?.jams) ensureJamsShop(state.site.pages.jams);
           resetHistory();
           saveQuiet();
           render();
