@@ -562,7 +562,7 @@ window.DEFAULT_SITE = {
       "book": {
         "title": "404 Photo Book",
         "credit": "*Designed By KiiiKiii",
-        "active": 0,
+        "active": 8,
         "pages": [
           {
             "id": "book-01_book",
@@ -638,6 +638,116 @@ window.DEFAULT_SITE = {
             "id": "book-08_book",
             "type": "image",
             "src": "assets/albums/404/book/08_book.jpg",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vs20p-aqig",
+            "type": "image",
+            "src": "assets/imported/from-0920/001_pages.404.book.pages-8_src_5bdc013042.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vs662-qdhq",
+            "type": "image",
+            "src": "assets/imported/from-0920/002_pages.404.book.pages-9_src_cda38ffe82.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vseqw-u7ui",
+            "type": "image",
+            "src": "assets/imported/from-0920/003_pages.404.book.pages-10_src_33aa144962.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vsjd6-j9oc",
+            "type": "image",
+            "src": "assets/imported/from-0920/004_pages.404.book.pages-11_src_e808a64aea.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vsnki-g1p9",
+            "type": "image",
+            "src": "assets/imported/from-0920/005_pages.404.book.pages-12_src_7c521186ef.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vstex-6h4v",
+            "type": "image",
+            "src": "assets/imported/from-0920/006_pages.404.book.pages-13_src_e086e08cff.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vsyiz-cluh",
+            "type": "image",
+            "src": "assets/imported/from-0920/007_pages.404.book.pages-14_src_d44c4d8f42.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vt3tk-9fk3",
+            "type": "image",
+            "src": "assets/imported/from-0920/008_pages.404.book.pages-15_src_7efeaaf36b.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vtah1-cgyn",
+            "type": "image",
+            "src": "assets/imported/from-0920/009_pages.404.book.pages-16_src_51662160f9.jpg",
+            "poster": "",
+            "frame": {
+              "w": 70,
+              "fit": "contain"
+            },
+            "floats": []
+          },
+          {
+            "id": "book-mu9vte52-4iqv",
+            "type": "image",
+            "src": "assets/imported/from-0920/010_pages.404.book.pages-17_src_37f8c0aad9.jpg",
+            "poster": "",
             "frame": {
               "w": 70,
               "fit": "contain"
@@ -738,7 +848,7 @@ window.DEFAULT_SITE = {
         {
           "id": "jam-debut-study",
           "title": "Debut Teaser Study",
-          "seller": "70岁的奶奶风流一夜",
+          "seller": "70岁的奶奶",
           "price": "1 Real Laugh",
           "cover": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
           "details": [
@@ -746,15 +856,6 @@ window.DEFAULT_SITE = {
               "id": "d-debut-1",
               "type": "image",
               "src": "assets/albums/uncut-gem/03_kiiikiii出道预告视觉分析_1_70岁的奶奶风流一夜.jpg",
-              "frame": {
-                "w": 100,
-                "fit": "contain"
-              }
-            },
-            {
-              "id": "d-debut-2",
-              "type": "image",
-              "src": "assets/albums/uncut-gem/04_kiiikiii出道预告视觉分析_2_70岁的奶奶风流一夜.jpg",
               "frame": {
                 "w": 100,
                 "fit": "contain"
@@ -779,9 +880,58 @@ window.DEFAULT_SITE = {
               }
             },
             {
+              "id": "d-debut-2",
+              "type": "image",
+              "src": "assets/albums/uncut-gem/04_kiiikiii出道预告视觉分析_2_70岁的奶奶风流一夜.jpg",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu9wfvba-7s63",
+              "type": "image",
+              "src": "assets/imported/from-0920/011_pages.jams.products-0-.details-4_src_d1d9b05e29.jpg",
+              "poster": "",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu9wg47s-qyh2",
+              "type": "image",
+              "src": "assets/imported/from-0920/012_pages.jams.products-0-.details-5_src_895c32bb10.jpg",
+              "poster": "",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
               "id": "d-debut-gif",
               "type": "image",
               "src": "assets/albums/uncut-gem/jam-factory-website.gif",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu9wgp9a-ne2q",
+              "type": "image",
+              "src": "assets/imported/from-0920/013_pages.jams.products-0-.details-7_src_ca88b67571.jpg",
+              "poster": "",
+              "frame": {
+                "w": 100,
+                "fit": "contain"
+              }
+            },
+            {
+              "id": "detail-mu9wgugv-f18f",
+              "type": "image",
+              "src": "assets/imported/from-0920/014_pages.jams.products-0-.details-8_src_f4f82793e4.jpg",
+              "poster": "",
               "frame": {
                 "w": 100,
                 "fit": "contain"
@@ -1440,14 +1590,15 @@ window.DEFAULT_SITE = {
                 "rows": 3
               }
             }
-          ]
+          ],
+          "notes": ""
         }
       ],
       "activePanel": 1,
       "tour": {
         "eyebrow": "KiiiKiii Travel · WHYKiiiiKIII TOUR",
         "title": "Hey Hi Tour Guide",
-        "active": 4,
+        "active": 0,
         "slides": [
           {
             "id": "tour-1",

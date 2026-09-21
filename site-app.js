@@ -1,6 +1,6 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v27-presenter";
+  const STORAGE_KEY = "kiiikiii-site-v29-0920-merge";
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [
@@ -15,7 +15,6 @@
     site: null,
     page: "home",
     edit: false,
-    present: false,
     replaceTarget: null,
     dragFrom: null,
     ig: null, // { postId, slide }
@@ -33,9 +32,6 @@
   let history = [];
   let historyIndex = -1;
   let applyingHistory = false;
-  let presenterWin = null;
-  let presenterTimer = null;
-  let presenterStartedAt = 0;
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const views = $("#views");
@@ -63,6 +59,71 @@
     if (/^data:video\//i.test(src)) return true;
     if (/\.(mp4|webm|mov)(\?|#|$)/i.test(src)) return true;
     return false;
+  }
+
+  function isGifSrc(src) {
+    if (!src) return false;
+    if (/^data:image\/gif/i.test(src)) return true;
+    return /\.gif(\?|#|$)/i.test(src);
+  }
+
+  function stripReplayQuery(src) {
+    return String(src || "")
+      .replace(/([?&])_replay=\d+/g, "$1")
+      .replace(/[?&]$/, "")
+      .replace(/\?$/, "");
+  }
+
+  function replayMediaEl(el) {
+    if (!el) return;
+    if (el.tagName === "VIDEO") {
+      try {
+        el.pause();
+        el.currentTime = 0;
+        const p = el.play?.();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      } catch (_) {}
+      return;
+    }
+    if (el.tagName === "IMG") {
+      const base = stripReplayQuery(el.dataset.replaySrc || el.getAttribute("src") || "");
+      if (!base) return;
+      el.dataset.replaySrc = base;
+      el.src = `${base}${base.includes("?") ? "&" : "?"}_replay=${Date.now()}`;
+    }
+  }
+
+  function attachReplayChrome(parent, mediaEl, opts = {}) {
+    if (!mediaEl) return null;
+    if (opts.cover || opts.replay === false) {
+      parent.appendChild(mediaEl);
+      return mediaEl;
+    }
+    const src = mediaEl.getAttribute("src") || mediaEl.src || "";
+    const animated = mediaEl.tagName === "VIDEO" || isGifSrc(src);
+    if (!animated) {
+      parent.appendChild(mediaEl);
+      return mediaEl;
+    }
+    if (mediaEl.tagName === "IMG") {
+      mediaEl.dataset.replaySrc = stripReplayQuery(src);
+    }
+    const wrap = document.createElement("div");
+    wrap.className = "media-replay-wrap";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "media-replay-btn";
+    btn.title = "重新播放";
+    btn.setAttribute("aria-label", "重新播放");
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>`;
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      replayMediaEl(mediaEl);
+    });
+    wrap.append(mediaEl, btn);
+    parent.appendChild(wrap);
+    return mediaEl;
   }
 
   function appendMediaNode(parent, item, opts = {}) {
@@ -101,16 +162,16 @@
           } catch (_) {}
         };
         v.addEventListener("loadeddata", snap, { once: true });
+        parent.appendChild(v);
+        return v;
       }
-      parent.appendChild(v);
-      return v;
+      return attachReplayChrome(parent, v, opts);
     }
     const img = document.createElement("img");
     img.src = src;
     img.alt = opts.alt || item?.text || item?.title || "";
     if (opts.lazy !== false) img.loading = "lazy";
-    parent.appendChild(img);
-    return img;
+    return attachReplayChrome(parent, img, opts);
   }
 
   function captureVideoPoster(src, atSec = 0.08) {
@@ -597,16 +658,16 @@
       media.appendChild(ghost);
     }
 
-    if (item.type === "video" && src && /\.(mp4|webm)$/i.test(src)) {
+    if (item.type === "video" && src && /\.(mp4|webm|mov)$/i.test(src)) {
       const v = document.createElement("video");
       v.src = src; v.muted = true; v.loop = true; v.playsInline = true; v.controls = true;
       v.style.objectFit = frame.fit || "contain";
-      media.appendChild(v);
+      attachReplayChrome(media, v, {});
     } else if (src) {
       const img = document.createElement("img");
       img.src = src; img.alt = ""; img.loading = "lazy";
       img.style.objectFit = frame.fit || "contain";
-      media.appendChild(img);
+      attachReplayChrome(media, img, {});
     } else {
       const ph = document.createElement("div");
       ph.style.cssText = "aspect-ratio:4/5;display:grid;place-items:center;color:#9aa;font-size:13px;";
@@ -723,7 +784,7 @@
     else next = state.page;
     const cur = (location.hash || "").replace(/^#/, "");
     if (cur === next) return;
-    if (!next) history.replaceState(null, "", location.pathname + location.search);
+    if (!next) window.history.replaceState(null, "", location.pathname + location.search);
     else location.hash = next;
   }
 
@@ -787,14 +848,14 @@
     // media
     const media = document.createElement("div");
     media.className = "ig-media";
-    if (slide?.type === "video" && slide.src && /\.(mp4|webm)$/i.test(slide.src)) {
+    if (slide?.type === "video" && slide.src && /\.(mp4|webm|mov)$/i.test(slide.src)) {
       const v = document.createElement("video");
-      v.src = slide.src; v.controls = true; v.autoplay = true;
-      media.appendChild(v);
+      v.src = slide.src; v.controls = true; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
+      attachReplayChrome(media, v, {});
     } else if (slide?.src) {
       const img = document.createElement("img");
       img.src = slide.src; img.alt = "";
-      media.appendChild(img);
+      attachReplayChrome(media, img, {});
     } else {
       const ph = document.createElement("div");
       ph.style.cssText = "color:#aaa;font-size:13px;";
@@ -2141,193 +2202,9 @@
     });
   }
 
-  function escHtml(s) {
-    return String(s ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function formatElapsed(ms) {
-    const sec = Math.floor(ms / 1000);
-    const m = String(Math.floor(sec / 60)).padStart(2, "0");
-    const s = String(sec % 60).padStart(2, "0");
-    return `${m}:${s}`;
-  }
-
-  function pageLabel(id) {
-    return NAV.find((n) => n.id === id)?.label || id;
-  }
-
-  function notesOwner() {
-    if (state.page === "home") return state.site.home;
-    if (state.page === "guides") {
-      const page = ensureGuides(state.site.pages.guides);
-      return guidesActivePanel(page);
-    }
-    return state.site.pages[state.page];
-  }
-
-  function currentNotesText() {
-    const owner = notesOwner();
-    if (!owner) return "";
-    if (state.page === "guides") {
-      const page = state.site.pages.guides;
-      const theme = owner;
-      const chunks = [];
-      if (theme.title) chunks.push(theme.title);
-      if (theme.intro) chunks.push(theme.intro);
-      (theme.sections || []).forEach((sec) => {
-        const h = (sec.heading || "").trim();
-        const b = (sec.body || "").trim();
-        if (h || b) chunks.push([h, b].filter(Boolean).join("\n"));
-      });
-      const extra = (theme.notes || page.notes || "").trim();
-      if (extra) chunks.push(`——\n${extra}`);
-      return chunks.join("\n\n") || "（本主题暂无讲稿）";
-    }
-    return (owner.notes || "").trim() || "（本页暂无备注，可在编辑侧栏填写）";
-  }
-
-  function currentPresenterTitle() {
-    if (state.page === "home") return state.site.home?.headline?.replace(/\n/g, " ") || "Home";
-    if (state.page === "guides") {
-      const theme = notesOwner();
-      return theme?.title || theme?.button || "Guides";
-    }
-    const page = state.site.pages[state.page];
-    return page?.title || pageLabel(state.page);
-  }
-
-  function paintPresenter() {
-    const w = presenterWin;
-    if (!w || w.closed) {
-      presenterWin = null;
-      return;
-    }
-    const idx = NAV.findIndex((n) => n.id === state.page);
-    const prev = idx > 0 ? NAV[idx - 1] : null;
-    const next = idx >= 0 && idx < NAV.length - 1 ? NAV[idx + 1] : null;
-    const elapsed = presenterStartedAt ? formatElapsed(Date.now() - presenterStartedAt) : "00:00";
-    const root = w.document.getElementById("root");
-    if (!root) return;
-    const sub = state.page === "guides"
-      ? `Guides · ${(state.site.pages.guides?.panels?.[state.site.pages.guides.activePanel || 0]?.button) || "主题"}`
-      : (state.productId ? `Jams · ${state.productId}` : pageLabel(state.page));
-    root.innerHTML = `
-      <header class="bar">
-        <div>
-          <div class="eyebrow">演讲者视图 · 仅本机可见</div>
-          <div class="page">${escHtml(sub)}</div>
-        </div>
-        <div class="timer" id="timer">${elapsed}</div>
-      </header>
-      <section class="now">
-        <h1>${escHtml(currentPresenterTitle())}</h1>
-        <pre class="notes">${escHtml(currentNotesText())}</pre>
-      </section>
-      <section class="meta">
-        <div class="card"><div class="label">上一站</div><div class="val">${prev ? escHtml(prev.label) : "—"}</div></div>
-        <div class="card"><div class="label">下一站</div><div class="val">${next ? escHtml(next.label) : "—"}</div></div>
-      </section>
-      <footer class="controls">
-        <button type="button" data-act="prev">← 上一站</button>
-        <button type="button" data-act="next">下一站 →</button>
-        <button type="button" data-act="reset-timer">重置计时</button>
-      </footer>
-      <p class="hint">把主窗口拖到投影仪；本窗留在电脑上。Guides 大屏会藏右侧文案，这里同步显示。←→ 翻导航 · Esc 退出演讲</p>
-    `;
-    root.querySelectorAll("[data-act]").forEach((btn) => {
-      btn.onclick = () => {
-        const act = btn.getAttribute("data-act");
-        if (act === "prev" || act === "next") stepNav(act === "next" ? 1 : -1);
-        if (act === "reset-timer") {
-          presenterStartedAt = Date.now();
-          paintPresenter();
-        }
-      };
-    });
-  }
-
-  function openPresenterWindow(auto = false) {
-    if (presenterWin && !presenterWin.closed) {
-      try { presenterWin.focus(); } catch (_) {}
-      paintPresenter();
-      return presenterWin;
-    }
-    const w = window.open("", "kiiikiii-site-presenter", "popup=yes,width=520,height=820,left=40,top=40");
-    if (!w) {
-      toast(auto ? "请允许弹窗，才能打开本机讲稿窗" : "弹窗被拦截，请允许后重试");
-      return null;
-    }
-    presenterWin = w;
-    if (!presenterStartedAt) presenterStartedAt = Date.now();
-    w.document.title = "演讲者视图 · 讲稿";
-    w.document.head.innerHTML = `<meta charset="UTF-8" /><style>
-      *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0b0d12;color:#eef2ff}
-      #root{min-height:100vh;padding:18px 18px 24px;display:flex;flex-direction:column;gap:14px}
-      .bar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-      .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7dd3fc}
-      .page{font-size:22px;font-weight:700;margin-top:4px}
-      .timer{font-variant-numeric:tabular-nums;font-size:28px;font-weight:600;color:#a5b4fc}
-      .now{background:#151821;border:1px solid #2c3140;border-radius:14px;padding:16px;flex:1;overflow:auto}
-      .now h1{font-size:20px;margin:0 0 12px;line-height:1.3}
-      .notes{margin:0;white-space:pre-wrap;line-height:1.65;font-size:16px;font-family:ui-sans-serif,system-ui,sans-serif;color:#e5e7eb}
-      .meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-      .card{background:#12151d;border:1px solid #2c3140;border-radius:12px;padding:12px}
-      .label{font-size:11px;color:#93c5fd;margin-bottom:6px}
-      .val{font-size:13px;color:#cbd5e1;line-height:1.4}
-      .controls{display:flex;flex-wrap:wrap;gap:8px}
-      .controls button{appearance:none;border:1px solid #334155;background:#1e293b;color:#f8fafc;border-radius:10px;padding:10px 14px;font-size:13px;cursor:pointer}
-      .controls button:hover{border-color:#38bdf8}
-      .hint{margin:0;font-size:12px;color:#94a3b8;line-height:1.45}
-    </style>`;
-    w.document.body.innerHTML = `<div id="root"></div>`;
-    w.addEventListener("keydown", (e) => {
-      if (["INPUT", "TEXTAREA"].includes(e.target?.tagName || "")) return;
-      if (e.key === "ArrowRight" || e.key === "PageDown") {
-        e.preventDefault();
-        stepNav(1);
-      }
-      if (e.key === "ArrowLeft" || e.key === "PageUp") {
-        e.preventDefault();
-        stepNav(-1);
-      }
-      if (e.key === "Escape") {
-        e.preventDefault();
-        setPresent(false);
-      }
-    });
-    w.addEventListener("beforeunload", () => {
-      if (presenterWin === w) presenterWin = null;
-    });
-    clearInterval(presenterTimer);
-    presenterTimer = setInterval(() => {
-      if (!presenterWin || presenterWin.closed) {
-        clearInterval(presenterTimer);
-        presenterTimer = null;
-        return;
-      }
-      const el = presenterWin.document.getElementById("timer");
-      if (el && presenterStartedAt) el.textContent = formatElapsed(Date.now() - presenterStartedAt);
-    }, 1000);
-    paintPresenter();
-    try { w.focus(); } catch (_) {}
-    return w;
-  }
-
-  function stepNav(delta) {
-    const idx = NAV.findIndex((n) => n.id === state.page);
-    const next = idx + delta;
-    if (next < 0 || next >= NAV.length) return;
-    go(NAV[next].id);
-  }
-
   function load() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-        || localStorage.getItem("kiiikiii-site-v26-jams-three");
+      const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         state.site = scrubSite(JSON.parse(raw));
         return;
@@ -2395,15 +2272,10 @@
   }
 
   function setEdit(on) {
-    if (on && state.present) {
-      state.present = false;
-      document.body.classList.remove("present");
-      $("#btnPresent")?.classList.remove("active");
-    }
     state.edit = on;
     document.body.classList.toggle("edit", on);
     $("#btnEdit").classList.toggle("active", on);
-    $("#btnView").classList.toggle("active", !on && !state.present);
+    $("#btnView").classList.toggle("active", !on);
     if (!on) {
       state.placingText = false;
       state.placingBookText = false;
@@ -2412,39 +2284,13 @@
     render();
   }
 
-  function setPresent(on) {
-    const next = !!on;
-    if (state.present === next) {
-      if (next) openPresenterWindow(true);
-      return;
-    }
-    state.present = next;
-    document.body.classList.toggle("present", state.present);
-    $("#btnPresent")?.classList.toggle("active", state.present);
-    if (state.present) {
-      state.edit = false;
-      document.body.classList.remove("edit");
-      $("#btnEdit")?.classList.remove("active");
-      $("#btnView")?.classList.remove("active");
-      state.placingText = false;
-      state.placingBookText = false;
-      state.selectedMedia = null;
-      render();
-      openPresenterWindow(true);
-      toast("演讲模式 · 大屏干净 · 本机看讲稿窗");
-    } else {
-      $("#btnView")?.classList.add("active");
-      render();
-      toast("已退出演讲");
-    }
-  }
-
   function go(page, productId = null) {
+    clearTourTimer();
+    clearHeroTimer();
     state.page = page;
     state.productId = page === "jams" ? productId : null;
     state.placingText = false;
     state.selectedMedia = null;
-    clearHeroTimer();
     closeIgModal();
     syncHash();
     render();
@@ -2476,14 +2322,15 @@
       v.src = item.src;
       v.controls = true;
       v.autoplay = true;
+      v.loop = true;
       v.addEventListener("click", (e) => e.stopPropagation());
-      lightboxBody.appendChild(v);
+      attachReplayChrome(lightboxBody, v, {});
     } else {
       const img = document.createElement("img");
       img.src = item.src;
       img.alt = "";
       img.addEventListener("click", (e) => e.stopPropagation());
-      lightboxBody.appendChild(img);
+      attachReplayChrome(lightboxBody, img, {});
     }
     const multi = lb.items.length > 1;
     lightboxPrev?.classList.toggle("show", multi);
@@ -2538,11 +2385,23 @@
     const duty = $("#navDuty");
     if (duty) duty.textContent = state.site.duty || "(Girls) Duty Free";
 
+    const existing = [...navLinks.querySelectorAll("button[data-nav]")];
+    if (existing.length === NAV.length) {
+      existing.forEach((btn, i) => {
+        const n = NAV[i];
+        btn.textContent = n.label;
+        btn.dataset.nav = n.id;
+        btn.classList.toggle("on", state.page === n.id);
+      });
+      return;
+    }
+
     navLinks.innerHTML = "";
     NAV.forEach((n) => {
       const li = document.createElement("li");
       const btn = document.createElement("button");
       btn.type = "button";
+      btn.dataset.nav = n.id;
       btn.textContent = n.label;
       btn.className = state.page === n.id ? "on" : "";
       btn.addEventListener("click", () => go(n.id));
@@ -3274,16 +3133,6 @@
       talk: "Talk · 团队 / 器材 / 回忆杀"
     };
     box.innerHTML = `<div class="note">${labels[state.page] || ""}</div>`;
-
-    const notesEl = $("#pageNotes");
-    if (notesEl) {
-      const owner = notesOwner();
-      const value = owner?.notes || "";
-      if (notesEl.value !== value) notesEl.value = value;
-      notesEl.placeholder = state.page === "guides"
-        ? "额外提词（会叠在右侧文案后面）"
-        : "写上台提词；投屏演讲时只出现在本机讲稿窗";
-    }
   }
 
   function defaultGuidesPanels() {
@@ -3554,9 +3403,9 @@
           appendMediaNode(media, item, { cover: false, muted: true, loop: true, autoplay: true });
         }
       } else if (src) {
-        const img = document.createElement("img");
-        img.src = src; img.alt = item.title || ""; img.loading = "lazy";
-        media.appendChild(img);
+        appendMediaNode(media, item, {
+          cover: false, muted: true, loop: true, autoplay: true, lazy: true, alt: item.title || ""
+        });
       } else {
         media.style.cssText += "display:grid;place-items:center;color:#99a;font-size:12px;";
         media.textContent = "双击添加";
@@ -3882,7 +3731,9 @@
       if (!slides.length) return;
       tour.active = ((idx % slides.length) + slides.length) % slides.length;
       if (!opts.quiet) saveQuiet();
-      render();
+      // Prefer in-place paint so nav / page chrome aren't rebuilt every tick
+      if (opts.full || state.edit) render();
+      else paintTour();
     };
 
     const stageWrap = document.createElement("div");
@@ -3890,89 +3741,102 @@
 
     const prev = document.createElement("button");
     prev.type = "button"; prev.className = "guides-tour-arrow"; prev.textContent = "‹";
-    prev.addEventListener("click", () => setTour(active - 1));
+    prev.addEventListener("click", () => setTour(tour.active - 1));
 
     const next = document.createElement("button");
     next.type = "button"; next.className = "guides-tour-arrow"; next.textContent = "›";
-    next.addEventListener("click", () => setTour(active + 1));
+    next.addEventListener("click", () => setTour(tour.active + 1));
 
     const stage = document.createElement("div");
     stage.className = "guides-tour-stage";
-    if (slide?.src) {
-      if (isVideoMedia(slide) || (slide.type === "video" && /\.(mp4|webm|mov)$/i.test(slide.src))) {
-        const v = document.createElement("video");
-        v.src = slide.src; v.controls = true; v.playsInline = true;
-        if (slide.poster) v.poster = slide.poster;
-        stage.appendChild(v);
-      } else {
-        const img = document.createElement("img");
-        img.src = slide.src; img.alt = slide.label || "";
-        stage.appendChild(img);
-      }
-    } else {
-      const ph = document.createElement("div");
-      ph.style.cssText = "display:grid;place-items:center;height:100%;color:#99a;";
-      ph.textContent = state.edit ? "添加导览大图" : "暂无导览图";
-      stage.appendChild(ph);
-    }
-
-    if (slide) {
-      const time = document.createElement("div");
-      time.className = "guides-tour-time";
-      editable(time, slide.time || "", (v) => { slide.time = v; saveQuiet(); });
-      stage.appendChild(time);
-
-      const foot = document.createElement("div");
-      foot.className = "guides-tour-footer";
-      const pager = document.createElement("div");
-      pager.className = "guides-tour-pager";
-      const dots = document.createElement("div");
-      dots.className = "guides-tour-dots";
-      slides.forEach((_, i) => {
-        const d = document.createElement("span");
-        if (i === active) d.classList.add("on");
-        dots.appendChild(d);
-      });
-      const count = document.createElement("span");
-      count.textContent = `${active + 1} / ${slides.length || 1}`;
-      pager.append(dots, count);
-
-      const label = document.createElement("div");
-      label.className = "guides-tour-label";
-      editable(label, slide.label || "", (v) => { slide.label = v; saveQuiet(); });
-      foot.append(pager, label);
-      stage.appendChild(foot);
-    }
-
-    if (state.edit) {
-      stage.addEventListener("click", (e) => {
-        if (e.target.closest("[contenteditable],.guides-tour-time,.guides-tour-label")) return;
-        if (slide) {
-          state.selectedMedia = slide;
-          toast("已选中导览图 · ⌘C / ⌘V");
-        }
-      });
-      stage.addEventListener("dblclick", (e) => {
-        if (e.target.closest("[contenteditable]")) return;
-        if (!slide) {
-          state.replaceTarget = { __guidesTourSlide: true };
-        } else {
-          state.replaceTarget = slide;
-        }
-        fileImage.click();
-      });
-    } else if (slide?.src) {
-      stage.addEventListener("click", () => openLightbox(slide.src, isVideoMedia(slide) ? "video" : "image"));
-      stage.style.cursor = "zoom-in";
-    }
-
-    if (slides.length > 1) stageWrap.append(prev, stage, next);
-    else stageWrap.appendChild(stage);
 
     const shelf = document.createElement("div");
     shelf.className = "guides-tour-shelf";
     const thumbs = document.createElement("div");
     thumbs.className = "guides-tour-thumbs";
+
+    const paintTour = () => {
+      const i = clamp(tour.active || 0, 0, Math.max(0, slides.length - 1));
+      tour.active = i;
+      const s = slides[i] || null;
+      stage.innerHTML = "";
+      stage.style.cursor = "";
+      if (s?.src) {
+        if (isVideoMedia(s) || (s.type === "video" && /\.(mp4|webm|mov)$/i.test(s.src))) {
+          const v = document.createElement("video");
+          v.src = s.src; v.controls = true; v.playsInline = true; v.muted = true; v.autoplay = true; v.loop = true;
+          if (s.poster) v.poster = s.poster;
+          attachReplayChrome(stage, v, {});
+        } else {
+          const img = document.createElement("img");
+          img.src = s.src; img.alt = s.label || "";
+          attachReplayChrome(stage, img, {});
+        }
+      } else {
+        const ph = document.createElement("div");
+        ph.style.cssText = "display:grid;place-items:center;height:100%;color:#99a;";
+        ph.textContent = state.edit ? "添加导览大图" : "暂无导览图";
+        stage.appendChild(ph);
+      }
+
+      if (s) {
+        const time = document.createElement("div");
+        time.className = "guides-tour-time";
+        editable(time, s.time || "", (v) => { s.time = v; saveQuiet(); });
+        stage.appendChild(time);
+
+        const foot = document.createElement("div");
+        foot.className = "guides-tour-footer";
+        const pager = document.createElement("div");
+        pager.className = "guides-tour-pager";
+        const dots = document.createElement("div");
+        dots.className = "guides-tour-dots";
+        slides.forEach((_, di) => {
+          const d = document.createElement("span");
+          if (di === i) d.classList.add("on");
+          dots.appendChild(d);
+        });
+        const count = document.createElement("span");
+        count.textContent = `${i + 1} / ${slides.length || 1}`;
+        pager.append(dots, count);
+
+        const label = document.createElement("div");
+        label.className = "guides-tour-label";
+        editable(label, s.label || "", (v) => { s.label = v; saveQuiet(); });
+        foot.append(pager, label);
+        stage.appendChild(foot);
+      }
+
+      if (state.edit) {
+        stage.onclick = (e) => {
+          if (e.target.closest("[contenteditable],.guides-tour-time,.guides-tour-label,.media-replay-btn")) return;
+          if (s) {
+            state.selectedMedia = s;
+            toast("已选中导览图 · ⌘C / ⌘V");
+          }
+        };
+        stage.ondblclick = (e) => {
+          if (e.target.closest("[contenteditable],.media-replay-btn")) return;
+          if (!s) state.replaceTarget = { __guidesTourSlide: true };
+          else state.replaceTarget = s;
+          fileImage.click();
+        };
+      } else if (s?.src) {
+        stage.onclick = (e) => {
+          if (e.target.closest(".media-replay-btn")) return;
+          openLightbox(s.src, isVideoMedia(s) ? "video" : "image");
+        };
+        stage.style.cursor = "zoom-in";
+      } else {
+        stage.onclick = null;
+        stage.ondblclick = null;
+      }
+
+      thumbs.querySelectorAll(".guides-tour-thumb").forEach((th, ti) => {
+        th.classList.toggle("on", ti === i);
+      });
+    };
+
     slides.forEach((s, i) => {
       const th = document.createElement("button");
       th.type = "button";
@@ -3994,7 +3858,11 @@
     });
     shelf.appendChild(thumbs);
 
-    // autoplay carousel (pause on hover / edit)
+    paintTour();
+    if (slides.length > 1) stageWrap.append(prev, stage, next);
+    else stageWrap.appendChild(stage);
+
+    // autoplay carousel (pause on hover / edit) — in-place only, never full-page render
     if (slides.length > 1 && tour.autoplay !== false && !state.edit) {
       const startAuto = () => {
         clearTourTimer();
@@ -4002,7 +3870,7 @@
         state.tourTimer = setInterval(() => {
           if (document.hidden || state.page !== "guides") return;
           tour.active = (tour.active + 1) % slides.length;
-          render();
+          paintTour();
         }, ms);
       };
       startAuto();
@@ -4036,7 +3904,6 @@
     }
     views.appendChild(view);
     renderSide();
-    paintPresenter();
   }
 
   function addItem(type) {
@@ -4367,21 +4234,8 @@
 
   function bind() {
     $("#btnEdit").addEventListener("click", () => setEdit(true));
-    $("#btnView").addEventListener("click", () => {
-      if (state.present) setPresent(false);
-      setEdit(false);
-    });
-    $("#btnPresent")?.addEventListener("click", () => setPresent(true));
-    $("#fabPresent")?.addEventListener("click", () => setPresent(true));
-    $("#fabExitPresent")?.addEventListener("click", () => setPresent(false));
+    $("#btnView").addEventListener("click", () => setEdit(false));
     $("#fabEdit").addEventListener("click", () => setEdit(true));
-    $("#pageNotes")?.addEventListener("input", (e) => {
-      const owner = notesOwner();
-      if (!owner) return;
-      owner.notes = e.target.value;
-      saveQuiet();
-      paintPresenter();
-    });
     $("#btnSave").addEventListener("click", save);
     $("#btnUndo")?.addEventListener("click", undo);
     $("#btnRedo")?.addEventListener("click", redo);
@@ -4494,7 +4348,6 @@
       if (e.key === "Escape") {
         if (state.ig) closeIgModal();
         else if (lightbox.classList.contains("open")) closeLightbox();
-        else if (state.present) setPresent(false);
         if (state.placingText) {
           state.placingText = false;
           render();
@@ -4503,27 +4356,6 @@
 
       const tag = (e.target && e.target.tagName) || "";
       const typing = e.target?.isContentEditable || tag === "INPUT" || tag === "TEXTAREA";
-      if (!typing && (e.key === "n" || e.key === "N") && !e.metaKey && !e.ctrlKey && !e.altKey) {
-        e.preventDefault();
-        openPresenterWindow(false);
-      }
-      if (!typing && state.present && !state.ig && !lightbox.classList.contains("open") && !e.metaKey && !e.ctrlKey) {
-        if (e.key === "ArrowRight" || e.key === "PageDown") {
-          // don't steal 404 book / ig arrows handled below when not present-nav
-          if (state.page !== "404") {
-            e.preventDefault();
-            stepNav(1);
-            return;
-          }
-        }
-        if (e.key === "ArrowLeft" || e.key === "PageUp") {
-          if (state.page !== "404") {
-            e.preventDefault();
-            stepNav(-1);
-            return;
-          }
-        }
-      }
 
       if (state.ig && !e.metaKey && !e.ctrlKey) {
         const post = find404Post(state.ig.postId);
