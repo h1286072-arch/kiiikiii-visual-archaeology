@@ -1,6 +1,12 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v30-jams-three";
+  const STORAGE_KEY = "kiiikiii-site-v31-jams-0920-imgs";
+  const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v30-jams-three",
+    "kiiikiii-site-v29-0920-merge",
+    "kiiikiii-site-v27-presenter",
+    "kiiikiii-site-v26-jams-three"
+  ];
   const MAX_HISTORY = 60;
   const PIN_DOTS = ["#f9a8d4", "#c4b5fd", "#86efac", "#d6d3d1", "#67e8f9", "#f87171", "#fde047", "#fda4af"];
   const NAV = [
@@ -529,17 +535,6 @@
       ensureFloats(p);
       p.details.forEach((d) => ensureFrame(d));
     });
-    // Debut Teaser Study: jam factory website GIF as last detail
-    const debut = page.products.find((p) => p.id === "jam-debut-study") || page.products[0];
-    const debutGif = "assets/albums/uncut-gem/jam-factory-website.gif";
-    if (debut?.details && !debut.details.some((d) => d.src === debutGif || d.id === "d-debut-gif")) {
-      debut.details.push({
-        id: "d-debut-gif",
-        type: "image",
-        src: debutGif,
-        frame: { w: 100, fit: "contain" }
-      });
-    }
     return page;
   }
 
@@ -2285,13 +2280,46 @@
     });
   }
 
+  function applyDefaultJamsProducts(site) {
+    const def = window.DEFAULT_SITE?.pages?.jams;
+    if (!def?.products || !site?.pages?.jams) return false;
+    site.pages.jams.products = deepClone(def.products);
+    return true;
+  }
+
+  function jamsMissing0920Images(page) {
+    const debut = (page?.products || []).find((p) => p.id === "jam-debut-study");
+    if (!debut?.details?.length) return true;
+    const ids = new Set(debut.details.map((d) => d.id));
+    return ["detail-mu9wfvba-7s63", "detail-mu9wg47s-qyh2", "detail-mu9wgp9a-ne2q", "detail-mu9wgugv-f18f", "d-debut-gif"]
+      .some((id) => !ids.has(id));
+  }
+
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         state.site = scrubSite(JSON.parse(raw));
+        if (jamsMissing0920Images(state.site.pages?.jams)) {
+          applyDefaultJamsProducts(state.site);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
+        }
       } else {
-        state.site = scrubSite(deepClone(window.DEFAULT_SITE));
+        let migrated = null;
+        for (const key of PREV_STORAGE_KEYS) {
+          const prev = localStorage.getItem(key);
+          if (prev) {
+            migrated = scrubSite(JSON.parse(prev));
+            break;
+          }
+        }
+        if (migrated) {
+          state.site = migrated;
+          applyDefaultJamsProducts(state.site);
+        } else {
+          state.site = scrubSite(deepClone(window.DEFAULT_SITE));
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
       }
     } catch (_) {
       state.site = scrubSite(deepClone(window.DEFAULT_SITE));
