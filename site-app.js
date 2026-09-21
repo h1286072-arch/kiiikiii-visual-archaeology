@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v31-jams-0920-imgs";
+  const STORAGE_KEY = "kiiikiii-site-v32-strip-hints";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v31-jams-0920-imgs",
     "kiiikiii-site-v30-jams-three",
     "kiiikiii-site-v29-0920-merge",
     "kiiikiii-site-v27-presenter",
@@ -271,7 +272,7 @@
       const pool = (page.items || []).length
         ? page.items
         : (page.heroSlides || []);
-      const labels = ["Haum", "Sui", "Leesol", "Kya", "Jiyu", "New Girl", "造型", "生活感", "街头"];
+      const labels = ["", "", "", "", "", "", "", "", ""];
       page.tiles = pool.slice(0, 7).map((it, i) => ({
         id: it.id || uid("tile"),
         src: it.src || "",
@@ -296,7 +297,7 @@
     if (!page.gifRow) page.gifRow = { title: "404 · Loop Clips", intro: "", items: [] };
     if (!page.gifRow.items) page.gifRow.items = [];
     if (page.gifRow.title == null) page.gifRow.title = "404 · Loop Clips";
-    if (page.gifRow.intro == null) page.gifRow.intro = "单封面 · 左右翻页 · 拖四角调尺寸";
+    page.gifRow.intro = "";
     if (!page.gifRow.frame) page.gifRow.frame = { w: 42 };
     if (typeof page.gifRow.frame.w !== "number") page.gifRow.frame.w = 42;
     if (typeof page.gifRow.activePage !== "number") page.gifRow.activePage = 0;
@@ -327,7 +328,7 @@
     if (!page.splitRail) {
       page.splitRail = {
         title: "404 · Cinema Strip",
-        intro: "上：三格动图平铺 · 下：横滑看图 · 编辑拖角等比缩放",
+        intro: "",
         features: [
           { id: "split-f1", type: "image", src: "assets/albums/404/split/02_delulu.gif", poster: "", aspect: "656/400" },
           { id: "split-f2", type: "image", src: "assets/albums/404/split/03_loading.gif", poster: "", aspect: "400/712" },
@@ -346,7 +347,11 @@
     }
     if (!page.splitRail.items) page.splitRail.items = [];
     if (page.splitRail.title == null) page.splitRail.title = "404 · Cinema Strip";
-    if (page.splitRail.intro == null) page.splitRail.intro = "上：三格动图平铺 · 下：横滑看图 · 编辑拖角等比缩放";
+    page.splitRail.intro = "";
+    const pinLabelKill = new Set(["造型", "道具", "Y2K", "直闪", "生活感", "街头", "New Era", "Haum", "Sui", "Leesol", "Kya", "Jiyu", "New Girl"]);
+    (page.tiles || []).forEach((t) => {
+      if (pinLabelKill.has(t.text)) t.text = "";
+    });
     if (!page.splitRail.frame) page.splitRail.frame = { w: 100 };
     if (typeof page.splitRail.frame.w !== "number") page.splitRail.frame.w = 100;
     if (!page.splitRail.features || !page.splitRail.features.length) {
@@ -1131,10 +1136,7 @@
     gifEye.textContent = "404 · Motion";
     const gifTitle = document.createElement("h2");
     editable(gifTitle, gifRow.title || "Loop Clips", (v) => { gifRow.title = v; saveQuiet(); });
-    const gifIntro = document.createElement("div");
-    gifIntro.className = "intro";
-    editable(gifIntro, gifRow.intro || "单封面 · 左右翻页 · 拖四角调尺寸", (v) => { gifRow.intro = v; saveQuiet(); });
-    gifHead.append(gifEye, gifTitle, gifIntro);
+    gifHead.append(gifEye, gifTitle);
 
     const gifToolbar = document.createElement("div");
     gifToolbar.className = "mag-gif-toolbar";
@@ -1494,10 +1496,7 @@
     bookEye.textContent = "404 · Photo Book";
     const bookTitle = document.createElement("h2");
     editable(bookTitle, book.title || "Photo Book", (v) => { book.title = v; saveQuiet(); });
-    const bookHint = document.createElement("div");
-    bookHint.className = "intro";
-    bookHint.textContent = "← → 键盘翻页 · 编辑模式拖四角等比缩放";
-    bookHead.append(bookEye, bookTitle, bookHint);
+    bookHead.append(bookEye, bookTitle);
 
     const bookToolbar = document.createElement("div");
     bookToolbar.className = "mag-book-toolbar";
@@ -1633,10 +1632,7 @@
     eye.textContent = "404 · Cinema";
     const title = document.createElement("h2");
     editable(title, rail.title || "Cinema Strip", (v) => { rail.title = v; saveQuiet(); });
-    const intro = document.createElement("div");
-    intro.className = "intro";
-    editable(intro, rail.intro || "上：横屏动图 · 下：两张竖屏并排 · 编辑拖角等比缩放", (v) => { rail.intro = v; saveQuiet(); });
-    head.append(eye, title, intro);
+    head.append(eye, title);
 
     const toolbar = document.createElement("div");
     toolbar.className = "mag-split-toolbar";
@@ -2122,11 +2118,14 @@
         });
       }
 
-      const caption = document.createElement("div");
-      caption.className = "mag-pin-cap";
-      editable(caption, tile.text || "", (v) => { tile.text = v; saveQuiet(); });
-
-      cell.append(dot, media, caption);
+      if (state.edit || (tile.text || "").trim()) {
+        const caption = document.createElement("div");
+        caption.className = "mag-pin-cap";
+        editable(caption, tile.text || "", (v) => { tile.text = v; saveQuiet(); });
+        cell.append(dot, media, caption);
+      } else {
+        cell.append(dot, media);
+      }
 
       if (state.edit) {
         const tools = document.createElement("div");

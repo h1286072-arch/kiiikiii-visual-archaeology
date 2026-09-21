@@ -434,49 +434,49 @@ window.DEFAULT_SITE = {
           "id": "tile-1",
           "src": "assets/imported/from-site2/003_tile-1_src_2adef4f566.jpg",
           "type": "image",
-          "text": "造型",
+          "text": "",
           "dot": "#f9a8d4"
         },
         {
           "id": "tile-2",
           "src": "assets/imported/from-site2/004_tile-2_src_6fcca5c555.jpg",
           "type": "image",
-          "text": "道具",
+          "text": "",
           "dot": "#c4b5fd"
         },
         {
           "id": "tile-3",
           "src": "assets/imported/from-site2/005_tile-3_src_4be4c4ebee.jpg",
           "type": "image",
-          "text": "Y2K",
+          "text": "",
           "dot": "#86efac"
         },
         {
           "id": "tile-4",
           "src": "assets/imported/from-site2/006_tile-4_src_13f77a3025.jpg",
           "type": "image",
-          "text": "直闪",
+          "text": "",
           "dot": "#d6d3d1"
         },
         {
           "id": "tile-5",
           "src": "assets/imported/from-site2/007_tile-5_src_d1f7a340e1.jpg",
           "type": "image",
-          "text": "生活感",
+          "text": "",
           "dot": "#67e8f9"
         },
         {
           "id": "tile-6",
           "src": "assets/imported/from-site2/008_tile-6_src_7909b28d94.jpg",
           "type": "image",
-          "text": "街头",
+          "text": "",
           "dot": "#f87171"
         },
         {
           "id": "tile-7",
           "src": "assets/imported/from-site2/009_tile-7_src_86625fbdb4.jpg",
           "type": "image",
-          "text": "New Era",
+          "text": "",
           "dot": "#fde047"
         },
         {
@@ -492,7 +492,7 @@ window.DEFAULT_SITE = {
       "scrapCaption": "[living my soft life <<3]",
       "gifRow": {
         "title": "404 · Loop Clips",
-        "intro": "单封面 · 左右翻页 · 拖四角调尺寸",
+        "intro": "",
         "items": [
           {
             "id": "gif-01_loop",
@@ -761,7 +761,7 @@ window.DEFAULT_SITE = {
       },
       "splitRail": {
         "title": "404 · Cinema Strip",
-        "intro": "上：三格动图平铺 · 下：横滑看图 · 编辑拖角等比缩放",
+        "intro": "",
         "feature": {
           "id": "split-f1",
           "type": "image",
