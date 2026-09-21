@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v32-strip-hints";
+  const STORAGE_KEY = "kiiikiii-site-v33-candy-pink";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v32-strip-hints",
     "kiiikiii-site-v31-jams-0920-imgs",
     "kiiikiii-site-v30-jams-three",
     "kiiikiii-site-v29-0920-merge",
@@ -2294,15 +2295,53 @@
       .some((id) => !ids.has(id));
   }
 
+  function applyDefaultCandyPinkPanel(site) {
+    const defPanels = window.DEFAULT_SITE?.pages?.guides?.panels;
+    const def = (defPanels || []).find((p) =>
+      p.id === "panel-mtzyno11-bvgu" || /Candy Pink Magic Hole/i.test(p.button || "")
+    );
+    if (!def?.items?.length || !site?.pages?.guides) return false;
+    if (!Array.isArray(site.pages.guides.panels)) site.pages.guides.panels = [];
+    const panels = site.pages.guides.panels;
+    const idx = panels.findIndex((p) =>
+      p.id === def.id || /Candy Pink Magic Hole|Bluehour/i.test(p.button || "")
+    );
+    const next = deepClone(def);
+    if (idx >= 0) panels[idx] = next;
+    else panels.push(next);
+    return true;
+  }
+
+  function candyPinkNeedsSync(site) {
+    const panels = site?.pages?.guides?.panels || [];
+    const panel = panels.find((p) =>
+      p.id === "panel-mtzyno11-bvgu" || /Candy Pink Magic Hole/i.test(p.button || "")
+    );
+    if (!panel?.items?.length) return true;
+    const def = (window.DEFAULT_SITE?.pages?.guides?.panels || []).find((p) =>
+      p.id === "panel-mtzyno11-bvgu" || /Candy Pink Magic Hole/i.test(p.button || "")
+    );
+    if (!def?.items?.length) return false;
+    if (panel.items.length < def.items.length) return true;
+    const ids = new Set(panel.items.map((it) => it.id));
+    return def.items.some((it) => !ids.has(it.id));
+  }
+
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         state.site = scrubSite(JSON.parse(raw));
+        let touched = false;
         if (jamsMissing0920Images(state.site.pages?.jams)) {
           applyDefaultJamsProducts(state.site);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
+          touched = true;
         }
+        if (candyPinkNeedsSync(state.site)) {
+          applyDefaultCandyPinkPanel(state.site);
+          touched = true;
+        }
+        if (touched) localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
       } else {
         let migrated = null;
         for (const key of PREV_STORAGE_KEYS) {
@@ -2315,6 +2354,7 @@
         if (migrated) {
           state.site = migrated;
           applyDefaultJamsProducts(state.site);
+          applyDefaultCandyPinkPanel(state.site);
         } else {
           state.site = scrubSite(deepClone(window.DEFAULT_SITE));
         }

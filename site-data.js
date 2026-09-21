@@ -1530,11 +1530,11 @@ window.DEFAULT_SITE = {
         },
         {
           "id": "panel-mtzyno11-bvgu",
-          "button": "Bluehour",
+          "button": "Candy Pink Magic Hole Flip Phone",
           "style": "dark",
           "eyebrow": "Comeback 03 · Guides",
-          "title": "新主题",
-          "intro": "在此写主题简介；左侧可插入对应图片 / GIF / 视频。",
+          "title": "Candy Pink Magic Hole Flip Phone",
+          "intro": "",
           "sections": [
             {
               "heading": "CONCEPT",
@@ -1545,7 +1545,7 @@ window.DEFAULT_SITE = {
             {
               "id": "guides-mtzzxwtn-vul1",
               "type": "image",
-              "src": "assets/imported/from-other-pc/019_guides-mtzzxwtn-vul1_src_512a881f0d.jpg",
+              "src": "assets/imported/from-0917-candy/00_guides-mtzzxwtn-vul1_d073a33b58.gif",
               "poster": "",
               "title": "",
               "caption": "",
@@ -1557,7 +1557,7 @@ window.DEFAULT_SITE = {
             {
               "id": "guides-mtzzydpf-a13w",
               "type": "image",
-              "src": "assets/imported/from-other-pc/020_guides-mtzzydpf-a13w_src_22eb02df63.jpg",
+              "src": "assets/imported/from-0917-candy/01_guides-mtzzydpf-a13w_92122652f9.jpg",
               "poster": "",
               "title": "",
               "caption": "",
@@ -1569,7 +1569,7 @@ window.DEFAULT_SITE = {
             {
               "id": "guides-mtzzzcy4-fw2o",
               "type": "image",
-              "src": "assets/imported/from-other-pc/021_guides-mtzzzcy4-fw2o_src_1693b934c5.jpg",
+              "src": "assets/imported/from-0917-candy/02_guides-mtzzzcy4-fw2o_26368ed281.jpg",
               "poster": "",
               "title": "",
               "caption": "",
@@ -1579,9 +1579,21 @@ window.DEFAULT_SITE = {
               }
             },
             {
-              "id": "guides-mu00uivf-xv91",
+              "id": "guides-mu48vp3w-umoh",
               "type": "image",
-              "src": "assets/imported/from-other-pc/022_guides-mu00uivf-xv91_src_ff7e7a91e1.jpg",
+              "src": "assets/imported/from-0917-candy/03_guides-mu48vp3w-umoh_689db29083.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 5,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mu48txdt-3p51",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/04_guides-mu48txdt-3p51_6805b7d002.jpg",
               "poster": "",
               "title": "",
               "caption": "",
@@ -1589,9 +1601,92 @@ window.DEFAULT_SITE = {
                 "cols": 6,
                 "rows": 3
               }
+            },
+            {
+              "id": "guides-mu48rlmq-rj7m",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/05_guides-mu48rlmq-rj7m_f50331c26e.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mu5u1qtw-qade",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/06_guides-mu5u1qtw-qade_7a2f504ce1.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 6
+              }
+            },
+            {
+              "id": "guides-mu5u25lb-s50e",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/07_guides-mu5u25lb-s50e_f18057653f.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 2
+              }
+            },
+            {
+              "id": "guides-mu5u2mli-ah8g",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/08_guides-mu5u2mli-ah8g_4c2b2bc426.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 3,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mu5u2y2u-3it7",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/09_guides-mu5u2y2u-3it7_fa53479b74.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 3,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mu5u399l-eaqu",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/10_guides-mu5u399l-eaqu_64fd2a4407.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 6
+              }
+            },
+            {
+              "id": "guides-mu5u4v4p-erjh",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/11_guides-mu5u4v4p-erjh_a0b41db7e6.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 6
+              }
             }
-          ],
-          "notes": ""
+          ]
         }
       ],
       "activePanel": 1,
