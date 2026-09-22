@@ -2006,7 +2006,8 @@ window.DEFAULT_SITE = {
       "gearIntro": "机型信息可点文字编辑",
       "thanks": {
         "text": "谢谢观看，请给个好评～",
-        "qr": "assets/imported/talk/thanks-qr.jpg"
+        "qr": "assets/imported/talk/thanks-qr.jpg",
+        "qrW": 220
       }
     }
   }

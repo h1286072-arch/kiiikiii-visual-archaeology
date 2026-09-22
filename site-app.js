@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v41-nostalgia-pic-only";
+  const STORAGE_KEY = "kiiikiii-site-v42-qr-resize";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v41-nostalgia-pic-only",
     "kiiikiii-site-v40-0921-duty-gif",
     "kiiikiii-site-v39-crew-match",
     "kiiikiii-site-v38-device-unstretch",
@@ -3497,6 +3498,7 @@
     // --- Thanks + QR ---
     const thanks = page.thanks || { text: "谢谢观看，请给个好评～", qr: "assets/imported/talk/thanks-qr.jpg" };
     page.thanks = thanks;
+    if (typeof thanks.qrW !== "number") thanks.qrW = 220;
     const thanksBlock = document.createElement("div");
     thanksBlock.className = "talk-thanks";
     const thanksText = document.createElement("div");
@@ -3504,6 +3506,7 @@
     editable(thanksText, thanks.text || "谢谢观看，请给个好评～", (v) => { thanks.text = v; saveQuiet(); });
     const thanksQr = document.createElement("div");
     thanksQr.className = "talk-thanks-qr";
+    thanksQr.style.setProperty("--qr-w", `${clamp(thanks.qrW, 120, 560)}px`);
     const qrImg = document.createElement("img");
     qrImg.src = thanks.qr || "assets/imported/talk/thanks-qr.jpg";
     qrImg.alt = "二维码";
@@ -3523,6 +3526,32 @@
         state.replaceTarget = { __talkQr: true };
         fileImage.click();
       });
+
+      const se = document.createElement("div");
+      se.className = "rh rh-se";
+      se.title = "拖角等比缩放";
+      const startResize = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startW = thanks.qrW;
+        const onMove = (ev) => {
+          const dx = ev.clientX - startX;
+          const dy = ev.clientY - startY;
+          thanks.qrW = clamp(startW + (dx + dy) * 0.55, 120, 560);
+          thanksQr.style.setProperty("--qr-w", `${thanks.qrW}px`);
+        };
+        const onUp = () => {
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("pointerup", onUp);
+          saveQuiet();
+        };
+        window.addEventListener("pointermove", onMove);
+        window.addEventListener("pointerup", onUp);
+      };
+      se.addEventListener("pointerdown", startResize);
+      thanksQr.appendChild(se);
     }
     thanksBlock.append(thanksText, thanksQr);
     view.appendChild(thanksBlock);
@@ -3552,6 +3581,7 @@
     }
     if (!page.thanks.qr) page.thanks.qr = "assets/imported/talk/thanks-qr.jpg";
     if (page.thanks.text == null) page.thanks.text = "谢谢观看，请给个好评～";
+    if (typeof page.thanks.qrW !== "number") page.thanks.qrW = 220;
     return page;
   }
 
