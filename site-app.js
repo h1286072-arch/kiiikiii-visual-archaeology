@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v42-qr-resize";
+  const STORAGE_KEY = "kiiikiii-site-v43-drop-gear-intro";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v42-qr-resize",
     "kiiikiii-site-v41-nostalgia-pic-only",
     "kiiikiii-site-v40-0921-duty-gif",
     "kiiikiii-site-v39-crew-match",
@@ -2364,7 +2365,14 @@
     if (talk.crewTitle !== nextCrewTitle) { talk.crewTitle = nextCrewTitle; touched = true; }
     if (talk.gearTitle !== nextGearTitle) { talk.gearTitle = nextGearTitle; touched = true; }
     if (talk.crewIntro == null && def.crewIntro != null) { talk.crewIntro = def.crewIntro; touched = true; }
-    if (talk.gearIntro == null && def.gearIntro != null) { talk.gearIntro = def.gearIntro; touched = true; }
+    if (
+      talk.gearIntro == null
+      || talk.gearIntro === "器材合集，可继续替换与补充"
+      || talk.gearIntro === "机型信息可点文字编辑"
+    ) {
+      talk.gearIntro = def.gearIntro != null ? def.gearIntro : "";
+      touched = true;
+    }
     if (Array.isArray(def.gear) && def.gear.length) {
       const need = !talk.gear?.length || talk.gear.length !== def.gear.length
         || !talk.gear.every((g) => String(g.src || "").includes("from-device-info"))
@@ -3282,9 +3290,13 @@
       block.className = "section-block";
       const h2 = document.createElement("h2");
       editable(h2, page[titleKey] || titleFallback, (v) => { page[titleKey] = v; saveQuiet(); });
-      const p = document.createElement("p");
-      editable(p, page[introKey] || introFallback, (v) => { page[introKey] = v; saveQuiet(); });
-      block.append(h2, p);
+      block.appendChild(h2);
+      const introText = page[introKey] != null ? page[introKey] : introFallback;
+      if (introText || state.edit) {
+        const p = document.createElement("p");
+        editable(p, introText || "", (v) => { page[introKey] = v; saveQuiet(); });
+        block.appendChild(p);
+      }
       if (state.edit) {
         const bar = document.createElement("div");
         bar.className = "talk-toolbar";
@@ -3389,7 +3401,7 @@
     view.appendChild(crew);
 
     // --- Gear ---
-    view.appendChild(mkSectionHead("gearTitle", "gearIntro", "kiiikiii同款设备分享", "器材合集，可继续替换与补充", "gear"));
+    view.appendChild(mkSectionHead("gearTitle", "gearIntro", "kiiikiii同款设备分享", "", "gear"));
     const gear = document.createElement("div");
     gear.className = "gear-grid";
     (page.gear || []).forEach((g, gi) => {
@@ -3526,33 +3538,33 @@
         state.replaceTarget = { __talkQr: true };
         fileImage.click();
       });
-
-      const se = document.createElement("div");
-      se.className = "rh rh-se";
-      se.title = "拖角等比缩放";
-      const startResize = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const startX = e.clientX;
-        const startY = e.clientY;
-        const startW = thanks.qrW;
-        const onMove = (ev) => {
-          const dx = ev.clientX - startX;
-          const dy = ev.clientY - startY;
-          thanks.qrW = clamp(startW + (dx + dy) * 0.55, 120, 560);
-          thanksQr.style.setProperty("--qr-w", `${thanks.qrW}px`);
-        };
-        const onUp = () => {
-          window.removeEventListener("pointermove", onMove);
-          window.removeEventListener("pointerup", onUp);
-          saveQuiet();
-        };
-        window.addEventListener("pointermove", onMove);
-        window.addEventListener("pointerup", onUp);
-      };
-      se.addEventListener("pointerdown", startResize);
-      thanksQr.appendChild(se);
     }
+
+    const se = document.createElement("div");
+    se.className = "rh rh-se";
+    se.title = "拖角等比缩放";
+    const startResize = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const startW = thanks.qrW;
+      const onMove = (ev) => {
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+        thanks.qrW = clamp(startW + (dx + dy) * 0.55, 120, 560);
+        thanksQr.style.setProperty("--qr-w", `${thanks.qrW}px`);
+      };
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        saveQuiet();
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    };
+    se.addEventListener("pointerdown", startResize);
+    thanksQr.appendChild(se);
     thanksBlock.append(thanksText, thanksQr);
     view.appendChild(thanksBlock);
 
@@ -3564,7 +3576,11 @@
     if (!page.crewTitle) page.crewTitle = "kiiikiii团队核心人物";
     if (page.crewIntro == null) page.crewIntro = "视觉 / 摄影 / 造型";
     if (!page.gearTitle) page.gearTitle = "kiiikiii同款设备分享";
-    if (page.gearIntro == null) page.gearIntro = "器材合集，可继续替换与补充";
+    if (
+      page.gearIntro == null
+      || page.gearIntro === "器材合集，可继续替换与补充"
+      || page.gearIntro === "机型信息可点文字编辑"
+    ) page.gearIntro = "";
     if (!Array.isArray(page.crew)) page.crew = [];
     if (!Array.isArray(page.gear)) page.gear = [];
     page.crew.forEach((c) => {

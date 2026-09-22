@@ -2003,7 +2003,7 @@ window.DEFAULT_SITE = {
       "crewTitle": "kiiikiii团队核心人物",
       "crewIntro": "视觉 / 摄影 / 造型",
       "gearTitle": "kiiikiii同款设备分享",
-      "gearIntro": "机型信息可点文字编辑",
+      "gearIntro": "",
       "thanks": {
         "text": "谢谢观看，请给个好评～",
         "qr": "assets/imported/talk/thanks-qr.jpg",
