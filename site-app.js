@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v33-candy-pink";
+  const STORAGE_KEY = "kiiikiii-site-v34-talk-duty";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v33-candy-pink",
     "kiiikiii-site-v32-strip-hints",
     "kiiikiii-site-v31-jams-0920-imgs",
     "kiiikiii-site-v30-jams-three",
@@ -587,7 +588,9 @@
       toast("已粘贴替换选中图片");
       return;
     }
-    if (state.replaceTarget && !state.replaceTarget.__new && !state.replaceTarget.__404NewTile) {
+    if (state.replaceTarget && !state.replaceTarget.__new && !state.replaceTarget.__404NewTile
+      && !state.replaceTarget.__talkAdd && !state.replaceTarget.__talkQr
+      && !state.replaceTarget.__guidesThemeItem && !state.replaceTarget.__guidesTourSlide) {
       applyMediaSrc(state.replaceTarget, dataUrl, type);
       state.replaceTarget = null;
       saveQuiet();
@@ -2327,6 +2330,54 @@
     return def.items.some((it) => !ids.has(it.id));
   }
 
+  function applyDefaultDutyFreeExtras(site) {
+    const def = (window.DEFAULT_SITE?.pages?.guides?.panels || []).find((p) => p.id === "panel-duty-free");
+    const cur = (site?.pages?.guides?.panels || []).find((p) => p.id === "panel-duty-free");
+    if (!def?.items?.length || !cur) return false;
+    const have = new Set((cur.items || []).map((it) => it.id));
+    let added = false;
+    def.items.forEach((it) => {
+      if (!have.has(it.id)) {
+        cur.items.push(deepClone(it));
+        have.add(it.id);
+        added = true;
+      }
+    });
+    return added;
+  }
+
+  function applyDefaultTalkExtras(site) {
+    const def = window.DEFAULT_SITE?.pages?.talk;
+    if (!def || !site?.pages?.talk) return false;
+    const talk = site.pages.talk;
+    let touched = false;
+    const nextCrewTitle = def.crewTitle || "kiiikiii团队核心人物";
+    const nextGearTitle = def.gearTitle || "kiiikiii同款设备分享";
+    if (talk.crewTitle !== nextCrewTitle) { talk.crewTitle = nextCrewTitle; touched = true; }
+    if (talk.gearTitle !== nextGearTitle) { talk.gearTitle = nextGearTitle; touched = true; }
+    if (talk.crewIntro == null && def.crewIntro != null) { talk.crewIntro = def.crewIntro; touched = true; }
+    if (talk.gearIntro == null && def.gearIntro != null) { talk.gearIntro = def.gearIntro; touched = true; }
+    if (Array.isArray(def.gear) && def.gear.length) {
+      const need = !talk.gear?.length || talk.gear.length < def.gear.length
+        || !talk.gear.some((g) => String(g.src || "").includes("from-device-info"));
+      if (need) {
+        talk.gear = deepClone(def.gear);
+        touched = true;
+      }
+    }
+    if (!talk.thanks || !talk.thanks.qr) {
+      talk.thanks = deepClone(def.thanks || {
+        text: "谢谢观看，请给个好评～",
+        qr: "assets/imported/talk/thanks-qr.jpg"
+      });
+      touched = true;
+    }
+    (talk.crew || []).forEach((c) => {
+      if (!c.frame) { c.frame = { w: 100, fit: "cover" }; touched = true; }
+    });
+    return touched;
+  }
+
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -2341,6 +2392,8 @@
           applyDefaultCandyPinkPanel(state.site);
           touched = true;
         }
+        if (applyDefaultDutyFreeExtras(state.site)) touched = true;
+        if (applyDefaultTalkExtras(state.site)) touched = true;
         if (touched) localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
       } else {
         let migrated = null;
@@ -2355,6 +2408,8 @@
           state.site = migrated;
           applyDefaultJamsProducts(state.site);
           applyDefaultCandyPinkPanel(state.site);
+          applyDefaultDutyFreeExtras(state.site);
+          applyDefaultTalkExtras(state.site);
         } else {
           state.site = scrubSite(deepClone(window.DEFAULT_SITE));
         }
@@ -2371,6 +2426,7 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
       }
     }
+    if (state.site?.pages?.talk) ensureTalk(state.site.pages.talk);
   }
 
   function save() {
@@ -3181,7 +3237,7 @@
   }
 
   function renderTalk() {
-    const page = state.site.pages.talk;
+    const page = ensureTalk(state.site.pages.talk);
     const view = document.createElement("section");
     view.className = "view active";
 
@@ -3198,42 +3254,124 @@
     head.append(eye, h1, intro);
     view.appendChild(head);
 
-    const crewBlock = document.createElement("div");
-    crewBlock.className = "section-block";
-    crewBlock.innerHTML = `<h2>铁三角</h2><p>视觉 / 摄影 / 造型 — 点进 IG</p>`;
-    view.appendChild(crewBlock);
+    const mkSectionHead = (titleKey, introKey, titleFallback, introFallback, listKey) => {
+      const block = document.createElement("div");
+      block.className = "section-block";
+      const h2 = document.createElement("h2");
+      editable(h2, page[titleKey] || titleFallback, (v) => { page[titleKey] = v; saveQuiet(); });
+      const p = document.createElement("p");
+      editable(p, page[introKey] || introFallback, (v) => { page[introKey] = v; saveQuiet(); });
+      block.append(h2, p);
+      if (state.edit) {
+        const bar = document.createElement("div");
+        bar.className = "talk-toolbar";
+        const add = document.createElement("button");
+        add.type = "button";
+        add.className = "tab";
+        add.textContent = "+ 图片";
+        add.addEventListener("click", () => {
+          state.replaceTarget = { __talkAdd: true, listKey };
+          fileImage.click();
+        });
+        bar.appendChild(add);
+        block.appendChild(bar);
+      }
+      return block;
+    };
 
+    // --- Crew ---
+    view.appendChild(mkSectionHead("crewTitle", "crewIntro", "kiiikiii团队核心人物", "视觉 / 摄影 / 造型", "crew"));
     const crew = document.createElement("div");
     crew.className = "crew-grid";
-    (page.crew || []).forEach((c) => {
+    (page.crew || []).forEach((c, ci) => {
+      ensureFrame(c);
+      if (typeof c.frame.w !== "number") c.frame.w = 100;
       const card = document.createElement("article");
-      card.className = "person";
-      card.innerHTML = `<div class="pic"></div><div class="body"><b></b><span></span><a class="ig" target="_blank" rel="noopener">Instagram</a></div>`;
-      card.querySelector(".pic").style.backgroundImage = c.src ? `url("${c.src}")` : "";
-      editable(card.querySelector("b"), c.name || "", (v) => { c.name = v; saveQuiet(); });
-      editable(card.querySelector("span"), c.role || "", (v) => { c.role = v; saveQuiet(); });
-      const a = card.querySelector("a.ig");
-      a.href = c.ig || "#";
-      card.querySelector(".pic").addEventListener("click", () => { if (!state.edit && c.src) openLightbox(c.src); });
-      card.querySelector(".pic").addEventListener("dblclick", () => {
+      card.className = "person talk-card";
+      const mediaWrap = document.createElement("div");
+      mediaWrap.className = "talk-media";
+      mediaWrap.style.width = `${clamp(c.frame.w, 40, 100)}%`;
+      const pic = document.createElement("div");
+      pic.className = "pic";
+      if (c.src) pic.style.backgroundImage = `url("${c.src}")`;
+      mediaWrap.appendChild(pic);
+      const body = document.createElement("div");
+      body.className = "body";
+      const b = document.createElement("b");
+      const span = document.createElement("span");
+      editable(b, c.name || "", (v) => { c.name = v; saveQuiet(); });
+      editable(span, c.role || "", (v) => { c.role = v; saveQuiet(); });
+      body.append(b, span);
+      card.append(mediaWrap, body);
+
+      pic.addEventListener("click", () => { if (!state.edit && c.src) openLightbox(c.src); });
+      pic.addEventListener("dblclick", () => {
         if (!state.edit) return;
         state.replaceTarget = c;
+        state.selectedMedia = c;
         fileImage.click();
       });
+
+      if (state.edit) {
+        const tools = document.createElement("div");
+        tools.className = "talk-card-tools";
+        const repl = document.createElement("button");
+        repl.type = "button"; repl.textContent = "换图";
+        repl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = c;
+          state.selectedMedia = c;
+          fileImage.click();
+        });
+        const del = document.createElement("button");
+        del.type = "button"; del.className = "danger"; del.textContent = "删";
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          page.crew.splice(ci, 1);
+          saveQuiet();
+          render();
+        });
+        tools.append(repl, del);
+        card.appendChild(tools);
+
+        const se = document.createElement("div");
+        se.className = "rh rh-se";
+        se.title = "拖角等比缩放";
+        const startResize = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const startW = c.frame.w;
+          const onMove = (ev) => {
+            const dx = ev.clientX - startX;
+            const dy = ev.clientY - startY;
+            c.frame.w = clamp(startW + (dx + dy) * 0.35, 40, 100);
+            mediaWrap.style.width = `${c.frame.w}%`;
+          };
+          const onUp = () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            saveQuiet();
+          };
+          window.addEventListener("pointermove", onMove);
+          window.addEventListener("pointerup", onUp);
+        };
+        se.addEventListener("pointerdown", startResize);
+        mediaWrap.appendChild(se);
+        mediaWrap.style.position = "relative";
+      }
       crew.appendChild(card);
     });
     view.appendChild(crew);
 
-    const gearBlock = document.createElement("div");
-    gearBlock.className = "section-block";
-    gearBlock.innerHTML = `<h2>拍摄小分享</h2><p>器材 / 手法占位，后续可替换图片与文案</p>`;
-    view.appendChild(gearBlock);
-
+    // --- Gear ---
+    view.appendChild(mkSectionHead("gearTitle", "gearIntro", "kiiikiii同款设备分享", "器材合集，可继续替换与补充", "gear"));
     const gear = document.createElement("div");
     gear.className = "gear-grid";
-    (page.gear || []).forEach((g) => {
+    (page.gear || []).forEach((g, gi) => {
       const card = document.createElement("article");
-      card.className = "gear";
+      card.className = "gear talk-card";
       card.innerHTML = `<div class="pic"></div><div class="body"><b></b><span></span></div>`;
       card.querySelector(".pic").style.backgroundImage = g.src ? `url("${g.src}")` : "";
       editable(card.querySelector("b"), g.title || "", (v) => { g.title = v; saveQuiet(); });
@@ -3242,13 +3380,37 @@
       card.querySelector(".pic").addEventListener("dblclick", () => {
         if (!state.edit) return;
         state.replaceTarget = g;
+        state.selectedMedia = g;
         fileImage.click();
       });
+      if (state.edit) {
+        const tools = document.createElement("div");
+        tools.className = "talk-card-tools";
+        const repl = document.createElement("button");
+        repl.type = "button"; repl.textContent = "换图";
+        repl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = g;
+          fileImage.click();
+        });
+        const del = document.createElement("button");
+        del.type = "button"; del.className = "danger"; del.textContent = "删";
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          page.gear.splice(gi, 1);
+          saveQuiet();
+          render();
+        });
+        tools.append(repl, del);
+        card.appendChild(tools);
+      }
       gear.appendChild(card);
     });
     view.appendChild(gear);
 
+    // --- Nostalgia ---
     const nos = page.nostalgia || { title: "互动 · 回忆杀", intro: "", items: [] };
+    page.nostalgia = nos;
     const nosBlock = document.createElement("div");
     nosBlock.className = "section-block";
     const nh = document.createElement("h2");
@@ -3256,13 +3418,25 @@
     const np = document.createElement("p");
     editable(np, nos.intro || "", (v) => { nos.intro = v; saveQuiet(); });
     nosBlock.append(nh, np);
+    if (state.edit) {
+      const bar = document.createElement("div");
+      bar.className = "talk-toolbar";
+      const add = document.createElement("button");
+      add.type = "button"; add.className = "tab"; add.textContent = "+ 图片";
+      add.addEventListener("click", () => {
+        state.replaceTarget = { __talkAdd: true, listKey: "nostalgia" };
+        fileImage.click();
+      });
+      bar.appendChild(add);
+      nosBlock.appendChild(bar);
+    }
     view.appendChild(nosBlock);
 
     const nostalgia = document.createElement("div");
     nostalgia.className = "nostalgia-grid";
-    (nos.items || []).forEach((n) => {
+    (nos.items || []).forEach((n, ni) => {
       const card = document.createElement("article");
-      card.className = "memory";
+      card.className = "memory talk-card";
       card.innerHTML = `<div class="pic"></div><div class="body"><b></b><span></span></div>`;
       card.querySelector(".pic").style.backgroundImage = n.src ? `url("${n.src}")` : "";
       editable(card.querySelector("b"), n.title || "", (v) => { n.title = v; saveQuiet(); });
@@ -3273,11 +3447,90 @@
         state.replaceTarget = n;
         fileImage.click();
       });
+      if (state.edit) {
+        const tools = document.createElement("div");
+        tools.className = "talk-card-tools";
+        const repl = document.createElement("button");
+        repl.type = "button"; repl.textContent = "换图";
+        repl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          state.replaceTarget = n;
+          fileImage.click();
+        });
+        const del = document.createElement("button");
+        del.type = "button"; del.className = "danger"; del.textContent = "删";
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          nos.items.splice(ni, 1);
+          saveQuiet();
+          render();
+        });
+        tools.append(repl, del);
+        card.appendChild(tools);
+      }
       nostalgia.appendChild(card);
     });
     view.appendChild(nostalgia);
 
+    // --- Thanks + QR ---
+    const thanks = page.thanks || { text: "谢谢观看，请给个好评～", qr: "assets/imported/talk/thanks-qr.jpg" };
+    page.thanks = thanks;
+    const thanksBlock = document.createElement("div");
+    thanksBlock.className = "talk-thanks";
+    const thanksText = document.createElement("div");
+    thanksText.className = "talk-thanks-text";
+    editable(thanksText, thanks.text || "谢谢观看，请给个好评～", (v) => { thanks.text = v; saveQuiet(); });
+    const thanksQr = document.createElement("div");
+    thanksQr.className = "talk-thanks-qr";
+    const qrImg = document.createElement("img");
+    qrImg.src = thanks.qr || "assets/imported/talk/thanks-qr.jpg";
+    qrImg.alt = "二维码";
+    thanksQr.appendChild(qrImg);
+    if (state.edit) {
+      const qrTools = document.createElement("div");
+      qrTools.className = "talk-card-tools";
+      const repl = document.createElement("button");
+      repl.type = "button"; repl.textContent = "换二维码";
+      repl.addEventListener("click", () => {
+        state.replaceTarget = { __talkQr: true };
+        fileImage.click();
+      });
+      qrTools.appendChild(repl);
+      thanksQr.appendChild(qrTools);
+      qrImg.addEventListener("dblclick", () => {
+        state.replaceTarget = { __talkQr: true };
+        fileImage.click();
+      });
+    }
+    thanksBlock.append(thanksText, thanksQr);
+    view.appendChild(thanksBlock);
+
     return view;
+  }
+
+  function ensureTalk(page) {
+    if (!page) return page;
+    if (!page.crewTitle) page.crewTitle = "kiiikiii团队核心人物";
+    if (page.crewIntro == null) page.crewIntro = "视觉 / 摄影 / 造型";
+    if (!page.gearTitle) page.gearTitle = "kiiikiii同款设备分享";
+    if (page.gearIntro == null) page.gearIntro = "器材合集，可继续替换与补充";
+    if (!Array.isArray(page.crew)) page.crew = [];
+    if (!Array.isArray(page.gear)) page.gear = [];
+    page.crew.forEach((c) => {
+      ensureFrame(c);
+      if (typeof c.frame.w !== "number") c.frame.w = 100;
+    });
+    if (!page.nostalgia) page.nostalgia = { title: "互动 · 回忆杀", intro: "", items: [] };
+    if (!Array.isArray(page.nostalgia.items)) page.nostalgia.items = [];
+    if (!page.thanks) {
+      page.thanks = {
+        text: "谢谢观看，请给个好评～",
+        qr: "assets/imported/talk/thanks-qr.jpg"
+      };
+    }
+    if (!page.thanks.qr) page.thanks.qr = "assets/imported/talk/thanks-qr.jpg";
+    if (page.thanks.text == null) page.thanks.text = "谢谢观看，请给个好评～";
+    return page;
   }
 
   function renderSide() {
@@ -3290,7 +3543,7 @@
         : "Jams · 货架可拖卡片排序（编辑模式）· 点进详情",
       "404": "404 · 轮播 + 贴纸墙 + Loop + 横滑条 + 双页书本",
       guides: "Guides · 右侧按钮切换主题图文；可新增主题 / 图片 / 视频",
-      talk: "Talk · 团队 / 器材 / 回忆杀"
+      talk: "Talk · 团队核心人物 / 同款设备 / 回忆杀 / 好评二维码"
     };
     box.innerHTML = `<div class="note">${labels[state.page] || ""}</div>`;
   }
@@ -4079,6 +4332,11 @@
       else fileImage.click();
       return;
     }
+    if (state.page === "talk") {
+      state.replaceTarget = { __talkAdd: true, listKey: "gear" };
+      (type === "video" ? fileVideo : fileImage).click();
+      return;
+    }
     if (state.page === "jams") {
       if (state.productId) {
         const prod = findJamsProduct(state.productId);
@@ -4266,6 +4524,49 @@
         saveQuiet();
         render();
         toast(type === "video" ? "已加入当前主题视频" : "已加入当前主题图片");
+        return;
+      }
+
+      if (target.__talkAdd) {
+        const page = ensureTalk(state.site.pages.talk);
+        const key = target.listKey || "gear";
+        if (key === "crew") {
+          page.crew.push({
+            id: uid("crew"),
+            name: "新成员",
+            role: "",
+            src: dataUrl,
+            frame: { w: 100, fit: "cover" }
+          });
+        } else if (key === "nostalgia") {
+          page.nostalgia.items.push({
+            id: uid("mem"),
+            title: "新图",
+            caption: "",
+            src: dataUrl
+          });
+        } else {
+          page.gear.push({
+            id: uid("gear"),
+            title: "",
+            caption: "",
+            src: dataUrl
+          });
+        }
+        state.replaceTarget = null;
+        saveQuiet();
+        render();
+        toast("已添加图片");
+        return;
+      }
+
+      if (target.__talkQr) {
+        const page = ensureTalk(state.site.pages.talk);
+        page.thanks.qr = dataUrl;
+        state.replaceTarget = null;
+        saveQuiet();
+        render();
+        toast("已更换二维码");
         return;
       }
 

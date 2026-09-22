@@ -1392,6 +1392,54 @@ window.DEFAULT_SITE = {
                 "cols": 6,
                 "rows": 5
               }
+            },
+            {
+              "id": "guides-mu5uk5w7-3wtu",
+              "type": "image",
+              "src": "assets/imported/from-0917-duty/00_guides-mu5uk5w7-3wtu_d473c2f264.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 3,
+                "rows": 4
+              }
+            },
+            {
+              "id": "guides-mu5uke85-kn6j",
+              "type": "image",
+              "src": "assets/imported/from-0917-duty/01_guides-mu5uke85-kn6j_82522cb67f.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 3,
+                "rows": 4
+              }
+            },
+            {
+              "id": "guides-mu5ulquo-yzre",
+              "type": "image",
+              "src": "assets/imported/from-0917-duty/02_guides-mu5ulquo-yzre_65b4767596.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 3,
+                "rows": 3
+              }
+            },
+            {
+              "id": "guides-mu5uluch-tw2k",
+              "type": "image",
+              "src": "assets/imported/from-0917-duty/03_guides-mu5uluch-tw2k_63a950ce59.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 3,
+                "rows": 3
+              }
             }
           ]
         },
@@ -1745,7 +1793,7 @@ window.DEFAULT_SITE = {
       "nav": "Talk",
       "title": "幕后 & 互动",
       "eyebrow": "Talk · Crew & Nostalgia",
-      "intro": "铁三角审美同频；再分享器材与 2000s 回忆杀。图片可后续替换。",
+      "intro": "团队核心人物、同款设备与回忆互动。",
       "notes": "幕后：byheyone / hiozoik / haanasah。固定班底→审美同频。回忆杀答案只在本机讲稿里念，别投屏念破。收：可被模仿的核心＝可传播的文化。谢谢。",
       "crew": [
         {
@@ -1753,41 +1801,155 @@ window.DEFAULT_SITE = {
           "name": "byheyone",
           "role": "视觉指导",
           "ig": "https://www.instagram.com/byheyone/",
-          "src": "assets/xhs/team_02.webp"
+          "src": "assets/xhs/team_02.webp",
+          "frame": {
+            "w": 100,
+            "fit": "cover"
+          }
         },
         {
           "id": "c2",
           "name": "hiozoik",
           "role": "摄影",
           "ig": "https://www.instagram.com/hiozoik/",
-          "src": "assets/xhs/team_03.webp"
+          "src": "assets/xhs/team_03.webp",
+          "frame": {
+            "w": 100,
+            "fit": "cover"
+          }
         },
         {
           "id": "c3",
           "name": "haanasah",
           "role": "造型",
           "ig": "https://www.instagram.com/haanasah/",
-          "src": "assets/xhs/team_01.webp"
+          "src": "assets/xhs/team_01.webp",
+          "frame": {
+            "w": 100,
+            "fit": "cover"
+          }
         }
       ],
       "gear": [
         {
-          "id": "g1",
-          "title": "Kodak C143",
-          "caption": "回归物料带火的 CCD 机型（占位图可换）",
-          "src": "assets/xhs/style_05.webp"
+          "id": "gear-device-0",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/00__已翻译_推韩女整理KiiiKiii_ccd型号合集_10_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
         },
         {
-          "id": "g2",
-          "title": "生活感镜头语言",
-          "caption": "歪斜 / 留白 / 虚焦 —— 待补器材清单",
-          "src": "assets/xhs/style_01.webp"
+          "id": "gear-device-1",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/01__已翻译_推韩女整理KiiiKiii_ccd型号合集_11_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
         },
         {
-          "id": "g3",
-          "title": "闪光灯夜拍",
-          "caption": "街头直闪 · 占位",
-          "src": "assets/albums/404/14_404-造型.jpg"
+          "id": "gear-device-2",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/02__已翻译_推韩女整理KiiiKiii_ccd型号合集_12_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-3",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/03__已翻译_推韩女整理KiiiKiii_ccd型号合集_13_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-4",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/04__已翻译_推韩女整理KiiiKiii_ccd型号合集_14_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-5",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/05__已翻译_推韩女整理KiiiKiii_ccd型号合集_2_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-6",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/06__已翻译_推韩女整理KiiiKiii_ccd型号合集_3_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-7",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/07__已翻译_推韩女整理KiiiKiii_ccd型号合集_4_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-8",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/08__已翻译_推韩女整理KiiiKiii_ccd型号合集_6_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-9",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/09__已翻译_推韩女整理KiiiKiii_ccd型号合集_7_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-10",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/10__已翻译_推韩女整理KiiiKiii_ccd型号合集_8_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-11",
+          "title": "",
+          "caption": "",
+          "src": "assets/imported/from-device-info/11__已翻译_推韩女整理KiiiKiii_ccd型号合集_9_梅雨季之后_来自小红书网页版.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
         }
       ],
       "nostalgia": {
@@ -1825,6 +1987,14 @@ window.DEFAULT_SITE = {
             "caption": "替换：摩丝女孩等"
           }
         ]
+      },
+      "crewTitle": "kiiikiii团队核心人物",
+      "crewIntro": "视觉 / 摄影 / 造型",
+      "gearTitle": "kiiikiii同款设备分享",
+      "gearIntro": "器材合集，可继续替换与补充",
+      "thanks": {
+        "text": "谢谢观看，请给个好评～",
+        "qr": "assets/imported/talk/thanks-qr.jpg"
       }
     }
   }

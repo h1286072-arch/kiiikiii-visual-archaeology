@@ -433,6 +433,44 @@
       display: inline-flex; margin-top: 10px; font-size: 12px; font-weight: 600; color: #fff;
       background: var(--ink); border-radius: 999px; padding: 7px 12px; text-decoration: none;
     }
+    .talk-toolbar { display: flex; gap: 8px; margin: 8px 0 4px; }
+    .talk-card { position: relative; }
+    .talk-card .talk-media {
+      margin: 0 auto; position: relative;
+    }
+    .talk-card .talk-media .pic { width: 100%; }
+    .talk-card .talk-media .rh {
+      position: absolute; width: 14px; height: 14px; border-radius: 3px;
+      background: #fff; border: 2px solid #2f5f9a; display: none; z-index: 3;
+    }
+    body.edit .talk-card .talk-media .rh { display: block; }
+    .talk-card .talk-media .rh-se { right: -7px; bottom: -7px; cursor: nwse-resize; }
+    .talk-card-tools {
+      position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; z-index: 2;
+    }
+    .talk-card-tools button {
+      border: 0; background: rgba(20,24,30,.82); color: #fff; font-size: 11px;
+      padding: 5px 8px; border-radius: 6px; cursor: pointer;
+    }
+    .talk-card-tools button.danger { background: #b91c1c; }
+    .talk-thanks {
+      max-width: 1180px; margin: 10px auto 60px; padding: 28px 6vw;
+      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 28px; align-items: center;
+      border-top: 1px solid #e8eef3;
+    }
+    .talk-thanks-text {
+      font-family: var(--display); font-size: clamp(28px, 4vw, 44px); line-height: 1.25;
+      color: var(--ink); white-space: pre-wrap;
+    }
+    .talk-thanks-qr {
+      position: relative; justify-self: end; width: min(220px, 42vw);
+      background: #fff; border: 1px solid #e8eef3; padding: 14px; border-radius: 12px;
+    }
+    .talk-thanks-qr img { display: block; width: 100%; height: auto; }
+    @media (max-width: 720px) {
+      .talk-thanks { grid-template-columns: 1fr; }
+      .talk-thanks-qr { justify-self: start; }
+    }
 
     .lightbox {
       position: fixed; inset: 0; z-index: 60; background: rgba(8,12,18,.9);
