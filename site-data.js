@@ -1801,10 +1801,10 @@ window.DEFAULT_SITE = {
           "name": "byheyone",
           "role": "视觉指导",
           "ig": "https://www.instagram.com/byheyone/",
-          "src": "assets/xhs/team_02.webp",
+          "src": "assets/xhs/team_01.webp",
           "frame": {
             "w": 100,
-            "fit": "cover"
+            "fit": "contain"
           }
         },
         {
@@ -1812,10 +1812,10 @@ window.DEFAULT_SITE = {
           "name": "hiozoik",
           "role": "摄影",
           "ig": "https://www.instagram.com/hiozoik/",
-          "src": "assets/xhs/team_03.webp",
+          "src": "assets/xhs/team_hiozoik.webp",
           "frame": {
             "w": 100,
-            "fit": "cover"
+            "fit": "contain"
           }
         },
         {
@@ -1823,10 +1823,10 @@ window.DEFAULT_SITE = {
           "name": "haanasah",
           "role": "造型",
           "ig": "https://www.instagram.com/haanasah/",
-          "src": "assets/xhs/team_01.webp",
+          "src": "assets/xhs/team_04.webp",
           "frame": {
             "w": 100,
-            "fit": "cover"
+            "fit": "contain"
           }
         }
       ],

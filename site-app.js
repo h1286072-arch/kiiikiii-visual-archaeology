@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v38-device-unstretch";
+  const STORAGE_KEY = "kiiikiii-site-v39-crew-match";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v38-device-unstretch",
     "kiiikiii-site-v37-device-align",
     "kiiikiii-site-v36-device-faces",
     "kiiikiii-site-v35-device-crop",
@@ -2378,8 +2379,21 @@
       });
       touched = true;
     }
+    if (Array.isArray(def.crew) && def.crew.length) {
+      const byName = Object.fromEntries(def.crew.map((c) => [String(c.name || "").toLowerCase(), c]));
+      const wrong = !talk.crew?.length || talk.crew.length !== def.crew.length
+        || talk.crew.some((c) => {
+          const want = byName[String(c.name || "").toLowerCase()];
+          return !want || c.src !== want.src;
+        });
+      if (wrong) {
+        talk.crew = deepClone(def.crew);
+        touched = true;
+      }
+    }
     (talk.crew || []).forEach((c) => {
-      if (!c.frame) { c.frame = { w: 100, fit: "cover" }; touched = true; }
+      if (!c.frame) { c.frame = { w: 100, fit: "contain" }; touched = true; }
+      else if (c.frame.fit === "cover") { c.frame.fit = "contain"; touched = true; }
     });
     return touched;
   }
@@ -4542,7 +4556,7 @@
             name: "新成员",
             role: "",
             src: dataUrl,
-            frame: { w: 100, fit: "cover" }
+            frame: { w: 100, fit: "contain" }
           });
         } else if (key === "nostalgia") {
           page.nostalgia.items.push({

@@ -323,8 +323,8 @@ window.DEFAULT_DECK = {
       elements: [
         { id: "p1", type: "section", x: 7, y: 14, w: 45, h: 8, text: "Crew · <span class=\"accent\">Triangle</span>", size: 26 },
         { id: "p2", type: "guide", x: 55, y: 16, w: 38, h: 36, src: "assets/xhs/team_01.webp", title: "Visual Team", caption: "审美同频的固定班底", badge: "CREW" },
-        { id: "p3", type: "jar", x: 7, y: 34, w: 22, h: 32, src: "assets/xhs/team_02.webp", title: "byheyone", price: "视觉指导" },
-        { id: "p4", type: "jar", x: 31, y: 34, w: 22, h: 32, src: "assets/xhs/team_03.webp", title: "hiozoik", price: "摄影" },
+        { id: "p3", type: "jar", x: 7, y: 34, w: 22, h: 32, src: "assets/xhs/team_01.webp", title: "byheyone", price: "视觉指导" },
+        { id: "p4", type: "jar", x: 31, y: 34, w: 22, h: 32, src: "assets/xhs/team_hiozoik.webp", title: "hiozoik", price: "摄影" },
         { id: "p5", type: "jar", x: 7, y: 70, w: 46, h: 14, src: "assets/xhs/team_04.webp", title: "haanasah · 造型", price: "每次不同，但都是她们" }
       ]
     },
