@@ -429,6 +429,12 @@
     .person .body, .gear .body, .memory .body { padding: 14px; }
     .person .body b, .gear .body b, .memory .body b { display: block; font-family: var(--ui); font-size: 16px; font-weight: 600; margin-bottom: 4px; }
     .person .body span, .gear .body span, .memory .body span { color: var(--mute); font-size: 13px; }
+    .gear .body b {
+      font-weight: 500; font-size: 14px; line-height: 1.45; min-height: 1.4em;
+      padding: 8px 10px; border: 1px dashed transparent; border-radius: 8px;
+    }
+    body.edit .gear .body b { border-color: #d7dee6; background: #fafbfd; }
+    .gear .body span:empty { display: none; }
     .person a.ig {
       display: inline-flex; margin-top: 10px; font-size: 12px; font-weight: 600; color: #fff;
       background: var(--ink); border-radius: 999px; padding: 7px 12px; text-decoration: none;

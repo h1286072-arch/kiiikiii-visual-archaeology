@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v34-talk-duty";
+  const STORAGE_KEY = "kiiikiii-site-v35-device-crop";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v34-talk-duty",
     "kiiikiii-site-v33-candy-pink",
     "kiiikiii-site-v32-strip-hints",
     "kiiikiii-site-v31-jams-0920-imgs",
@@ -2358,8 +2359,10 @@
     if (talk.crewIntro == null && def.crewIntro != null) { talk.crewIntro = def.crewIntro; touched = true; }
     if (talk.gearIntro == null && def.gearIntro != null) { talk.gearIntro = def.gearIntro; touched = true; }
     if (Array.isArray(def.gear) && def.gear.length) {
-      const need = !talk.gear?.length || talk.gear.length < def.gear.length
-        || !talk.gear.some((g) => String(g.src || "").includes("from-device-info"));
+      const need = !talk.gear?.length || talk.gear.length !== def.gear.length
+        || !talk.gear.every((g) => String(g.src || "").includes("from-device-info"))
+        || talk.gear.some((g) => !g.title)
+        || talk.gear[0]?.src !== def.gear[0]?.src;
       if (need) {
         talk.gear = deepClone(def.gear);
         touched = true;

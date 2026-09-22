@@ -1832,110 +1832,10 @@ window.DEFAULT_SITE = {
       ],
       "gear": [
         {
-          "id": "gear-device-0",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/00__已翻译_推韩女整理KiiiKiii_ccd型号合集_10_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-1",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/01__已翻译_推韩女整理KiiiKiii_ccd型号合集_11_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-2",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/02__已翻译_推韩女整理KiiiKiii_ccd型号合集_12_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-3",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/03__已翻译_推韩女整理KiiiKiii_ccd型号合集_13_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-4",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/04__已翻译_推韩女整理KiiiKiii_ccd型号合集_14_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-5",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/05__已翻译_推韩女整理KiiiKiii_ccd型号合集_2_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-6",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/06__已翻译_推韩女整理KiiiKiii_ccd型号合集_3_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-7",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/07__已翻译_推韩女整理KiiiKiii_ccd型号合集_4_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-8",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/08__已翻译_推韩女整理KiiiKiii_ccd型号合集_6_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
-          "id": "gear-device-9",
-          "title": "",
-          "caption": "",
-          "src": "assets/imported/from-device-info/09__已翻译_推韩女整理KiiiKiii_ccd型号合集_7_梅雨季之后_来自小红书网页版.jpg",
-          "frame": {
-            "w": 100,
-            "fit": "contain"
-          }
-        },
-        {
           "id": "gear-device-10",
-          "title": "",
+          "title": "徕卡 (Leica) D-LUX 6",
           "caption": "",
-          "src": "assets/imported/from-device-info/10__已翻译_推韩女整理KiiiKiii_ccd型号合集_8_梅雨季之后_来自小红书网页版.jpg",
+          "src": "assets/imported/from-device-info/07_device_10.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1943,9 +1843,109 @@ window.DEFAULT_SITE = {
         },
         {
           "id": "gear-device-11",
-          "title": "",
+          "title": "理光 (Ricoh) CX3",
           "caption": "",
-          "src": "assets/imported/from-device-info/11__已翻译_推韩女整理KiiiKiii_ccd型号合集_9_梅雨季之后_来自小红书网页版.jpg",
+          "src": "assets/imported/from-device-info/08_device_11.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-12",
+          "title": "柯达 (Kodak) Pixpro FZ55 (银色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/09_device_12.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-13",
+          "title": "柯达 (Kodak) EasyShare C143 (银色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/10_device_13.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-14",
+          "title": "佳能 (Canon) IXUS 132 (粉色) = IXY 90F",
+          "caption": "",
+          "src": "assets/imported/from-device-info/11_device_14.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-2",
+          "title": "佳能 (Canon) IXUS 210 (紫色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/00_device_2.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-3",
+          "title": "佳能 (Canon) PowerShot A3000 IS (白色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/01_device_3.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-4",
+          "title": "柯达 (Kodak) EasyShare C143 (蓝色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/02_device_4.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-6",
+          "title": "松下 (Panasonic) Lumix TZ10 (黑色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/03_device_6.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-7",
+          "title": "松下 (Panasonic) Lumix TZ10 (黑色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/04_device_7.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-8",
+          "title": "富士 (Fujifilm) Finepix F80exr (银色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/05_device_8.jpg",
+          "frame": {
+            "w": 100,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "gear-device-9",
+          "title": "柯达 (Kodak) EasyShare C143 (蓝色)",
+          "caption": "",
+          "src": "assets/imported/from-device-info/06_device_9.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1991,7 +1991,7 @@ window.DEFAULT_SITE = {
       "crewTitle": "kiiikiii团队核心人物",
       "crewIntro": "视觉 / 摄影 / 造型",
       "gearTitle": "kiiikiii同款设备分享",
-      "gearIntro": "器材合集，可继续替换与补充",
+      "gearIntro": "机型信息可点文字编辑",
       "thanks": {
         "text": "谢谢观看，请给个好评～",
         "qr": "assets/imported/talk/thanks-qr.jpg"
