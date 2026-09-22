@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v39-crew-match";
+  const STORAGE_KEY = "kiiikiii-site-v40-0921-duty-gif";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v39-crew-match",
     "kiiikiii-site-v38-device-unstretch",
     "kiiikiii-site-v37-device-align",
     "kiiikiii-site-v36-device-faces",

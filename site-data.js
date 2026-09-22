@@ -1440,6 +1440,18 @@ window.DEFAULT_SITE = {
                 "cols": 3,
                 "rows": 3
               }
+            },
+            {
+              "id": "guides-mubaahrj-b2px",
+              "type": "image",
+              "src": "assets/imported/from-0921/00_guides-mubaahrj-b2px_8b84e68d40.gif",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 3
+              }
             }
           ]
         },
