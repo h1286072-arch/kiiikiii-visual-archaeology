@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v40-0921-duty-gif";
+  const STORAGE_KEY = "kiiikiii-site-v41-nostalgia-pic-only";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v40-0921-duty-gif",
     "kiiikiii-site-v39-crew-match",
     "kiiikiii-site-v38-device-unstretch",
     "kiiikiii-site-v37-device-align",
@@ -3457,13 +3458,13 @@
     nostalgia.className = "nostalgia-grid";
     (nos.items || []).forEach((n, ni) => {
       const card = document.createElement("article");
-      card.className = "memory talk-card";
-      card.innerHTML = `<div class="pic"></div><div class="body"><b></b><span></span></div>`;
-      card.querySelector(".pic").style.backgroundImage = n.src ? `url("${n.src}")` : "";
-      editable(card.querySelector("b"), n.title || "", (v) => { n.title = v; saveQuiet(); });
-      editable(card.querySelector("span"), n.caption || "", (v) => { n.caption = v; saveQuiet(); });
-      card.querySelector(".pic").addEventListener("click", () => { if (!state.edit && n.src) openLightbox(n.src); });
-      card.querySelector(".pic").addEventListener("dblclick", () => {
+      card.className = "memory talk-card memory-pic-only";
+      const pic = document.createElement("div");
+      pic.className = "pic";
+      if (n.src) pic.style.backgroundImage = `url("${n.src}")`;
+      card.appendChild(pic);
+      pic.addEventListener("click", () => { if (!state.edit && n.src) openLightbox(n.src); });
+      pic.addEventListener("dblclick", () => {
         if (!state.edit) return;
         state.replaceTarget = n;
         fileImage.click();
@@ -4562,7 +4563,7 @@
         } else if (key === "nostalgia") {
           page.nostalgia.items.push({
             id: uid("mem"),
-            title: "新图",
+            title: "",
             caption: "",
             src: dataUrl
           });

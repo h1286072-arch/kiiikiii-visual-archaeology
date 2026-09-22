@@ -1971,32 +1971,32 @@ window.DEFAULT_SITE = {
           {
             "id": "n1",
             "src": "assets/xhs/jam_06.webp",
-            "title": "回忆 1",
-            "caption": "替换：小霸王等"
+            "title": "",
+            "caption": ""
           },
           {
             "id": "n2",
             "src": "assets/xhs/jam_01.webp",
-            "title": "回忆 2",
-            "caption": "替换：诺基亚等"
+            "title": "",
+            "caption": ""
           },
           {
             "id": "n3",
             "src": "assets/xhs/jam_03.webp",
-            "title": "回忆 3",
-            "caption": "替换：黑白猪等"
+            "title": "",
+            "caption": ""
           },
           {
             "id": "n4",
             "src": "assets/xhs/jam_05.webp",
-            "title": "回忆 4",
-            "caption": "替换：流氓兔等"
+            "title": "",
+            "caption": ""
           },
           {
             "id": "n5",
             "src": "assets/xhs/style_08.webp",
-            "title": "回忆 5",
-            "caption": "替换：摩丝女孩等"
+            "title": "",
+            "caption": ""
           }
         ]
       },
