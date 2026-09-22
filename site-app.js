@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v35-device-crop";
+  const STORAGE_KEY = "kiiikiii-site-v36-device-faces";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v35-device-crop",
     "kiiikiii-site-v34-talk-duty",
     "kiiikiii-site-v33-candy-pink",
     "kiiikiii-site-v32-strip-hints",

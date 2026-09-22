@@ -1835,7 +1835,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-10",
           "title": "徕卡 (Leica) D-LUX 6",
           "caption": "",
-          "src": "assets/imported/from-device-info/07_device_10.jpg",
+          "src": "assets/imported/from-device-info/00_device_10.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1845,7 +1845,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-11",
           "title": "理光 (Ricoh) CX3",
           "caption": "",
-          "src": "assets/imported/from-device-info/08_device_11.jpg",
+          "src": "assets/imported/from-device-info/01_device_11.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1855,7 +1855,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-12",
           "title": "柯达 (Kodak) Pixpro FZ55 (银色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/09_device_12.jpg",
+          "src": "assets/imported/from-device-info/02_device_12.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1865,7 +1865,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-13",
           "title": "柯达 (Kodak) EasyShare C143 (银色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/10_device_13.jpg",
+          "src": "assets/imported/from-device-info/03_device_13.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1875,7 +1875,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-14",
           "title": "佳能 (Canon) IXUS 132 (粉色) = IXY 90F",
           "caption": "",
-          "src": "assets/imported/from-device-info/11_device_14.jpg",
+          "src": "assets/imported/from-device-info/04_device_14.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1885,7 +1885,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-2",
           "title": "佳能 (Canon) IXUS 210 (紫色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/00_device_2.jpg",
+          "src": "assets/imported/from-device-info/05_device_2.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1895,7 +1895,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-3",
           "title": "佳能 (Canon) PowerShot A3000 IS (白色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/01_device_3.jpg",
+          "src": "assets/imported/from-device-info/06_device_3.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1905,7 +1905,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-4",
           "title": "柯达 (Kodak) EasyShare C143 (蓝色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/02_device_4.jpg",
+          "src": "assets/imported/from-device-info/07_device_4.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1915,7 +1915,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-6",
           "title": "松下 (Panasonic) Lumix TZ10 (黑色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/03_device_6.jpg",
+          "src": "assets/imported/from-device-info/08_device_6.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1925,7 +1925,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-7",
           "title": "松下 (Panasonic) Lumix TZ10 (黑色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/04_device_7.jpg",
+          "src": "assets/imported/from-device-info/09_device_7.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1935,7 +1935,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-8",
           "title": "富士 (Fujifilm) Finepix F80exr (银色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/05_device_8.jpg",
+          "src": "assets/imported/from-device-info/10_device_8.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
@@ -1945,7 +1945,7 @@ window.DEFAULT_SITE = {
           "id": "gear-device-9",
           "title": "柯达 (Kodak) EasyShare C143 (蓝色)",
           "caption": "",
-          "src": "assets/imported/from-device-info/06_device_9.jpg",
+          "src": "assets/imported/from-device-info/11_device_9.jpg",
           "frame": {
             "w": 100,
             "fit": "contain"
