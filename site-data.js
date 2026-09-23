@@ -1966,35 +1966,53 @@ window.DEFAULT_SITE = {
       ],
       "nostalgia": {
         "title": "互动 · 回忆杀",
-        "intro": "看到这些 2000 年代旧物 / IP，弹幕里说说你记得谁？",
+        "intro": "看到这些 2000 年代旧物 / IP，弹幕里说说你还记得谁？",
         "items": [
           {
             "id": "n1",
-            "src": "assets/xhs/jam_06.webp",
+            "src": "assets/imported/from-nostalgia-ip/01_4399.jpg",
             "title": "",
             "caption": ""
           },
           {
             "id": "n2",
-            "src": "assets/xhs/jam_01.webp",
+            "src": "assets/imported/from-nostalgia-ip/02_mole-orbi.jpg",
             "title": "",
             "caption": ""
           },
           {
             "id": "n3",
-            "src": "assets/xhs/jam_03.webp",
+            "src": "assets/imported/from-nostalgia-ip/03_bomb-it.jpg",
             "title": "",
             "caption": ""
           },
           {
             "id": "n4",
-            "src": "assets/xhs/jam_05.webp",
+            "src": "assets/imported/from-nostalgia-ip/04_otome.jpg",
             "title": "",
             "caption": ""
           },
           {
             "id": "n5",
-            "src": "assets/xhs/style_08.webp",
+            "src": "assets/imported/from-nostalgia-ip/05_monokuro-boo.jpg",
+            "title": "",
+            "caption": ""
+          },
+          {
+            "id": "n6",
+            "src": "assets/imported/from-nostalgia-ip/06_mashimaro.jpg",
+            "title": "",
+            "caption": ""
+          },
+          {
+            "id": "n7",
+            "src": "assets/imported/from-nostalgia-ip/07_ddung.jpg",
+            "title": "",
+            "caption": ""
+          },
+          {
+            "id": "n8",
+            "src": "assets/imported/from-nostalgia-ip/08_ali.jpg",
             "title": "",
             "caption": ""
           }

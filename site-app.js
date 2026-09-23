@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v43-drop-gear-intro";
+  const STORAGE_KEY = "kiiikiii-site-v44-nostalgia-ip";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v43-drop-gear-intro",
     "kiiikiii-site-v42-qr-resize",
     "kiiikiii-site-v41-nostalgia-pic-only",
     "kiiikiii-site-v40-0921-duty-gif",
@@ -2406,6 +2407,19 @@
       if (!c.frame) { c.frame = { w: 100, fit: "contain" }; touched = true; }
       else if (c.frame.fit === "cover") { c.frame.fit = "contain"; touched = true; }
     });
+    if (def.nostalgia) {
+      const wantIntro = def.nostalgia.intro || "";
+      const wantItems = Array.isArray(def.nostalgia.items) ? def.nostalgia.items : [];
+      const cur = talk.nostalgia || { title: "互动 · 回忆杀", intro: "", items: [] };
+      const needNos = !cur.items?.length || cur.items.length !== wantItems.length
+        || !cur.items.every((it) => String(it.src || "").includes("from-nostalgia-ip"))
+        || cur.items[0]?.src !== wantItems[0]?.src
+        || cur.intro !== wantIntro;
+      if (needNos) {
+        talk.nostalgia = deepClone(def.nostalgia);
+        touched = true;
+      }
+    }
     return touched;
   }
 
