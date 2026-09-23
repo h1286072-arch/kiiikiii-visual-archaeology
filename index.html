@@ -1133,17 +1133,19 @@
     .mag-split-feature-row {
       position: relative;
       width: var(--split-feat-w, 100%);
-      max-width: 100%;
+      max-width: 720px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 14px;
       box-sizing: border-box;
     }
     .mag-split-feature-tile {
       position: relative;
       min-width: 0;
+      width: 100%;
+      aspect-ratio: var(--tile-ar, 3 / 4);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1152,17 +1154,6 @@
       background: #0e1014;
       cursor: zoom-in;
       box-shadow: 0 12px 28px rgba(20,30,50,.12);
-    }
-    /* 1st = landscape full width; 2nd+3rd = portrait side by side */
-    .mag-split-feature-tile:nth-child(1) {
-      grid-column: 1 / -1;
-      aspect-ratio: var(--tile-ar, 656 / 400);
-      width: 100%;
-    }
-    .mag-split-feature-tile:nth-child(2),
-    .mag-split-feature-tile:nth-child(3) {
-      aspect-ratio: var(--tile-ar, 3 / 4);
-      width: 100%;
     }
     .mag-split-feature-tile.empty {
       color: #889; font-size: 28px; font-family: var(--ui);
@@ -1229,17 +1220,6 @@
       border-radius: 8px; padding: 4px 8px; font-size: 10px; font-family: var(--ui);
     }
     .mag-split-tools .danger { background: rgba(127,29,29,.85); }
-    @media (max-width: 640px) {
-      .mag-split-feature-row {
-        grid-template-columns: 1fr;
-      }
-      .mag-split-feature-tile:nth-child(1),
-      .mag-split-feature-tile:nth-child(2),
-      .mag-split-feature-tile:nth-child(3) {
-        grid-column: 1;
-      }
-    }
-
     /* ===== 404 Flip book (spread) ===== */
     .mag-book-block { margin: 12px 0 80px; }
     .mag-book-head { margin-bottom: 16px; max-width: 520px; }
@@ -1518,7 +1498,7 @@
   <div class="ig-modal" id="igModal" aria-hidden="true"></div>
   <div class="toast" id="toast"></div>
 
-  <script src="site-data.js"></script>
-  <script src="site-app.js"></script>
+  <script src="site-data.js?v=45"></script>
+  <script src="site-app.js?v=45"></script>
 </body>
 </html>

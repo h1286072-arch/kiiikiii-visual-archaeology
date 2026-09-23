@@ -2246,7 +2246,7 @@
     const gifBlock = render404GifRow(page, mk);
     const splitBlock = render404SplitRail(page, mk);
     const bookBlock = render404Book(page, mk);
-    wrap.append(head, toolbar, stage, scrap, gifBlock, splitBlock, bookBlock);
+    wrap.append(head, toolbar, stage, scrap, splitBlock, gifBlock, bookBlock);
     view.appendChild(wrap);
     return view;
   }
