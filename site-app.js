@@ -1658,10 +1658,6 @@
       mk("+ 上方视频", () => {
         state.replaceTarget = { __404SplitFeature: true, prefer: "video" };
         fileVideo.click();
-      }),
-      mk("+ 下方图片", () => {
-        state.replaceTarget = { __404SplitItem: true };
-        fileImage.click();
       })
     );
 
@@ -1794,6 +1790,30 @@
       });
     }
 
+    layout.append(featRow);
+    block.append(head, toolbar, layout);
+    return block;
+  }
+
+  function render404SplitScroller(page, mk) {
+    const rail = page.splitRail;
+    if (!rail.items) rail.items = [];
+    const wrap = document.createElement("div");
+    wrap.className = "mag-split-strip";
+
+    if (state.edit) {
+      const toolbar = document.createElement("div");
+      toolbar.className = "mag-split-toolbar";
+      toolbar.style.display = "flex";
+      toolbar.append(
+        mk("+ 横滑图片", () => {
+          state.replaceTarget = { __404SplitItem: true };
+          fileImage.click();
+        })
+      );
+      wrap.appendChild(toolbar);
+    }
+
     const scroller = document.createElement("div");
     scroller.className = "mag-split-scroller";
     scroller.setAttribute("tabindex", "0");
@@ -1865,9 +1885,8 @@
       }
     }, { passive: false });
 
-    layout.append(featRow, scroller);
-    block.append(head, toolbar, layout);
-    return block;
+    wrap.appendChild(scroller);
+    return wrap;
   }
 
   function render404Page() {
@@ -2232,7 +2251,7 @@
     // click blank to place text
     wrap.addEventListener("click", (e) => {
       if (!state.edit || !state.placingText) return;
-      if (e.target.closest(".mag-float, .mag-pin, .mag-hero-stage, .mag-head, .mag-toolbar, .mag-gif-block, .mag-split-block, .mag-book-block, button, [contenteditable=true]")) return;
+      if (e.target.closest(".mag-float, .mag-pin, .mag-hero-stage, .mag-head, .mag-toolbar, .mag-gif-block, .mag-split-block, .mag-split-strip, .mag-book-block, button, [contenteditable=true]")) return;
       const rect = wrap.getBoundingClientRect();
       const x = clamp(((e.clientX - rect.left) / rect.width) * 100, 2, 85);
       const y = clamp(((e.clientY - rect.top) / rect.height) * 100, 2, 90);
@@ -2244,9 +2263,10 @@
     });
 
     const gifBlock = render404GifRow(page, mk);
+    const stripBlock = render404SplitScroller(page, mk);
     const splitBlock = render404SplitRail(page, mk);
     const bookBlock = render404Book(page, mk);
-    wrap.append(head, toolbar, stage, scrap, splitBlock, gifBlock, bookBlock);
+    wrap.append(head, toolbar, stage, scrap, stripBlock, splitBlock, gifBlock, bookBlock);
     view.appendChild(wrap);
     return view;
   }
