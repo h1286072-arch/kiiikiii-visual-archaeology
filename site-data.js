@@ -5,7 +5,7 @@ window.DEFAULT_SITE = {
   "duty": "(Girls) Duty Free",
   "home": {
     "tag": "Design Share",
-    "headline": "打开 KiiiKiii\n的美学密码",
+    "headline": "Welcome to KiiiKiii Festival",
     "sub": "复古打底 + 未来感先锋\n把被遗忘的千禧审美，重新做得好看。",
     "heroGuide": {
       "src": "assets/ref/ever2late.png",

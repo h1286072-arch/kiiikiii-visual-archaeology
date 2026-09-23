@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v44-nostalgia-ip";
+  const STORAGE_KEY = "kiiikiii-site-v45-home-festival";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v44-nostalgia-ip",
     "kiiikiii-site-v43-drop-gear-intro",
     "kiiikiii-site-v42-qr-resize",
     "kiiikiii-site-v41-nostalgia-pic-only",
@@ -2313,6 +2314,22 @@
     });
   }
 
+  function applyDefaultHomeHeadline(site) {
+    const want = window.DEFAULT_SITE?.home?.headline;
+    if (!site?.home || !want) return false;
+    const cur = String(site.home.headline || "");
+    const oldTitles = [
+      "打开 KiiiKiii\n的美学密码",
+      "打开 KiiiKiii 的美学密码",
+      "打开 KiiiKiii的美学密码"
+    ];
+    if (!cur || oldTitles.includes(cur) || /打开\s*KiiiKiii[\s\n]*的美学密码/.test(cur)) {
+      site.home.headline = want;
+      return true;
+    }
+    return false;
+  }
+
   function applyDefaultJamsProducts(site) {
     const def = window.DEFAULT_SITE?.pages?.jams;
     if (!def?.products || !site?.pages?.jams) return false;
@@ -2459,6 +2476,7 @@
         }
         if (applyDefaultDutyFreeExtras(state.site)) touched = true;
         if (applyDefaultTalkExtras(state.site)) touched = true;
+        if (applyDefaultHomeHeadline(state.site)) touched = true;
         if (touched) localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
       } else {
         let migrated = null;
@@ -2475,6 +2493,7 @@
           applyDefaultCandyPinkPanel(state.site);
           applyDefaultDutyFreeExtras(state.site);
           applyDefaultTalkExtras(state.site);
+          applyDefaultHomeHeadline(state.site);
         } else {
           state.site = scrubSite(deepClone(window.DEFAULT_SITE));
         }
