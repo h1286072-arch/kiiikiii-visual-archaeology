@@ -2,3 +2,5 @@
 *.log
 .env
 .env.*
+.tmp_*/
+.tmp_pip/
