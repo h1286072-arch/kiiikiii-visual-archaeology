@@ -555,10 +555,11 @@
     }
     .toast.show { display: block; }
     .fab-edit {
-      position: fixed; right: 18px; bottom: 18px; z-index: 35; appearance: none; border: none; border-radius: 999px;
+      display: none; position: fixed; right: 18px; bottom: 18px; z-index: 35; appearance: none; border: none; border-radius: 999px;
       background: var(--ink); color: #fff; padding: 12px 16px; font-size: 12px; font-weight: 600;
       box-shadow: 0 12px 28px rgba(0,0,0,.2);
     }
+    body.show-edit-fab .fab-edit { display: inline-block; }
     body.edit .fab-edit { display: none; }
 
     .media-replay-wrap {
@@ -1503,7 +1504,7 @@
   <div class="ig-modal" id="igModal" aria-hidden="true"></div>
   <div class="toast" id="toast"></div>
 
-  <script src="site-data.js?v=50"></script>
-  <script src="site-app.js?v=50"></script>
+  <script src="site-data.js?v=51"></script>
+  <script src="site-app.js?v=51"></script>
 </body>
 </html>

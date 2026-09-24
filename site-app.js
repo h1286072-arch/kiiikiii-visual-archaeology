@@ -5046,6 +5046,11 @@
   }
 
   function boot() {
+    // 默认隐藏「编辑」入口；需要改内容时打开 ?edit=1
+    const params = new URLSearchParams(location.search);
+    if (params.get("edit") === "1" || params.get("edit") === "true") {
+      document.body.classList.add("show-edit-fab");
+    }
     load();
     applyHash();
     resetHistory();
