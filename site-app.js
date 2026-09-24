@@ -1,7 +1,9 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v46-browser-edits";
+  const STORAGE_KEY = "kiiikiii-site-v48-candy-lede";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v47-candy-concept",
+    "kiiikiii-site-v46-browser-edits",
     "kiiikiii-site-v45-home-festival",
     "kiiikiii-site-v44-nostalgia-ip",
     "kiiikiii-site-v43-drop-gear-intro",
@@ -2376,7 +2378,27 @@
     if (!def?.items?.length) return false;
     if (panel.items.length < def.items.length) return true;
     const ids = new Set(panel.items.map((it) => it.id));
-    return def.items.some((it) => !ids.has(it.id));
+    if (def.items.some((it) => !ids.has(it.id))) return true;
+    const body = (panel.sections || []).map((s) => `${s.heading}|${s.body}`).join("\n");
+    if (/编辑这段文字|CONCEPT/.test(body) || !(panel.sections || []).some((s) => /色彩系统|翻盖手机|定格动画/.test(s.heading || ""))) {
+      return true;
+    }
+    const wantIntro = def.intro || "";
+    if (wantIntro && String(panel.intro || "") !== wantIntro) return true;
+    return false;
+  }
+
+  function applyDefaultGuidesSectionCleanup(site) {
+    const panels = site?.pages?.guides?.panels;
+    if (!Array.isArray(panels)) return false;
+    let touched = false;
+    panels.forEach((panel) => {
+      if (!Array.isArray(panel.sections)) return;
+      const before = panel.sections.length;
+      panel.sections = panel.sections.filter((s) => String(s.heading || "").toUpperCase() !== "NOTE");
+      if (panel.sections.length !== before) touched = true;
+    });
+    return touched;
   }
 
   function applyDefaultDutyFreeExtras(site) {
@@ -2492,6 +2514,7 @@
           applyDefaultCandyPinkPanel(state.site);
           touched = true;
         }
+        if (applyDefaultGuidesSectionCleanup(state.site)) touched = true;
         if (applyDefaultDutyFreeExtras(state.site)) touched = true;
         if (applyDefaultTalkExtras(state.site)) touched = true;
         if (applyDefaultHomeHeadline(state.site)) touched = true;
@@ -2509,6 +2532,7 @@
           state.site = migrated;
           applyDefaultJamsProducts(state.site);
           applyDefaultCandyPinkPanel(state.site);
+          applyDefaultGuidesSectionCleanup(state.site);
           applyDefaultDutyFreeExtras(state.site);
           applyDefaultTalkExtras(state.site);
           applyDefaultHomeHeadline(state.site);

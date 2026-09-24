@@ -562,7 +562,7 @@ window.DEFAULT_SITE = {
       "book": {
         "title": "404 Photo Book",
         "credit": "*Designed By KiiiKiii",
-        "active": 0,
+        "active": 2,
         "pages": [
           {
             "id": "book-01_book",
@@ -1297,6 +1297,18 @@ window.DEFAULT_SITE = {
           }
         },
         {
+          "id": "guides-mu5u4v4p-erjh",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/11_guides-mu5u4v4p-erjh_a0b41db7e6.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 6
+          }
+        },
+        {
           "id": "guides-mu5u1qtw-qade",
           "type": "image",
           "src": "assets/imported/from-0917-candy/06_guides-mu5u1qtw-qade_7a2f504ce1.jpg",
@@ -1355,18 +1367,6 @@ window.DEFAULT_SITE = {
             "cols": 6,
             "rows": 6
           }
-        },
-        {
-          "id": "guides-mu5u4v4p-erjh",
-          "type": "image",
-          "src": "assets/imported/from-0917-candy/11_guides-mu5u4v4p-erjh_a0b41db7e6.jpg",
-          "poster": "",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 6,
-            "rows": 6
-          }
         }
       ],
       "panels": [
@@ -1390,10 +1390,6 @@ window.DEFAULT_SITE = {
             {
               "heading": "Free of (Girls) Duty",
               "body": "免税区 × 少女无负担。可点「购买」弹出 Thank you for your purchase！希望真的出同款周边。"
-            },
-            {
-              "heading": "NOTE",
-              "body": "来源：格瑞特舞曼 · 小红书「KiiiKiii Girl's免税店」"
             }
           ],
           "items": [
@@ -1516,10 +1512,6 @@ window.DEFAULT_SITE = {
             {
               "heading": "弹窗时空",
               "body": "多层电脑弹窗堆叠、虚实场景快切，把千禧年互联网的轻快治愈拉满——唤醒早年线上冲浪与虚拟旅行的集体记忆。"
-            },
-            {
-              "heading": "NOTE",
-              "body": "来源：70岁的奶奶风流一夜 · 小红书「kiiikiii | Popoffpopoff美学视觉分析」"
             }
           ],
           "items": [
@@ -1631,11 +1623,19 @@ window.DEFAULT_SITE = {
           "style": "dark",
           "eyebrow": "Comeback 03 · Guides",
           "title": "Candy Pink Magic Hole Flip Phone",
-          "intro": "",
+          "intro": "所谓的审美风格特色，或许不在大家都在吹捧的高价昂贵的名牌产品，而在于自我构建的小小世界，充满了爱与美好。",
           "sections": [
             {
-              "heading": "CONCEPT",
-              "body": "编辑这段文字。"
+              "heading": "色彩系统：马卡龙高饱和与糖果撞色",
+              "body": "视觉基调：抛弃了传统女团追求的高级灰或暗黑风，采用了源自初代 Cyworld 小窝和跑跑卡丁车视觉的高饱和糖果色。\n色彩心理学：大面积的 Candy Pink（糖果粉）搭配荧光绿、亮蓝和明黄，营造出一种「经济上行时期」的乐观与无忧无虑。"
+            },
+            {
+              "heading": "核心符号：翻盖手机与复古数码遗物",
+              "body": "Flip Phone 的隐喻：歌名里的「翻盖手机」不仅是道具，更是核心精神图腾。它象征着那些看似过时、却依然闪闪发亮的青春回忆。在智能机垄断的今天，翻盖手机代表着一种「低干扰、慢节奏、充满仪式感」的旧日浪漫。\n数码遗物堆砌：画面中大量出现了像素插画、拼豆、Blythe 印花、荧光贴纸和复古厚底鞋。这些 2000s 的韩式数码遗物被重新组合，搭建起了一个只属于少女的线上社群空间。"
+            },
+            {
+              "heading": "影像质感：定格动画与 CCD 原生感",
+              "body": "定格动画（Stop Motion）：MV 和预告片中大量运用了定格动画技术，充满了鬼马、古灵精怪的童趣。\n模仿 00 年代韩女随性的街拍和自拍姿态，让画面充满了「生活感」和「在场感」。"
             }
           ],
           "items": [
@@ -1712,6 +1712,18 @@ window.DEFAULT_SITE = {
               }
             },
             {
+              "id": "guides-mu5u4v4p-erjh",
+              "type": "image",
+              "src": "assets/imported/from-0917-candy/11_guides-mu5u4v4p-erjh_a0b41db7e6.jpg",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 6
+              }
+            },
+            {
               "id": "guides-mu5u1qtw-qade",
               "type": "image",
               "src": "assets/imported/from-0917-candy/06_guides-mu5u1qtw-qade_7a2f504ce1.jpg",
@@ -1770,18 +1782,6 @@ window.DEFAULT_SITE = {
                 "cols": 6,
                 "rows": 6
               }
-            },
-            {
-              "id": "guides-mu5u4v4p-erjh",
-              "type": "image",
-              "src": "assets/imported/from-0917-candy/11_guides-mu5u4v4p-erjh_a0b41db7e6.jpg",
-              "poster": "",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 6,
-                "rows": 6
-              }
             }
           ]
         }
@@ -1790,7 +1790,7 @@ window.DEFAULT_SITE = {
       "tour": {
         "eyebrow": "KiiiKiii Travel · WHYKiiiiKIII TOUR",
         "title": "Hey Hi Tour Guide",
-        "active": 3,
+        "active": 1,
         "slides": [
           {
             "id": "tour-1",
