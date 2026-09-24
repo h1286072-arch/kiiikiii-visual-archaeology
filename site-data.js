@@ -5,7 +5,7 @@ window.DEFAULT_SITE = {
   "duty": "(Girls) Duty Free",
   "home": {
     "tag": "Design Share",
-    "headline": "Welcome to KiiiKiii Festival",
+    "headline": "Welcome to the KiiiKiii Festival",
     "sub": "复古打底 + 未来感先锋\n把被遗忘的千禧审美，重新做得好看。",
     "heroGuide": {
       "src": "assets/ref/ever2late.png",
@@ -562,7 +562,7 @@ window.DEFAULT_SITE = {
       "book": {
         "title": "404 Photo Book",
         "credit": "*Designed By KiiiKiii",
-        "active": 8,
+        "active": 0,
         "pages": [
           {
             "id": "book-01_book",
@@ -824,13 +824,6 @@ window.DEFAULT_SITE = {
             "src": "assets/albums/404/split/03_loading.gif",
             "poster": "",
             "aspect": "400/712"
-          },
-          {
-            "id": "split-f3",
-            "type": "image",
-            "src": "assets/albums/404/split/04_garage_sale.gif",
-            "poster": "",
-            "aspect": "540/720"
           }
         ]
       }
@@ -1232,9 +1225,10 @@ window.DEFAULT_SITE = {
       "notes": "WhyKiiiKiii 重点站。投屏时右侧文案会藏到本机讲稿窗；现场点主题按钮切换。强调：氧气感 × 旧互联网，风格是外套不是身份证。",
       "items": [
         {
-          "id": "popoff-04_popoff",
+          "id": "guides-mtzzxwtn-vul1",
           "type": "image",
-          "src": "assets/imported/from-site2/023_popoff-04_popoff_src_80eb3c742b.gif",
+          "src": "assets/imported/from-0917-candy/00_guides-mtzzxwtn-vul1_d073a33b58.gif",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
@@ -1243,31 +1237,10 @@ window.DEFAULT_SITE = {
           }
         },
         {
-          "id": "popoff-05_popoff",
+          "id": "guides-mtzzydpf-a13w",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/popoff-xhs/05_popoff.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 6,
-            "rows": 5
-          }
-        },
-        {
-          "id": "popoff-06_popoff",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/popoff-xhs/06_popoff.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 6,
-            "rows": 5
-          }
-        },
-        {
-          "id": "popoff-07_popoff",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/popoff-xhs/07_popoff.webp",
+          "src": "assets/imported/from-0917-candy/01_guides-mtzzydpf-a13w_92122652f9.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
@@ -1276,20 +1249,10 @@ window.DEFAULT_SITE = {
           }
         },
         {
-          "id": "popoff-08_popoff",
+          "id": "guides-mtzzzcy4-fw2o",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/popoff-xhs/08_popoff.webp",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 6,
-            "rows": 4
-          }
-        },
-        {
-          "id": "popoff-09_popoff",
-          "type": "image",
-          "src": "assets/albums/why-kiiikiii/popoff-xhs/09_popoff.webp",
+          "src": "assets/imported/from-0917-candy/02_guides-mtzzzcy4-fw2o_26368ed281.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
@@ -1298,37 +1261,111 @@ window.DEFAULT_SITE = {
           }
         },
         {
-          "id": "popoff-10_popoff",
+          "id": "guides-mu48vp3w-umoh",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/popoff-xhs/10_popoff.webp",
+          "src": "assets/imported/from-0917-candy/03_guides-mu48vp3w-umoh_689db29083.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
-            "cols": 6,
-            "rows": 4
+            "cols": 5,
+            "rows": 3
           }
         },
         {
-          "id": "guides-mu2daaj0-ba9p",
-          "type": "video",
-          "src": "assets/imported/from-site2/024_guides-mu2daaj0-ba9p_src_fcde216a96.mp4",
-          "poster": "assets/imported/from-site2/025_guides-mu2daaj0-ba9p_poster_3ec87a1df9.jpg",
-          "title": "",
-          "caption": "",
-          "puzzle": {
-            "cols": 6,
-            "rows": 1
-          }
-        },
-        {
-          "id": "popoff-14_popoff",
+          "id": "guides-mu48txdt-3p51",
           "type": "image",
-          "src": "assets/albums/why-kiiikiii/popoff-xhs/14_popoff.webp",
+          "src": "assets/imported/from-0917-candy/04_guides-mu48txdt-3p51_6805b7d002.jpg",
+          "poster": "",
           "title": "",
           "caption": "",
           "puzzle": {
             "cols": 6,
             "rows": 3
+          }
+        },
+        {
+          "id": "guides-mu48rlmq-rj7m",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/05_guides-mu48rlmq-rj7m_f50331c26e.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 3
+          }
+        },
+        {
+          "id": "guides-mu5u1qtw-qade",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/06_guides-mu5u1qtw-qade_7a2f504ce1.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 6
+          }
+        },
+        {
+          "id": "guides-mu5u25lb-s50e",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/07_guides-mu5u25lb-s50e_f18057653f.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 2
+          }
+        },
+        {
+          "id": "guides-mu5u2mli-ah8g",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/08_guides-mu5u2mli-ah8g_4c2b2bc426.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 3,
+            "rows": 3
+          }
+        },
+        {
+          "id": "guides-mu5u2y2u-3it7",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/09_guides-mu5u2y2u-3it7_fa53479b74.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 3,
+            "rows": 3
+          }
+        },
+        {
+          "id": "guides-mu5u399l-eaqu",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/10_guides-mu5u399l-eaqu_64fd2a4407.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 6
+          }
+        },
+        {
+          "id": "guides-mu5u4v4p-erjh",
+          "type": "image",
+          "src": "assets/imported/from-0917-candy/11_guides-mu5u4v4p-erjh_a0b41db7e6.jpg",
+          "poster": "",
+          "title": "",
+          "caption": "",
+          "puzzle": {
+            "cols": 6,
+            "rows": 6
           }
         }
       ],
@@ -1360,6 +1397,18 @@ window.DEFAULT_SITE = {
             }
           ],
           "items": [
+            {
+              "id": "guides-mubaahrj-b2px",
+              "type": "image",
+              "src": "assets/imported/from-0921/00_guides-mubaahrj-b2px_8b84e68d40.gif",
+              "poster": "",
+              "title": "",
+              "caption": "",
+              "puzzle": {
+                "cols": 6,
+                "rows": 2
+              }
+            },
             {
               "id": "duty-02_duty_free",
               "type": "image",
@@ -1438,18 +1487,6 @@ window.DEFAULT_SITE = {
               "caption": "",
               "puzzle": {
                 "cols": 3,
-                "rows": 3
-              }
-            },
-            {
-              "id": "guides-mubaahrj-b2px",
-              "type": "image",
-              "src": "assets/imported/from-0921/00_guides-mubaahrj-b2px_8b84e68d40.gif",
-              "poster": "",
-              "title": "",
-              "caption": "",
-              "puzzle": {
-                "cols": 6,
                 "rows": 3
               }
             }
@@ -1749,11 +1786,11 @@ window.DEFAULT_SITE = {
           ]
         }
       ],
-      "activePanel": 1,
+      "activePanel": 2,
       "tour": {
         "eyebrow": "KiiiKiii Travel · WHYKiiiiKIII TOUR",
         "title": "Hey Hi Tour Guide",
-        "active": 0,
+        "active": 3,
         "slides": [
           {
             "id": "tour-1",
@@ -2023,9 +2060,9 @@ window.DEFAULT_SITE = {
       "gearTitle": "kiiikiii同款设备分享",
       "gearIntro": "",
       "thanks": {
-        "text": "谢谢观看，请给个好评～",
+        "text": "THANKS",
         "qr": "assets/imported/talk/thanks-qr.jpg",
-        "qrW": 220
+        "qrW": 411
       }
     }
   }

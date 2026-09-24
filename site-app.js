@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v45-home-festival";
+  const STORAGE_KEY = "kiiikiii-site-v46-browser-edits";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v45-home-festival",
     "kiiikiii-site-v44-nostalgia-ip",
     "kiiikiii-site-v43-drop-gear-intro",
     "kiiikiii-site-v42-qr-resize",
@@ -2321,7 +2322,8 @@
     const oldTitles = [
       "打开 KiiiKiii\n的美学密码",
       "打开 KiiiKiii 的美学密码",
-      "打开 KiiiKiii的美学密码"
+      "打开 KiiiKiii的美学密码",
+      "Welcome to KiiiKiii Festival"
     ];
     if (!cur || oldTitles.includes(cur) || /打开\s*KiiiKiii[\s\n]*的美学密码/.test(cur)) {
       site.home.headline = want;
@@ -2423,10 +2425,26 @@
     }
     if (!talk.thanks || !talk.thanks.qr) {
       talk.thanks = deepClone(def.thanks || {
-        text: "谢谢观看，请给个好评～",
-        qr: "assets/imported/talk/thanks-qr.jpg"
+        text: "THANKS",
+        qr: "assets/imported/talk/thanks-qr.jpg",
+        qrW: 411
       });
       touched = true;
+    } else if (def.thanks) {
+      if (
+        talk.thanks.text === "谢谢观看，请给个好评～"
+        || talk.thanks.text == null
+        || talk.thanks.text === ""
+      ) {
+        talk.thanks.text = def.thanks.text || "THANKS";
+        touched = true;
+      }
+      if (typeof def.thanks.qrW === "number") {
+        if (typeof talk.thanks.qrW !== "number" || talk.thanks.qrW === 220) {
+          talk.thanks.qrW = def.thanks.qrW;
+          touched = true;
+        }
+      }
     }
     if (Array.isArray(def.crew) && def.crew.length) {
       const byName = Object.fromEntries(def.crew.map((c) => [String(c.name || "").toLowerCase(), c]));
