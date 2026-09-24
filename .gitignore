@@ -3,4 +3,5 @@
 .env
 .env.*
 .tmp_*/
+.tmp_*
 .tmp_pip/
