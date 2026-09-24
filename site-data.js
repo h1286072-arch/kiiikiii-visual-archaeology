@@ -15,13 +15,13 @@ window.DEFAULT_SITE = {
     },
     "jars": [
       {
-        "src": "assets/xhs/jam_06.webp",
+        "src": "assets/imported/home/jam-groundwork-whykiiikiii.jpg",
         "title": "Jam · Groundwork",
         "price": "Unlock soon",
         "locked": true
       },
       {
-        "src": "assets/xhs/jam_02.webp",
+        "src": "assets/imported/home/jam-debut-uncut-gem.jpg",
         "title": "Jam · Debut",
         "price": "12.00",
         "locked": false

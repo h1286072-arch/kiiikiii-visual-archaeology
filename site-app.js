@@ -1,7 +1,8 @@
 /* Interactive site — Home / Jams / 404 / Guides / Talk */
 (() => {
-  const STORAGE_KEY = "kiiikiii-site-v48-candy-lede";
+  const STORAGE_KEY = "kiiikiii-site-v49-home-jars";
   const PREV_STORAGE_KEYS = [
+    "kiiikiii-site-v48-candy-lede",
     "kiiikiii-site-v47-candy-concept",
     "kiiikiii-site-v46-browser-edits",
     "kiiikiii-site-v45-home-festival",
@@ -2334,6 +2335,16 @@
     return false;
   }
 
+  function applyDefaultHomeJars(site) {
+    const want = window.DEFAULT_SITE?.home?.jars;
+    if (!site?.home || !Array.isArray(want) || !want.length) return false;
+    const cur = Array.isArray(site.home.jars) ? site.home.jars : [];
+    const same = cur.length === want.length && want.every((j, i) => String(cur[i]?.src || "") === String(j.src || ""));
+    if (same) return false;
+    site.home.jars = deepClone(want);
+    return true;
+  }
+
   function applyDefaultJamsProducts(site) {
     const def = window.DEFAULT_SITE?.pages?.jams;
     if (!def?.products || !site?.pages?.jams) return false;
@@ -2518,6 +2529,7 @@
         if (applyDefaultDutyFreeExtras(state.site)) touched = true;
         if (applyDefaultTalkExtras(state.site)) touched = true;
         if (applyDefaultHomeHeadline(state.site)) touched = true;
+        if (applyDefaultHomeJars(state.site)) touched = true;
         if (touched) localStorage.setItem(STORAGE_KEY, JSON.stringify(state.site));
       } else {
         let migrated = null;
@@ -2536,6 +2548,7 @@
           applyDefaultDutyFreeExtras(state.site);
           applyDefaultTalkExtras(state.site);
           applyDefaultHomeHeadline(state.site);
+          applyDefaultHomeJars(state.site);
         } else {
           state.site = scrubSite(deepClone(window.DEFAULT_SITE));
         }
